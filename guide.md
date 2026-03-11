@@ -74,17 +74,10 @@ In each profile → **General** tab:
 Change the dropdown from "Login Shell" to **"Custom Shell"** and enter:
 
 ```bash
-# DEV-AUDIT
-/bin/zsh -c 'export PANE_ROLE="AUDIT"; cd ~/Desktop/your-project; exec zsh'
-
-# DEV-IMPL
-/bin/zsh -c 'export PANE_ROLE="IMPL"; cd ~/Desktop/your-project; exec zsh'
-
-# DEV-PROMPT
-/bin/zsh -c 'export PANE_ROLE="PROMPT"; cd ~/Desktop/your-project; exec zsh'
-
-# DEV-PLAN
-/bin/zsh -c 'export PANE_ROLE="PLAN"; cd ~/Desktop/your-project; exec zsh'
+# Same command for all 4 profiles — only the directory changes per project.
+# Role detection uses $ITERM_PROFILE (set automatically by iTerm2),
+# so the startup command doesn't need to set PANE_ROLE.
+/bin/zsh -c 'cd ~/Desktop/your-project; exec zsh'
 ```
 
 Replace `your-project` with the actual project directory name.
@@ -95,10 +88,11 @@ Change from **"Home directory"** to **"Directory:"** and enter the full path:
 /Users/yourname/Desktop/your-project
 ```
 
-> **Why both?** The startup command sets `PANE_ROLE` and does the initial `cd`.
+> **Why both?** The startup command does the initial `cd`.
 > The Initial directory setting is a fallback — iTerm2 window arrangement
 > restore doesn't always re-run the startup command, but it does respect the
-> Initial directory setting.
+> Initial directory setting. Role detection relies on `$ITERM_PROFILE`
+> (auto-set by iTerm2 on every session), not the startup command.
 
 > **Why `exec zsh`?** This replaces the subshell with an interactive zsh.
 > Without it, the pane closes when you exit any command launched inside it.
@@ -327,9 +321,9 @@ alias audit-ready='pytest tests/ -v --tb=short && echo "Ready for AUDIT pane"'
 ```
 1. Open iTerm2 (arrangement auto-restores)
 2. Type "cc" in each pane
-3. PLAN pane  → review where you left off
+3. PLAN pane  → review where you left off (git log --oneline -10)
 4. IMPL pane  → quick smoke test (pytest tests/ -x --tb=short)
-5. AUDIT pane → review open issues (grep -A2 "OPEN\|TODO" CLAUDE.md)
+5. AUDIT pane → review open issues (grep -A2 "TODO" CLAUDE.md)
 ```
 
 ### End of session
@@ -337,7 +331,7 @@ alias audit-ready='pytest tests/ -v --tb=short && echo "Ready for AUDIT pane"'
 ```
 1. IMPL  → run full test suite
 2. IMPL  → stage and commit (git add -p && git commit)
-3. PLAN  → log what was done
+3. Compress long contexts → type /compact inside Claude Code
 4. Save arrangement if layout changed
    (Window → Save Window Arrangement → overwrite)
 ```

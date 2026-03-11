@@ -517,7 +517,7 @@
           <div class="detail"><span class="detail-label">Effort</span><span class="detail-value">high</span></div>
           <div class="detail"><span class="detail-label">Permission</span><span class="detail-value">plan (read-only)</span></div>
         </div>
-        <div class="pane-card-desc">Review completed work. Never generates code. Enforced read-only via <span class="mono">--permission-mode plan</span>.</div>
+        <div class="pane-card-desc">Review completed work. Never generates code. Enforced read-only via <span class="mono">--permission-mode plan</span>. Scope reviews with: <em>"Focus ONLY on src/auth.py. Do not read other files."</em></div>
       </div>
 
       <div class="pane-card pc-impl">
@@ -661,16 +661,11 @@
           <p>In each profile &rarr; <strong>General</strong> sub-tab &rarr; change the <strong>Command</strong> dropdown from "Login Shell" to <strong>"Custom Shell"</strong> and paste the corresponding command:</p>
           <div class="code-block">
 <div class="comment"># DEV-AUDIT</div>
-<div><span class="cmd">/bin/zsh</span> <span class="flag">-c</span> <span class="str">'export PANE_ROLE="AUDIT"; cd ~/Desktop/your-project; exec zsh'</span></div>
+<div><span class="cmd">/bin/zsh</span> <span class="flag">-c</span> <span class="str">'cd ~/Desktop/your-project; exec zsh'</span></div>
 <div></div>
-<div class="comment"># DEV-IMPL</div>
-<div><span class="cmd">/bin/zsh</span> <span class="flag">-c</span> <span class="str">'export PANE_ROLE="IMPL"; cd ~/Desktop/your-project; exec zsh'</span></div>
-<div></div>
-<div class="comment"># DEV-PROMPT</div>
-<div><span class="cmd">/bin/zsh</span> <span class="flag">-c</span> <span class="str">'export PANE_ROLE="PROMPT"; cd ~/Desktop/your-project; exec zsh'</span></div>
-<div></div>
-<div class="comment"># DEV-PLAN</div>
-<div><span class="cmd">/bin/zsh</span> <span class="flag">-c</span> <span class="str">'export PANE_ROLE="PLAN"; cd ~/Desktop/your-project; exec zsh'</span></div>
+<div class="comment"># Same command for all 4 profiles &mdash; only the directory changes per project.</div>
+<div class="comment"># Role detection uses $ITERM_PROFILE (set automatically by iTerm2),</div>
+<div class="comment"># so the startup command doesn't need to set PANE_ROLE.</div>
           </div>
           <p>Replace <span class="mono">your-project</span> with your actual project directory name.</p>
           <div class="callout tip">
@@ -832,8 +827,8 @@
         <div class="step-body">
           <ol style="margin-left:20px">
             <li><strong>Window &rarr; Arrangements &rarr; Save Window Arrangement</strong> &mdash; give it a name (e.g. your project name).</li>
-            <li>Then: <strong>Window &rarr; Arrangements &rarr; Save Window Arrangement</strong> again &mdash; this time it saves as default.</li>
             <li>Go to <strong>iTerm2 &rarr; Settings &rarr; General &rarr; Startup</strong> and set <strong>"Window restoration policy"</strong> to <strong>"Open Default Window Arrangement"</strong>.</li>
+            <li>Back in the menu: <strong>Window &rarr; Arrangements &rarr; Save Window Arrangement</strong> once more &mdash; this saves it as the <em>default</em> arrangement that the startup policy will use.</li>
           </ol>
 
           <div class="screenshot">
@@ -1037,7 +1032,7 @@
 <div class="comment"># 2. Type "cc" in each pane</div>
 <div></div>
 <div class="comment"># 3. PLAN &mdash; review where you left off</div>
-<div><span class="cmd">tail</span> <span class="flag">-30</span> SESSION_LOG.md</div>
+<div><span class="cmd">git</span> log <span class="flag">--oneline</span> <span class="flag">-10</span></div>
 <div></div>
 <div class="comment"># 4. IMPL &mdash; quick smoke test</div>
 <div><span class="cmd">pytest</span> tests/ <span class="flag">-x</span> <span class="flag">--tb=short</span></div>
@@ -1059,7 +1054,10 @@
 <div><span class="cmd">git</span> add <span class="flag">-p</span></div>
 <div><span class="cmd">git</span> commit <span class="flag">-m</span> <span class="str">"feat: ..."</span></div>
 <div></div>
-<div class="comment"># 3. Save arrangement if layout changed</div>
+<div class="comment"># 3. Compress long contexts instead of clearing</div>
+<div class="comment"># Type /compact inside Claude Code</div>
+<div></div>
+<div class="comment"># 4. Save arrangement if layout changed</div>
 <div class="comment"># Window &rarr; Arrangements &rarr; Save Window Arrangement</div>
           </div>
         </div>
