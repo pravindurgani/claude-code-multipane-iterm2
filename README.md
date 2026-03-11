@@ -1,12 +1,14 @@
 # 4-Pane Claude Code Setup for iTerm2
 
-A step-by-step guide to running 4 dedicated Claude Code sessions in a single iTerm2 window — each with a distinct role, model, effort level, and visual identity.
+Run 4 dedicated Claude Code sessions in a single iTerm2 window — each with its own role, model, effort level, and visual identity. One command (`cc`) launches the right configuration per pane.
 
-**[Read the full guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**
+**[Read the full guide with screenshots](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**
 
 ![4-pane iTerm2 layout with Claude Code running in each pane](screenshots/05-claude-running.png)
 
-## The Setup
+---
+
+## What you get
 
 | Pane | Role | Model | Effort | Permission |
 |------|------|-------|--------|------------|
@@ -15,50 +17,71 @@ A step-by-step guide to running 4 dedicated Claude Code sessions in a single iTe
 | **PROMPT** | Prompt engineering | Sonnet | medium | default |
 | **PLAN** | Architecture & planning | Sonnet | low | default |
 
-**Why this split:**
-- Opus is ~15x more expensive than Sonnet — reserve it for review only
-- Separating review from implementation prevents "self-grading" bias
-- Each pane keeps a clean, focused context window
-- A `cc` alias launches the right configuration per pane automatically
+**Why split it this way?**
+- **Cost control** — Opus is ~15x more expensive than Sonnet. Reserve it for review only.
+- **No self-grading** — The model that writes the code never reviews its own work.
+- **Clean context** — Each pane has a focused, independent conversation window.
+- **One-command launch** — A `cc` alias in your shell handles model, effort, and permissions automatically.
+
+---
+
+## Why iTerm2 (not macOS Terminal)?
+
+This workflow depends on iTerm2-specific features:
+
+| Feature | macOS Terminal | iTerm2 |
+|---------|---------------|--------|
+| Split panes | Tabs/windows only | Unlimited independent panes in one tab |
+| Named profiles | No `$ITERM_PROFILE` env var | Auto-sets `$ITERM_PROFILE` per pane |
+| Visual identity | Basic themes | Per-profile backgrounds, tab colours, badges |
+| Saved layouts | Not supported | Save & auto-restore multi-pane arrangements |
+
+`$ITERM_PROFILE` is the key — it's what lets the shell detect which role a pane has, even after restarting iTerm2 or restoring a saved layout.
+
+---
+
+## Quick start
+
+> For detailed step-by-step instructions with screenshots, **[read the full guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**.
+
+1. **Create 4 iTerm2 profiles** — `DEV-AUDIT`, `DEV-IMPL`, `DEV-PROMPT`, `DEV-PLAN` — each with a distinct background colour and tab colour
+2. **Set startup command & initial directory** — point each profile at your project folder
+3. **Add the shell snippet to `~/.zshrc`** — copy-paste from [`zshrc-snippet.sh`](zshrc-snippet.sh)
+4. **Create a 2x2 pane layout** and save it as the default window arrangement
+5. **Type `cc` in each pane** — Claude Code launches with the correct flags
+
+---
 
 ## What's in this repo
 
-| File | Purpose |
-|------|---------|
+| File | What it does |
+|------|-------------|
 | [`index.html`](index.html) | Full visual guide (the GitHub Pages site) |
 | [`guide.md`](guide.md) | Markdown version for quick reference |
 | [`zshrc-snippet.sh`](zshrc-snippet.sh) | Copy-paste block for your `~/.zshrc` |
-| [`screenshots/`](screenshots/) | Step-by-step screenshots |
+| [`screenshots/`](screenshots/) | Step-by-step screenshots used in the guide |
 
-## Quick Start
-
-1. Create 4 iTerm2 profiles (`DEV-AUDIT`, `DEV-IMPL`, `DEV-PROMPT`, `DEV-PLAN`) with distinct background colours
-2. Set startup commands and initial directory for each profile
-3. Append [`zshrc-snippet.sh`](zshrc-snippet.sh) to your `~/.zshrc`
-4. Create a 2x2 pane layout and save as default arrangement
-5. Type `cc` in each pane to launch Claude Code
-
-For detailed instructions with screenshots, **[read the full guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**.
-
-## Why iTerm2?
-
-This workflow needs split panes, named profiles with `$ITERM_PROFILE` auto-detection, per-pane visual identity (background/tab colours/badges), and saved window arrangements — none of which macOS Terminal supports. See the [full comparison in the guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/#s1).
+---
 
 ## Requirements
 
 - macOS
-- [iTerm2](https://iterm2.com/) (the setup relies on iTerm2-specific features — see above)
-- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) (with an active subscription)
-- zsh (default macOS shell)
+- [iTerm2](https://iterm2.com/)
+- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) (requires an active subscription)
+- zsh (the default macOS shell)
 
-## Adapting for Your Project
+---
 
-The setup is project-agnostic. To use with any codebase:
+## Adapting for your project
+
+The setup is project-agnostic. To use it with a different codebase:
 
 1. Update the **Initial Directory** in each profile to your project path
-2. If you want per-project profiles, use a prefix (e.g. `SS-AUDIT` for SensiSpend) and add matching `case` entries to `~/.zshrc`
+2. Optionally rename profiles with a project prefix (e.g. `SS-AUDIT`) and add matching `case` entries to `~/.zshrc`
 3. Save a separate window arrangement per project
+
+---
 
 ## License
 
-MIT
+[MIT](LICENSE)
