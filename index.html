@@ -456,6 +456,37 @@
     justify-content: space-between;
   }
 
+  /* COMPARE CARDS (mobile-only alternative to the 3-col table) */
+  .iterm-compare-cards { display: none; }
+  .compare-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+  .compare-card-title { font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+  .compare-row {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+  .compare-row.yes { color: var(--green); }
+  .compare-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    min-width: 58px;
+    flex-shrink: 0;
+  }
+  .compare-row.yes .compare-label { color: var(--green); }
+
   /* RESPONSIVE */
   @media (max-width: 640px) {
     .hero { padding: 40px 20px 36px; }
@@ -500,6 +531,10 @@
 
     /* Footer */
     .footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px 16px; }
+
+    /* Why iTerm2: swap table for stacked cards */
+    .iterm-compare-table { display: none !important; }
+    .iterm-compare-cards { display: block; }
   }
 
   /* Mid-size tablets */
@@ -618,7 +653,7 @@
     <div>
       <strong>Why iTerm2 over macOS Terminal?</strong>
       <p style="margin-top:8px;">This workflow relies on features the default Terminal doesn't have:</p>
-      <table class="data-table" style="margin-top:12px; font-size:14px;">
+      <table class="data-table iterm-compare-table" style="margin-top:12px; font-size:14px;">
         <thead><tr><th style="width:35%">Feature</th><th>macOS Terminal</th><th>iTerm2</th></tr></thead>
         <tbody>
           <tr><td><strong>Split panes</strong></td><td>Tabs/windows only &mdash; no side-by-side splits</td><td>Unlimited independent panes in a single tab</td></tr>
@@ -628,6 +663,34 @@
           <tr><td><strong>Productivity</strong></td><td>Standard find and copy</td><td>Paste history, Instant Replay, triggers, shell integration</td></tr>
         </tbody>
       </table>
+      <!-- Mobile-only stacked version of the same comparison -->
+      <div class="iterm-compare-cards" style="margin-top:12px;">
+        <div class="compare-card">
+          <div class="compare-card-title">Split panes</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Tabs/windows only</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Unlimited independent panes in one tab</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Named profiles</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> No <span class="mono">$ITERM_PROFILE</span> env var</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Auto-sets <span class="mono">$ITERM_PROFILE</span> per pane</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Visual identity</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Basic themes only</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Per-profile backgrounds, tab colours, badges</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Saved layouts</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Not supported</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Save &amp; auto-restore on launch</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Productivity</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Standard find and copy</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Paste history, Instant Replay, triggers</div>
+        </div>
+      </div>
       <p style="margin-top:8px; color: var(--text-muted); font-size: 14px;">The <span class="mono">$ITERM_PROFILE</span> environment variable is especially critical &mdash; it's what lets the <span class="mono">cc</span> alias automatically launch the right model and permissions per pane, and it survives window arrangement restores.</p>
     </div>
   </div>
