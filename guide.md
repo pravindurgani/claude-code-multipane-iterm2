@@ -188,9 +188,10 @@ Result:
 ### Save and set as default
 
 5. **Save:** `Window → Save Window Arrangement` → name it (e.g. your project name).
-6. **Set as default:** `Window → Save Window Arrangement As Default`.
-7. **Auto-restore on launch:** Go to `iTerm2 → Settings → General → Startup`
+6. **Set startup policy:** Go to `iTerm2 → Settings → General → Startup`
    → set to **"Open Default Window Arrangement"**.
+7. **Save again as default:** `Window → Save Window Arrangement` → select the
+   same name. This time iTerm2 knows it's the default because of step 6.
 
 Now iTerm2 opens your 4-pane layout automatically on launch. No extra
 windows or tabs.
