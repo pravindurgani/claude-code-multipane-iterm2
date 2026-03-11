@@ -569,6 +569,26 @@
     </div>
   </div>
 
+  <!-- WHY ITERM2 -->
+  <div class="callout tip" style="margin: 0 0 48px; max-width: 800px;">
+    <span class="callout-icon">&#128161;</span>
+    <div>
+      <strong>Why iTerm2 over macOS Terminal?</strong>
+      <p style="margin-top:8px;">This workflow relies on features the default Terminal doesn't have:</p>
+      <table class="data-table" style="margin-top:12px; font-size:14px;">
+        <thead><tr><th style="width:35%">Feature</th><th>macOS Terminal</th><th>iTerm2</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Split panes</strong></td><td>Tabs/windows only &mdash; no side-by-side splits</td><td>Unlimited independent panes in a single tab</td></tr>
+          <tr><td><strong>Named profiles</strong></td><td>Basic profiles, no <span class="mono">$ITERM_PROFILE</span> env var</td><td>Auto-sets <span class="mono">$ITERM_PROFILE</span> per pane &mdash; the key to role detection</td></tr>
+          <tr><td><strong>Visual identity</strong></td><td>Basic themes and transparency</td><td>Per-profile backgrounds, tab colours, badges, and 24-bit colour</td></tr>
+          <tr><td><strong>Window arrangements</strong></td><td>No saved layouts</td><td>Save &amp; auto-restore multi-pane layouts on launch</td></tr>
+          <tr><td><strong>Productivity</strong></td><td>Standard find and copy</td><td>Paste history, Instant Replay, triggers, shell integration</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px; color: var(--text-muted); font-size: 14px;">The <span class="mono">$ITERM_PROFILE</span> environment variable is especially critical &mdash; it's what lets the <span class="mono">cc</span> alias automatically launch the right model and permissions per pane, and it survives window arrangement restores.</p>
+    </div>
+  </div>
+
   <!-- SECTION 2 -->
   <div class="section" id="s2">
     <div class="section-header">

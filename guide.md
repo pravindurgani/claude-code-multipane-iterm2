@@ -25,6 +25,24 @@ directory but serve different purposes.
 
 ---
 
+## Why iTerm2 over macOS Terminal?
+
+This workflow relies on features the default Terminal doesn't have:
+
+| Feature | macOS Terminal | iTerm2 |
+|---------|---------------|--------|
+| **Split panes** | Tabs/windows only — no side-by-side splits | Unlimited independent panes in a single tab |
+| **Named profiles** | Basic profiles, no `$ITERM_PROFILE` env var | Auto-sets `$ITERM_PROFILE` per pane — the key to role detection |
+| **Visual identity** | Basic themes and transparency | Per-profile backgrounds, tab colours, badges, and 24-bit colour |
+| **Window arrangements** | No saved layouts | Save & auto-restore multi-pane layouts on launch |
+| **Productivity** | Standard find and copy | Paste history, Instant Replay, triggers, shell integration |
+
+The `$ITERM_PROFILE` variable is especially critical — it lets the `cc` alias
+automatically launch the right model and permissions per pane, and it survives
+window arrangement restores.
+
+---
+
 ## Step 1 — Create 4 iTerm2 Profiles
 
 1. Open **iTerm2 → Settings → Profiles** (`⌘,`).

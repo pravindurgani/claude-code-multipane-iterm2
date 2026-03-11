@@ -40,10 +40,14 @@ A step-by-step guide to running 4 dedicated Claude Code sessions in a single iTe
 
 For detailed instructions with screenshots, **[read the full guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**.
 
+## Why iTerm2?
+
+This workflow needs split panes, named profiles with `$ITERM_PROFILE` auto-detection, per-pane visual identity (background/tab colours/badges), and saved window arrangements — none of which macOS Terminal supports. See the [full comparison in the guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/#s1).
+
 ## Requirements
 
 - macOS
-- [iTerm2](https://iterm2.com/)
+- [iTerm2](https://iterm2.com/) (the setup relies on iTerm2-specific features — see above)
 - [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) (with an active subscription)
 - zsh (default macOS shell)
 
