@@ -459,10 +459,53 @@
   /* RESPONSIVE */
   @media (max-width: 640px) {
     .hero { padding: 40px 20px 36px; }
-    .hero h1 { font-size: 28px; }
+    .hero h1 { font-size: 26px; letter-spacing: -0.5px; }
+    .hero h1 br { display: none; }
+    .hero p { font-size: 16px; }
     .container { padding: 0 16px 60px; }
+
+    .toc { padding: 20px; }
     .toc-list, .pane-grid, .shortcut-grid { grid-template-columns: 1fr; }
+
+    .section { margin: 40px 0; }
+    .section-header { flex-wrap: wrap; gap: 8px; }
+    .section h2 { font-size: 20px; }
+
     .step-body, .step-header { padding: 14px 16px; }
+    .step-header { flex-wrap: wrap; }
+
+    .code-block { padding: 14px 16px; font-size: 12px; line-height: 1.8; }
+
+    /* Tables: horizontal scroll wrapper */
+    .data-table { font-size: 13px; }
+    .data-table th, .data-table td { padding: 8px 10px; }
+    .step-body .data-table,
+    .callout .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* Pane cards */
+    .pane-card-desc { font-size: 12px; }
+
+    /* Layout diagram */
+    .layout-diagram { padding: 16px; }
+    .layout-row { flex-direction: column; }
+    .layout-pane { min-height: 60px; }
+
+    /* Shortcut items */
+    .shortcut-item { flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 12px; }
+    .shortcut-desc { font-size: 12px; }
+
+    /* Callouts */
+    .callout { flex-direction: column; gap: 8px; padding: 14px 16px; }
+    .callout-icon { font-size: 16px; }
+
+    /* Footer */
+    .footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px 16px; }
+  }
+
+  /* Mid-size tablets */
+  @media (max-width: 768px) and (min-width: 641px) {
+    .hero h1 { font-size: 32px; }
+    .shortcut-grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
