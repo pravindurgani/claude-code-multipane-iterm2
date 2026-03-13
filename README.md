@@ -1,10 +1,16 @@
 # 4-Pane Claude Code Setup for iTerm2
 
+> Stop your AI agent from reviewing its own code — each pane runs a separate Claude Code session with a locked role, model, and permission set.
+
+![4-pane iTerm2 layout with Claude Code running in each pane](screenshots/05-claude-running.png)
+
+![Empty 4-pane layout showing colour differentiation](screenshots/04-four-panes.png)
+
+<p align="center"><em>Clean state on launch — colour-coded panes before any session starts</em></p>
+
 Run 4 dedicated Claude Code sessions in a single iTerm2 window — each with its own role, model, effort level, and visual identity. One command (`cc`) launches the right configuration per pane.
 
 **[Read the full guide with screenshots](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**
-
-![4-pane iTerm2 layout with Claude Code running in each pane](screenshots/05-claude-running.png)
 
 ---
 
@@ -40,6 +46,14 @@ This workflow depends on iTerm2-specific features:
 
 ---
 
+## Prerequisites
+
+- **macOS** (zsh is the default shell)
+- **[iTerm2](https://iterm2.com/)** — required for split panes, named profiles, and saved layouts
+- **[Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code)** with an active subscription
+
+---
+
 ## Quick start
 
 > For detailed step-by-step instructions with screenshots, **[read the full guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**.
@@ -63,15 +77,6 @@ This workflow depends on iTerm2-specific features:
 
 ---
 
-## Requirements
-
-- macOS
-- [iTerm2](https://iterm2.com/)
-- [Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code) (requires an active subscription)
-- zsh (the default macOS shell)
-
----
-
 ## Adapting for your project
 
 The setup is project-agnostic. To use it with a different codebase:
@@ -79,6 +84,10 @@ The setup is project-agnostic. To use it with a different codebase:
 1. Update the **Initial Directory** in each profile to your project path
 2. Optionally rename profiles with a project prefix (e.g. `SS-AUDIT`) and add matching `case` entries to `~/.zshrc`
 3. Save a separate window arrangement per project
+
+---
+
+If this saves you time, a ⭐ helps others find it.
 
 ---
 
