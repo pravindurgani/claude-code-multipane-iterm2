@@ -395,6 +395,11 @@ invariants that prompt instructions alone cannot guarantee.
    - Copy the `"hooks"` block from `hooks/settings.json.example` into the top
      level of the JSON object.
    - All `"command"` values use `$HOME` — Claude Code does not expand `~`.
+   - The example also includes `"env": {"CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"}`.
+     This tells Claude Code to auto-compact the conversation context when it
+     reaches 50% of the context window, instead of waiting until it's nearly
+     full. Set to `"0"` to disable, or remove the `"env"` block to use the
+     default threshold.
 
 ### What each hook does
 
@@ -522,6 +527,74 @@ Two starter templates are included in this repo:
 
 > **Tip:** Start `~/.claude/CLAUDE.md` with a one-line role statement
 > ("I am a senior data engineer…") so every session starts with the right frame.
+
+---
+
+## Step 15 — MCP Server, Slash Commands & Skills
+
+### GitHub MCP Server
+
+The included `.mcp.json.example` configures the GitHub MCP server, giving
+Claude read access to GitHub issues, PRs, and code search inside any session.
+
+**Setup:**
+
+1. Install the binary — see [github.com/github/github-mcp-server](https://github.com/github/github-mcp-server).
+
+2. Copy and configure:
+   ```bash
+   cp .mcp.json.example ~/.claude/.mcp.json
+   # Edit ~/.claude/.mcp.json:
+   #   - Replace /path/to/github-mcp-server with the actual binary path
+   #   - Replace ghp_your_readonly_pat_here with a real read-only PAT
+   ```
+
+3. Restart Claude Code and run `/mcp` to confirm the server is connected.
+
+> **Scope:** Placing `.mcp.json` in `~/.claude/` makes the server available in
+> all projects. For per-project scope, place it in `.claude/.mcp.json` inside
+> the repo instead.
+
+---
+
+### /reflect Command
+
+`commands/reflect.md` defines a `/reflect` slash command. Run it at the end of
+any IMPL or AUDIT session to extract project-specific learnings and get
+structured suggestions for updating CLAUDE.md.
+
+**Install:**
+```bash
+mkdir -p ~/.claude/commands
+cp commands/reflect.md ~/.claude/commands/reflect.md
+```
+
+**Use:** Type `/reflect` at the end of a session. Claude reads the recent git
+log and diff, then outputs a formatted table of suggested CLAUDE.md additions.
+
+> `/reflect` never edits CLAUDE.md directly. You review and decide what to
+> incorporate.
+
+---
+
+### Contextual Skills
+
+The `skills/` directory contains three skills that add relevant instructions
+when Claude is doing review or testing work:
+
+| Skill | When it activates | What it adds |
+|-------|------------------|--------------|
+| `code-review` | Code review tasks (AUDIT pane) | Project-specific review conventions |
+| `security-audit` | Security review tasks (AUDIT pane) | Security checklist and vulnerability patterns |
+| `testing` | Writing/reviewing tests (IMPL pane) | pytest conventions matching the project |
+
+**Install:**
+```bash
+cp -r skills/ ~/.claude/skills/
+```
+
+Skills are loaded automatically by Claude Code when the task matches the
+skill's trigger description — no manual invocation needed.
 
 ---
 

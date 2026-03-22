@@ -6,8 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>4-Pane Claude Code Setup for iTerm2 — Complete Guide</title>
 <meta name="description" content="Step-by-step guide to set up a 4-pane iTerm2 workflow for Claude Code with role-based models, coloured prompts, and one-command launch.">
+<meta property="og:title" content="4-Pane Claude Code Setup for iTerm2">
+<meta property="og:description" content="Stop your AI from grading its own code. Run 4 Claude Code sessions in one iTerm2 window — each with a locked role, model, and permission set.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pravindurgani.github.io/claude-code-multipane-iterm2/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
   :root {
     --bg: #ffffff;
@@ -578,7 +585,8 @@
       <li><a href="#s13"><span class="toc-num">13</span> SESSION_LOG cold-start fix</a></li>
       <li><a href="#s14"><span class="toc-num">14</span> CLAUDE.md split pattern</a></li>
       <li><a href="#s15"><span class="toc-num">15</span> Cheatsheet</a></li>
-      <li><a href="#s16"><span class="toc-num">16</span> Troubleshooting</a></li>
+      <li><a href="#s16"><span class="toc-num">16</span> MCP server, commands &amp; skills</a></li>
+      <li><a href="#s17"><span class="toc-num">17</span> Troubleshooting</a></li>
     </ul>
   </div>
 
@@ -1092,6 +1100,15 @@
       <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/model</span></div><div class="shortcut-desc">Switch model mid-session</div></div>
       <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/effort</span></div><div class="shortcut-desc">Switch effort mid-session</div></div>
     </div>
+
+    <p style="font-size:13px;color:var(--text-muted);margin:24px 0 12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">iTerm2 triggers (optional)</p>
+    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">Auto-highlight keywords in terminal output. Set up in <strong>Profile &rarr; Advanced &rarr; Triggers &rarr; +</strong></p>
+    <table class="data-table">
+      <tr><th>Regex</th><th>Action</th><th>Colour</th></tr>
+      <tr><td><span class="mono">\b(CRITICAL|ERROR|FAIL(ED)?)\b</span></td><td>Highlight Text</td><td>Red background</td></tr>
+      <tr><td><span class="mono">\b(PASS(ED)?|SUCCESS)\b</span></td><td>Highlight Text</td><td>Green background</td></tr>
+      <tr><td><span class="mono">\b(WARNING|WARN|TODO)\b</span></td><td>Highlight Text</td><td>Yellow background</td></tr>
+    </table>
   </div>
 
   <!-- SECTION 8 -->
@@ -1302,6 +1319,7 @@
             <span class="callout-icon">&#128161;</span>
             <div><strong>Why <code>$HOME</code> instead of <code>~</code>?</strong> Claude Code does not expand <span class="mono">~</span> in hook command strings. Use <span class="mono">$HOME</span> which the shell expands at execution time, or replace with your full absolute path.</div>
           </div>
+          <p>The example also includes <span class="mono">"env": &#123;"CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"&#125;</span>. This tells Claude Code to auto-compact the conversation context when it reaches 50% of the context window. Without this, Claude waits until near the limit before compacting, which can cause abrupt context loss mid-session. Set to <span class="mono">"0"</span> to disable, or remove the <span class="mono">"env"</span> block entirely to use the default threshold.</p>
         </div>
       </div>
 
@@ -1565,6 +1583,83 @@
   <div class="section" id="s16">
     <div class="section-header">
       <span class="section-num">16</span>
+      <h2>MCP Server, Commands &amp; Skills</h2>
+    </div>
+    <p class="section-intro">Phase 6 additions — GitHub MCP integration, the <span class="mono">/reflect</span> command, and contextual skills.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">GitHub MCP Server</span>
+        </div>
+        <div class="step-body">
+          <p>The included <span class="mono">.mcp.json.example</span> configures the GitHub MCP server, giving Claude read access to GitHub issues, PRs, and code search inside any session.</p>
+          <ol style="margin-left:20px">
+            <li>Install the binary — see <a href="https://github.com/github/github-mcp-server" style="color:var(--blue)">github.com/github/github-mcp-server</a>.</li>
+            <li>Copy and configure:
+              <div class="code-block" style="margin-top:8px">
+<div>cp .mcp.json.example ~/.claude/.mcp.json</div>
+<div class="comment"># Edit ~/.claude/.mcp.json:</div>
+<div class="comment">#   - Replace /path/to/github-mcp-server with the actual binary path</div>
+<div class="comment">#   - Replace ghp_your_readonly_pat_here with a real read-only PAT</div>
+              </div>
+            </li>
+            <li>Restart Claude Code. Run <span class="mono">/mcp</span> to confirm the server is connected.</li>
+          </ol>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Scope:</strong> <span class="mono">~/.claude/.mcp.json</span> makes the server available in all projects. For per-project scope, place the file at <span class="mono">.claude/.mcp.json</span> inside the repo instead.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">/reflect slash command</span>
+        </div>
+        <div class="step-body">
+          <p>Run <span class="mono">/reflect</span> at the end of any IMPL or AUDIT session. Claude reads the recent git log and diff, then outputs a formatted table of suggested CLAUDE.md additions — ready to copy and paste.</p>
+          <div class="code-block">
+<div class="comment"># Install once:</div>
+<div>mkdir -p ~/.claude/commands</div>
+<div>cp commands/reflect.md ~/.claude/commands/reflect.md</div>
+          </div>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <div><span class="mono">/reflect</span> never edits CLAUDE.md directly. It outputs suggestions — you decide what to incorporate.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <span class="step-title">Contextual skills</span>
+        </div>
+        <div class="step-body">
+          <p>Three skills that load relevant instructions automatically when Claude is doing review or test work:</p>
+          <table class="data-table">
+            <tr><th>Skill</th><th>Pane</th><th>Adds</th></tr>
+            <tr><td><span class="mono">code-review</span></td><td>AUDIT</td><td>Project-specific review conventions</td></tr>
+            <tr><td><span class="mono">security-audit</span></td><td>AUDIT</td><td>Security checklist and vulnerability patterns</td></tr>
+            <tr><td><span class="mono">testing</span></td><td>IMPL</td><td>pytest conventions matching the project</td></tr>
+          </table>
+          <div class="code-block" style="margin-top:12px">
+<div class="comment"># Install once:</div>
+<div>cp -r skills/ ~/.claude/skills/</div>
+          </div>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">Skills activate automatically — no manual invocation needed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 17 -->
+  <div class="section" id="s17">
+    <div class="section-header">
+      <span class="section-num">17</span>
       <h2>Troubleshooting</h2>
     </div>
     <p class="section-intro">Common failure modes and how to fix them.</p>
