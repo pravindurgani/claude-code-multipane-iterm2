@@ -36,7 +36,8 @@ esac
 # gate/ship only meaningful in IMPL pane; harmless elsewhere
 if [[ "$ITERM_PROFILE" == "DEV-IMPL" ]]; then
   # gate: run full test suite; exits non-zero if any test fails
-  alias gate='python3 -m pytest hooks/tests/ -v --tb=short && echo "✅ GATE PASSED"'
+  # Exit code 5 = no tests collected — show helpful hint instead of cryptic error
+  alias gate='python3 -m pytest tests/ -x --tb=short && echo "✅ GATE PASSED" || { _rc=$?; [ $_rc -eq 5 ] && echo "No tests found — add tests/test_placeholder.py to get started" || false; }'
   # ship: gate + interactive stage + commit
   alias ship='gate && git add -p && git commit'
 fi

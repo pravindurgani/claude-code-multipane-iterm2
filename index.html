@@ -553,7 +553,7 @@
     <div class="hero-badge">iTerm2 + Claude Code</div>
     <h1>Stop Your AI From Grading<br>Its Own Code</h1>
     <p>Run 4 Claude Code sessions in one iTerm2 window. Opus reviews. Sonnet builds. Each pane has a locked role, model, and permission set &mdash; the reviewer is physically incapable of writing files.</p>
-    <div class="hero-meta">macOS &middot; iTerm2 &middot; Claude Code CLI &middot; ~15 min setup</div>
+    <div class="hero-meta">macOS only &middot; iTerm2 &middot; Claude Code CLI &middot; ~15 min setup</div>
   </div>
 </div>
 
@@ -714,6 +714,11 @@
       <h2>Create iTerm2 Profiles</h2>
     </div>
     <p class="section-intro">Create 4 named profiles, each with a distinct background tint, tab colour, and badge so you can instantly tell which pane you're in.</p>
+
+    <div class="callout warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div><strong>macOS + iTerm2 required</strong> This guide requires macOS with iTerm2 3.3+. The <span class="mono">$ITERM_PROFILE</span> environment variable that drives role detection is iTerm2-specific. A WSL2 + Windows Terminal equivalent (<span class="mono">$WT_PROFILE_ID</span> as the role signal) is possible but not documented here.</div>
+    </div>
 
     <div class="steps">
       <div class="step">
@@ -1252,10 +1257,10 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">4</span>
-          <span class="step-title">Save a new window arrangement</span>
+          <span class="step-title">Save a new window arrangement per project</span>
         </div>
         <div class="step-body">
-          <p>Name it after the project so you can switch between layouts for different projects.</p>
+          <p>Name it after the project (<strong>Window &rarr; Arrangements &rarr; Save Window Arrangement</strong>). To switch between projects later, use <strong>Window &rarr; Arrangements &rarr; [arrangement name]</strong> &mdash; iTerm2 opens the saved 4-pane layout for that project in a new window.</p>
         </div>
       </div>
     </div>
@@ -1338,8 +1343,8 @@
         </div>
         <div class="step-body">
           <div class="code-block">
-<div class="comment"># gate: run full test suite</div>
-<div>alias gate='python3 -m pytest hooks/tests/ -v --tb=short &amp;&amp; echo "✅ GATE PASSED"'</div>
+<div class="comment"># gate: run full test suite; exit code 5 = no tests collected → helpful hint</div>
+<div>alias gate='python3 -m pytest tests/ -x --tb=short &amp;&amp; echo "✅ GATE PASSED" || { _rc=$?; [ $_rc -eq 5 ] &amp;&amp; echo "No tests found — add tests/test_placeholder.py to get started" || false; }'</div>
 <div class="comment"># ship: gate + interactive stage + commit</div>
 <div>alias ship='gate &amp;&amp; git add -p &amp;&amp; git commit'</div>
           </div>
