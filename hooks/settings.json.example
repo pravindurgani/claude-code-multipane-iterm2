@@ -1,6 +1,9 @@
 # Copy the hooks block into your ~/.claude/settings.json. Adjust $HOME if needed.
 # NOTE: This file is NOT valid JSON — strip this comment before using json.load().
 {
+  "env": {
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"
+  },
   "hooks": {
     "PreToolUse": [
       {
