@@ -53,6 +53,8 @@ This workflow depends on iTerm2-specific features:
 - **[iTerm2](https://iterm2.com/)** — required for split panes, named profiles, and saved layouts
 - **[Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code)** with an active subscription
 
+> **Windows/Linux:** This setup requires macOS with iTerm2. A WSL2 + Windows Terminal port is possible (`$WT_PROFILE_ID` as the role signal) but not documented here — contributions welcome.
+
 ---
 
 ## Quick start
@@ -102,6 +104,13 @@ Claude Code merges both automatically. Use `CLAUDE.md.template` and
 `REFERENCE.md.template` as starting points. See Step 14 in the full guide.
 
 ---
+
+## What this is NOT
+
+- Not an agent orchestrator. No background processes, no task queues, no dashboards.
+- Not autonomous. You run four focused sessions, you drive each one, you decide when work moves between panes.
+- Not a replacement for CI/CD. The `gate` alias is a local quality gate — your regular pipeline still runs.
+- Not Windows-native. Requires macOS with iTerm2.
 
 If this saves you time, a ⭐ helps others find it.
 

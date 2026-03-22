@@ -229,7 +229,7 @@ The alias (set up in Step 3) expands to the correct command per pane:
 | Flag                              | Purpose                                    |
 |-----------------------------------|--------------------------------------------|
 | `--model opus`                    | Use Opus (aliases: `opus`, `sonnet`, `haiku`, or full ID like `claude-opus-4-6`) |
-| `--effort high`                   | Effort level: `low`, `medium`, `high`, `max` |
+| `--effort high`                   | Thinking budget: `low` = fast, minimal reasoning; `medium` = balanced; `high` = extended reasoning, more tokens; `max` = maximum depth. PLAN uses `low` — architectural discussion doesn't need deep reasoning chains. |
 | `--permission-mode plan`          | Read-only — Claude can't write files       |
 | `--permission-mode acceptEdits`   | Auto-accept file edits without asking      |
 | `--append-system-prompt "..."`    | Add custom instructions on top of defaults |
@@ -478,6 +478,15 @@ every session; never overwrite old entries.
 - **Next**: open items or follow-ups for the next session
 ```
 
+Real example:
+
+```markdown
+### 2026-03-22 — Add rate-limit retry to API client
+- **Done**: Implemented exponential backoff in api_client.py. All 24 tests pass.
+- **Decisions**: Max 3 retries, 2s base delay. Errors logged with context, not raised.
+- **Next**: AUDIT review of api_client.py. Then wire retry into pipeline scheduler.
+```
+
 At the start of every IMPL session, Claude reads the last 60 lines of
 `SESSION_LOG.md` to pick up where work stopped.
 
@@ -513,6 +522,90 @@ Two starter templates are included in this repo:
 
 > **Tip:** Start `~/.claude/CLAUDE.md` with a one-line role statement
 > ("I am a senior data engineer…") so every session starts with the right frame.
+
+---
+
+## Troubleshooting
+
+### T1 — `$ITERM_PROFILE` is empty, `cc` launches with wrong model
+
+**Symptom:** `echo $ITERM_PROFILE` returns nothing. The `cc` alias falls through with no model flags.
+
+**Cause:** Old iTerm2 version (< 3.3) or the pane was opened before the profile was applied.
+
+**Fix:**
+- Update iTerm2 to 3.3+ (Help → Check For Updates).
+- Reopen the pane via **Profiles → [your profile name] → Open in current tab**.
+- Confirm: `echo $ITERM_PROFILE` should print `DEV-AUDIT`, etc.
+
+---
+
+### T2 — `cc` launches the C compiler instead of Claude
+
+**Symptom:** `which cc` shows `/usr/bin/cc`. Typing `cc` outputs compiler error messages.
+
+**Fix:** Rename the alias in `~/.zshrc`. Replace all 4 `alias cc=` occurrences with `alias cl=` (or any name), then `source ~/.zshrc`.
+
+---
+
+### T3 — Hooks not firing
+
+**Symptom:** `.env` edits or `git push` commands are not blocked by Claude.
+
+```bash
+# Check 1 — files exist
+ls ~/.claude/hooks/
+# Expected: protect-env.py  protect-git-push.py  circuit-breaker.py  session-start-reset.py
+
+# Check 2 — python3 available
+which python3  # must return a path; if missing: brew install python3
+
+# Check 3 — settings.json is valid
+python3 -m json.tool ~/.claude/settings.json  # prints formatted JSON on success
+```
+
+---
+
+### T4 — Circuit-breaker stuck after tool failures
+
+**Symptom:** Claude is blocked and won't proceed.
+
+**Fix A:** Press `Ctrl+C`, then `cc`. The `session-start-reset.py` hook fires on session start and resets the counter automatically.
+
+**Fix B:** Delete the state file (it lives in the project root, where Claude Code was launched from):
+```bash
+rm -f ./circuit-breaker-state.json
+# Then /clear inside Claude Code to reset conversation context.
+```
+
+---
+
+### T5 — `gate` fails with "pytest not found" or 0 tests collected
+
+- Activate your venv first: `source venv/bin/activate` (or `.venv/bin/activate`).
+- Verify: `which pytest` should point inside your venv. If not: `pip install pytest`.
+- If there are no test files yet, add a placeholder: `touch tests/test_placeholder.py`.
+
+---
+
+### T6 — Need to push to git — hook is blocking it
+
+The `protect-git-push.py` hook blocks Claude from pushing autonomously. You can always push from a regular shell prompt — hooks only intercept tool calls inside a Claude Code session.
+
+```bash
+# Open a new tab (not inside a Claude session) and run:
+git push
+```
+
+---
+
+### T7 — Claude CLI update broke the `cc` alias
+
+**Symptom:** After `npm update -g @anthropic-ai/claude-code`, `cc` errors with an unknown flag.
+
+1. Run `claude --help` to see current supported flags.
+2. Update the alias block in `~/.zshrc` to match, then `source ~/.zshrc`.
+3. Run `claude --version` to confirm your installed version. This guide was verified against v2.1.72 (March 2026).
 
 ---
 

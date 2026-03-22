@@ -551,8 +551,8 @@
 <div class="hero">
   <div class="hero-inner">
     <div class="hero-badge">iTerm2 + Claude Code</div>
-    <h1>Run 4 Claude Code Sessions<br>in One Terminal Window</h1>
-    <p>A step-by-step guide to set up role-based panes &mdash; one for code, one for review, one for planning, one for prompts. Each with the right model, effort level, and permissions.</p>
+    <h1>Stop Your AI From Grading<br>Its Own Code</h1>
+    <p>Run 4 Claude Code sessions in one iTerm2 window. Opus reviews. Sonnet builds. Each pane has a locked role, model, and permission set &mdash; the reviewer is physically incapable of writing files.</p>
     <div class="hero-meta">macOS &middot; iTerm2 &middot; Claude Code CLI &middot; ~15 min setup</div>
   </div>
 </div>
@@ -578,6 +578,7 @@
       <li><a href="#s13"><span class="toc-num">13</span> SESSION_LOG cold-start fix</a></li>
       <li><a href="#s14"><span class="toc-num">14</span> CLAUDE.md split pattern</a></li>
       <li><a href="#s15"><span class="toc-num">15</span> Cheatsheet</a></li>
+      <li><a href="#s16"><span class="toc-num">16</span> Troubleshooting</a></li>
     </ul>
   </div>
 
@@ -650,6 +651,11 @@
     <div class="callout warn">
       <span class="callout-icon">&#9888;&#65039;</span>
       <div><strong>Cost awareness</strong> Opus is ~15x more expensive than Sonnet per token. Only use the AUDIT pane for reviewing completed, tested work &mdash; never for code generation.</div>
+    </div>
+
+    <div class="callout tip" style="margin-top:16px">
+      <span class="callout-icon">&#128221;</span>
+      <div><strong>What this is NOT</strong> This is not an agent orchestrator. There are no background processes, no task queues, no dashboards. You run four focused sessions, you drive each one, you decide when work moves between panes. If you want 50 agents running unattended, other tools exist for that. This setup is for developers who want control, not automation.</div>
     </div>
   </div>
 
@@ -1037,7 +1043,7 @@
           <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
           <tbody>
             <tr><td class="cell-mono">--model opus|sonnet|haiku</td><td>Model selection (or full IDs like <span class="mono">claude-opus-4-6</span>)</td></tr>
-            <tr><td class="cell-mono">--effort low|medium|high|max</td><td>How much thinking effort Claude uses</td></tr>
+            <tr><td class="cell-mono">--effort low|medium|high|max</td><td>Thinking budget: <span class="mono">low</span> = fast, minimal reasoning; <span class="mono">medium</span> = balanced; <span class="mono">high</span> = extended reasoning chains, more tokens; <span class="mono">max</span> = maximum depth (slowest, most expensive). PLAN uses <span class="mono">low</span> — architectural discussion doesn't need deep reasoning chains.</td></tr>
             <tr><td class="cell-mono">--permission-mode plan</td><td>Read-only &mdash; Claude cannot write files</td></tr>
             <tr><td class="cell-mono">--permission-mode acceptEdits</td><td>Auto-accept file edits without prompting</td></tr>
             <tr><td class="cell-mono">--append-system-prompt "..."</td><td>Add custom instructions on top of defaults</td></tr>
@@ -1382,6 +1388,13 @@
 <div>- **Decisions**: any architectural choices made</div>
 <div>- **Next**: open items for the next session</div>
           </div>
+          <p style="font-size:14px;color:var(--text-secondary);margin-top:12px;margin-bottom:4px;">Real example:</p>
+          <div class="code-block">
+<div>### 2026-03-22 — Add rate-limit retry to API client</div>
+<div>- **Done**: Implemented exponential backoff in api_client.py. All 24 tests pass.</div>
+<div>- **Decisions**: Max 3 retries, 2s base delay. Errors logged with context, not raised.</div>
+<div>- **Next**: AUDIT review of api_client.py. Then wire retry into pipeline scheduler.</div>
+          </div>
         </div>
       </div>
 
@@ -1540,6 +1553,144 @@
           </table>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- SECTION 16 -->
+  <div class="section" id="s16">
+    <div class="section-header">
+      <span class="section-num">16</span>
+      <h2>Troubleshooting</h2>
+    </div>
+    <p class="section-intro">Common failure modes and how to fix them.</p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T1</span>
+          <span class="step-title"><span class="mono">$ITERM_PROFILE</span> is empty &mdash; <span class="mono">cc</span> launches the wrong model</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> <span class="mono">echo $ITERM_PROFILE</span> returns nothing. The <span class="mono">cc</span> alias falls through with no model flags.</p>
+          <p><strong>Cause:</strong> Old iTerm2 version (&lt; 3.3) or the pane was opened before the profile was applied.</p>
+          <p><strong>Fix:</strong></p>
+          <ul>
+            <li>Update iTerm2 to 3.3 or later (Help &rarr; Check For Updates).</li>
+            <li>Close and reopen the pane by selecting the profile explicitly: <strong>Profiles &rarr; [your profile name]</strong> &rarr; Open in current tab.</li>
+            <li>Confirm with: <span class="mono">echo $ITERM_PROFILE</span> &mdash; should print <span class="mono">DEV-AUDIT</span>, etc.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T2</span>
+          <span class="step-title"><span class="mono">cc</span> launches the C compiler instead of Claude</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> <span class="mono">which cc</span> shows <span class="mono">/usr/bin/cc</span>. Typing <span class="mono">cc</span> outputs compiler error messages.</p>
+          <p><strong>Fix:</strong> Rename the alias in <span class="mono">~/.zshrc</span>. Replace all 4 <span class="mono">alias cc=</span> occurrences with <span class="mono">alias cl=</span> (or any name you prefer), then reload:</p>
+          <div class="code-block">
+<div class="comment"># In ~/.zshrc — change all 4 occurrences:</div>
+<div>DEV-AUDIT)  alias cl='claude --model opus --effort high --permission-mode plan' ;;</div>
+<div>DEV-IMPL)   alias cl='claude --model sonnet --effort high --permission-mode acceptEdits' ;;</div>
+<div class="comment"># ... then:</div>
+<div>source ~/.zshrc</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T3</span>
+          <span class="step-title">Hooks not firing &mdash; <span class="mono">.env</span> edits or <span class="mono">git push</span> not blocked</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Check 1 &mdash; Hook files exist:</strong></p>
+          <div class="code-block">
+<div>ls ~/.claude/hooks/</div>
+<div class="comment"># Expected: protect-env.py  protect-git-push.py  circuit-breaker.py  session-start-reset.py</div>
+          </div>
+          <p><strong>Check 2 &mdash; Python 3 is available:</strong></p>
+          <div class="code-block">
+<div>which python3</div>
+<div class="comment"># Must return a path. If missing: brew install python3</div>
+          </div>
+          <p><strong>Check 3 &mdash; settings.json is valid JSON:</strong></p>
+          <div class="code-block">
+<div>python3 -m json.tool ~/.claude/settings.json</div>
+<div class="comment"># Prints formatted JSON on success. Any error = invalid JSON in the file.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T4</span>
+          <span class="step-title">Circuit-breaker stuck &mdash; session halted after tool failures</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> Claude is blocked and won't proceed. The circuit-breaker tripped after 3 consecutive tool failures.</p>
+          <p><strong>Fix A &mdash; Start a new session:</strong> Press <span class="mono">Ctrl+C</span>, then type <span class="mono">cc</span>. The <span class="mono">session-start-reset.py</span> hook fires automatically on session start and resets the counter.</p>
+          <p><strong>Fix B &mdash; Reset the state file directly:</strong></p>
+          <div class="code-block">
+<div class="comment"># Run from your project root (where Claude Code was launched from)</div>
+<div>rm -f ./circuit-breaker-state.json</div>
+<div class="comment"># Then /clear inside Claude Code to reset conversation context.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T5</span>
+          <span class="step-title"><span class="mono">gate</span> fails with "pytest not found" or collects 0 tests</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> <span class="mono">gate</span> exits non-zero immediately or pytest reports <span class="mono">collected 0 items</span>.</p>
+          <ul>
+            <li><strong>Venv not active:</strong> Run <span class="mono">source venv/bin/activate</span> (or <span class="mono">source .venv/bin/activate</span>) before running <span class="mono">gate</span>.</li>
+            <li><strong>pytest not installed:</strong> <span class="mono">which pytest</span> should point inside your venv. If not: <span class="mono">pip install pytest</span>.</li>
+            <li><strong>No test files yet:</strong> Add a placeholder so the intent is explicit: <span class="mono">touch tests/test_placeholder.py</span> with a single passing test.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T6</span>
+          <span class="step-title">Need to push to git &mdash; hook is blocking it</span>
+        </div>
+        <div class="step-body">
+          <p>The <span class="mono">protect-git-push.py</span> hook blocks Claude from running <span class="mono">git push</span> autonomously. <em>You</em> can always push directly from a regular terminal prompt &mdash; hooks only intercept tool calls inside a Claude Code session.</p>
+          <div class="code-block">
+<div class="comment"># Open a new iTerm2 tab (not inside a Claude session) and run:</div>
+<div>git push</div>
+          </div>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <div>This is by design. Review the diff yourself before pushing &mdash; that's the point of the hook.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T7</span>
+          <span class="step-title">Claude CLI update broke the <span class="mono">cc</span> alias</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> After <span class="mono">npm update -g @anthropic-ai/claude-code</span>, typing <span class="mono">cc</span> errors with an unknown flag message.</p>
+          <ol style="margin-left:20px">
+            <li>Run <span class="mono">claude --help</span> to see current supported flags.</li>
+            <li>Update the alias block in <span class="mono">~/.zshrc</span> to match, then <span class="mono">source ~/.zshrc</span>.</li>
+            <li><strong>Most stable flags:</strong> <span class="mono">--model</span> and <span class="mono">--effort</span> have been stable across versions. <span class="mono">--permission-mode</span> values are also stable. Check the Claude Code release notes for breaking changes.</li>
+          </ol>
+          <p style="font-size:14px;color:var(--text-muted);margin-top:8px;">Run <span class="mono">claude --version</span> to check your installed version. This guide was verified against v2.1.72 (March 2026).</p>
+        </div>
+      </div>
+
     </div>
   </div>
 
