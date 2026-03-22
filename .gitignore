@@ -8,6 +8,9 @@ circuit-breaker-state.json
 # Session log archive
 SESSION_LOG.archive.md
 
+# Draft pages
+best-usecase-guide.html
+
 # macOS
 .DS_Store
 support-files/
