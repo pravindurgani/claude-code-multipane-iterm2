@@ -577,6 +577,7 @@
       <li><a href="#s12"><span class="toc-num">12</span> gate/ship workflow</a></li>
       <li><a href="#s13"><span class="toc-num">13</span> SESSION_LOG cold-start fix</a></li>
       <li><a href="#s14"><span class="toc-num">14</span> CLAUDE.md split pattern</a></li>
+      <li><a href="#s15"><span class="toc-num">15</span> Cheatsheet</a></li>
     </ul>
   </div>
 
@@ -1254,8 +1255,6 @@
     </div>
   </div>
 
-</div>
-
   <!-- SECTION 11 -->
   <div class="section" id="s11">
     <div class="section-header">
@@ -1288,6 +1287,10 @@
         </div>
         <div class="step-body">
           <p>Open (or create) <span class="mono">~/.claude/settings.json</span>. Copy the <span class="mono">"hooks"</span> block from <span class="mono">hooks/settings.json.example</span> into the top level of the JSON object. All <span class="mono">"command"</span> values use <span class="mono">$HOME</span> — Claude Code does not expand <span class="mono">~</span>.</p>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Why <code>$HOME</code> instead of <code>~</code>?</strong> Claude Code does not expand <span class="mono">~</span> in hook command strings. Use <span class="mono">$HOME</span> which the shell expands at execution time, or replace with your full absolute path.</div>
+          </div>
         </div>
       </div>
 
@@ -1297,13 +1300,17 @@
           <span class="step-title">What each hook does</span>
         </div>
         <div class="step-body">
-          <table>
+          <table class="data-table">
             <tr><th>Hook</th><th>Tier</th><th>Blocks when</th></tr>
             <tr><td><span class="mono">protect-env.py</span></td><td>PreToolUse</td><td>Edit/Write/MultiEdit targets any <span class="mono">.env</span> file</td></tr>
             <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td>Bash command matches <span class="mono">git … push</span></td></tr>
             <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
             <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter — never blocks)</td></tr>
           </table>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <div><strong>macOS and Linux only</strong> The hook scripts use <span class="mono">fcntl</span> for file locking, which is not available on Windows. This matches the iTerm2 requirement (macOS only).</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1343,7 +1350,11 @@
           <div class="code-block">
 <div>IMPL → implement → gate (must pass) → AUDIT → findings → IMPL → fix → gate → AUDIT</div>
           </div>
-          <p>Never send work to AUDIT until <span class="mono">gate</span> passes. Sending failing code to the review pane wastes its context window on defects the test suite already catches.</p>
+          <p>Never send work to AUDIT until <span class="mono">gate</span> passes.</p>
+          <div class="callout success">
+            <span class="callout-icon">&#10003;</span>
+            <div><strong>Why this matters</strong> Sending failing code to AUDIT wastes Opus tokens on defects the test suite already catches. The <span class="mono">gate</span> alias makes this impossible to forget.</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1401,12 +1412,16 @@
           <span class="step-title">Two files, two scopes</span>
         </div>
         <div class="step-body">
-          <table>
+          <table class="data-table">
             <tr><th>File</th><th>Location</th><th>Committed?</th><th>Contains</th></tr>
             <tr><td><span class="mono">CLAUDE.md</span></td><td><span class="mono">~/.claude/</span></td><td>No — personal</td><td>Coding conventions, error-handling policy, tool preferences</td></tr>
             <tr><td><span class="mono">CLAUDE.md</span></td><td><span class="mono">.claude/</span> (repo)</td><td>Yes</td><td>Project architecture, active constraints, session continuity</td></tr>
           </table>
           <p>Claude Code merges both automatically — global first, project-specific second.</p>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Keep global rules lean</strong> Your <span class="mono">~/.claude/CLAUDE.md</span> is loaded into every session across every project. Aim for under 80 lines — move project-specific detail into the repo's <span class="mono">.claude/CLAUDE.md</span>.</div>
+          </div>
         </div>
       </div>
 
@@ -1426,6 +1441,109 @@
       </div>
     </div>
   </div>
+
+  <!-- SECTION 15 -->
+  <div class="section" id="s15">
+    <div class="section-header">
+      <span class="section-num">15</span>
+      <h2>Cheatsheet</h2>
+    </div>
+    <p class="section-intro">Everything on one screen — copy, paste, go.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Pane roles</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Pane</th><th>Model</th><th>Effort</th><th>Permission</th><th>Purpose</th></tr>
+            <tr><td><span class="mono">AUDIT</span></td><td>Opus</td><td>high</td><td><span class="mono">plan</span></td><td>Code review (read-only)</td></tr>
+            <tr><td><span class="mono">IMPL</span></td><td>Sonnet</td><td>high</td><td><span class="mono">acceptEdits</span></td><td>Write code + run tests</td></tr>
+            <tr><td><span class="mono">PROMPT</span></td><td>Sonnet</td><td>medium</td><td>default</td><td>Prompt engineering</td></tr>
+            <tr><td><span class="mono">PLAN</span></td><td>Sonnet</td><td>low</td><td>default</td><td>Architecture + planning</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Shell aliases</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Alias</th><th>Pane</th><th>What it does</th></tr>
+            <tr><td><span class="mono">cc</span></td><td>All</td><td>Launch Claude Code with role-correct flags</td></tr>
+            <tr><td><span class="mono">gate</span></td><td>IMPL</td><td>Run full test suite — must pass before AUDIT handoff</td></tr>
+            <tr><td><span class="mono">ship</span></td><td>IMPL</td><td><span class="mono">gate</span> + <span class="mono">git add -p</span> + <span class="mono">git commit</span></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <span class="step-title">Keyboard shortcuts</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Shortcut</th><th>Action</th></tr>
+            <tr><td><span class="mono">⌘⌥ ←/→/↑/↓</span></td><td>Switch panes</td></tr>
+            <tr><td><span class="mono">⌘⇧↵</span></td><td>Zoom/unzoom pane</td></tr>
+            <tr><td><span class="mono">⌘D</span></td><td>Split right</td></tr>
+            <tr><td><span class="mono">⌘⇧D</span></td><td>Split down</td></tr>
+            <tr><td><span class="mono">Esc</span></td><td>Stop Claude generation</td></tr>
+            <tr><td><span class="mono">/clear</span></td><td>Reset conversation context</td></tr>
+            <tr><td><span class="mono">/compact</span></td><td>Compress context (keep history)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">4</span>
+          <span class="step-title">Daily workflow</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div class="comment"># Morning</div>
+<div>1. Open iTerm2 (arrangement auto-restores)</div>
+<div>2. Type <span class="str">cc</span> in each pane</div>
+<div>&nbsp;</div>
+<div class="comment"># Working</div>
+<div>3. PLAN → discuss approach (no writes)</div>
+<div>4. IMPL → implement → <span class="str">gate</span> (must pass)</div>
+<div>5. AUDIT → review changed files → findings back to IMPL</div>
+<div>&nbsp;</div>
+<div class="comment"># End of day</div>
+<div>6. IMPL → <span class="str">ship</span> (gate + stage + commit)</div>
+<div>7. Update SESSION_LOG.md</div>
+<div>8. /compact in long sessions</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">5</span>
+          <span class="step-title">Safety hooks</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Hook</th><th>Event</th><th>Blocks</th></tr>
+            <tr><td><span class="mono">protect-env.py</span></td><td>PreToolUse</td><td>Any edit to <span class="mono">.env</span> files</td></tr>
+            <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td><span class="mono">git push</span> commands</td></tr>
+            <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
+            <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter)</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 <div class="footer">
   <span>iTerm2 + Claude Code &middot; 4-Pane Setup Guide</span>
