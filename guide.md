@@ -1,7 +1,7 @@
 # iTerm2 Multi-Pane Claude Code Setup — Universal Reference
 
 > Corrected, battle-tested version. Implemented and verified on macOS with
-> iTerm2 + Claude Code v2.1.72. Reusable for any project. March 2026.
+> iTerm2 + Claude Code v2.1.81. Reusable for any project. March 2026.
 
 ---
 
@@ -241,7 +241,7 @@ The alias (set up in Step 3) expands to the correct command per pane:
 > commands. Only use `--dangerously-skip-permissions` in fully sandboxed
 > environments.
 
-> **Version note:** Flags verified against Claude Code v2.1.72 (March 2026).
+> **Version note:** Flags verified against Claude Code v2.1.81 (March 2026).
 > CLI tools update frequently — run `claude --help` if a flag isn't recognised.
 
 ---
@@ -678,7 +678,7 @@ git push
 
 1. Run `claude --help` to see current supported flags.
 2. Update the alias block in `~/.zshrc` to match, then `source ~/.zshrc`.
-3. Run `claude --version` to confirm your installed version. This guide was verified against v2.1.72 (March 2026).
+3. Run `claude --version` to confirm your installed version. This guide was verified against v2.1.81 (March 2026).
 
 ---
 
