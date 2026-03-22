@@ -1,0 +1,46 @@
+# CLAUDE.md — Global Rules
+
+> Copy this file to ~/.claude/CLAUDE.md and fill in each section.
+> This file is personal — do not commit it to any repository.
+> Project-specific rules belong in .claude/CLAUDE.md inside the repo.
+
+---
+
+## Project Overview
+
+<!-- One paragraph: what this project does and who uses it. -->
+
+---
+
+## Architecture Decisions
+
+<!-- Record active architectural decisions that Claude should respect.
+     Example format:
+     - Use functional-first style (~70% functions, ~30% classes).
+     - Classes only for: dataclasses, Pydantic models, ABCs, framework integrations.
+     - No speculative abstractions — if a function works, do not wrap it.
+-->
+
+---
+
+## Active Constraints
+
+<!-- Hard rules Claude must never violate in this project.
+     Example format:
+     - Never expose API keys or .env file contents.
+     - Never git push without explicit user confirmation.
+     - Never commit large data files (csv, xlsx, db, sqlite).
+     - Never modify .env files without explicit permission.
+     - Never install packages globally — use project venv.
+-->
+
+---
+
+## Session Continuity Instructions
+
+<!-- What Claude should do at the start of every session.
+     Example format:
+     1. Read SESSION_LOG.md (last 60 lines) and surface the most recent "Next:" items.
+     2. Run git status and git log --oneline -5 to confirm current branch state.
+     3. Confirm starting state, target state, and scope with me before writing code.
+-->

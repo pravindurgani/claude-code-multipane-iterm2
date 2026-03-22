@@ -57,7 +57,7 @@ window arrangement restores.
 | `DEV-PLAN`   | `#0d0b00`     | `#f59e0b` (amber)  | Planning / Architecture|
 
 > **Naming convention for project-specific profiles:** Replace `DEV` with a
-> short project prefix (e.g. `SS` for SensiSpend, `WEB` for a web app).
+> short project prefix (e.g. `PROJ` for your project, `WEB` for a web app).
 
 For each profile:
 
@@ -324,12 +324,8 @@ Fix this while preserving existing patterns. Do not touch unrelated files.
 
 ### Test-before-audit gate
 
-Never send work to AUDIT until tests pass:
-
-```bash
-# Add to ~/.zshrc if desired
-alias audit-ready='pytest tests/ -v --tb=short && echo "Ready for AUDIT pane"'
-```
+Never send work to AUDIT until tests pass. Use the `gate` alias in the IMPL
+pane (see Step 12) to run the full test suite before handing off to AUDIT.
 
 ---
 
@@ -361,12 +357,162 @@ alias audit-ready='pytest tests/ -v --tb=short && echo "Ready for AUDIT pane"'
 
 To adapt this setup for a different project:
 
-1. **Rename profiles:** `DEV-AUDIT` → `SS-AUDIT` (for SensiSpend), etc.
+1. **Rename profiles:** `DEV-AUDIT` → `MYPROJECT-AUDIT`, etc.
 2. **Update Initial directory** in each profile to the new project path.
 3. **Update `~/.zshrc`** — add new `case` entries matching the new profile
-   names (e.g. `SS-AUDIT`).
+   names (e.g. `MYPROJECT-AUDIT`).
 4. **Add project-specific slash commands** to `.claude/commands/`.
 5. **Save a project-specific arrangement** named after the project.
+
+---
+
+## Step 11 — Two-Tier Hook Architecture
+
+Claude Code hooks run scripts before and after tool use to enforce safety
+invariants that prompt instructions alone cannot guarantee.
+
+### Two tiers
+
+| Tier | Event | Purpose |
+|------|-------|---------|
+| **PreToolUse** | Before the tool executes | Block dangerous actions before they happen |
+| **PostToolUse** | After the tool returns | Observe outcomes; trip circuit-breaker on repeat failures |
+| **SessionStart** | When a new session opens | Reset counters; validate session state |
+
+### Setup
+
+1. Copy the hook scripts to `~/.claude/hooks/`:
+   ```bash
+   mkdir -p ~/.claude/hooks
+   cp hooks/protect-env.py ~/.claude/hooks/
+   cp hooks/protect-git-push.py ~/.claude/hooks/
+   cp hooks/circuit-breaker.py ~/.claude/hooks/
+   cp hooks/session-start-reset.py ~/.claude/hooks/
+   ```
+
+2. Merge the hooks block into `~/.claude/settings.json`:
+   - Open (or create) `~/.claude/settings.json`.
+   - Copy the `"hooks"` block from `hooks/settings.json.example` into the top
+     level of the JSON object.
+   - All `"command"` values use `$HOME` — Claude Code does not expand `~`.
+
+### What each hook does
+
+| Hook | Tier | Blocks when |
+|------|------|------------|
+| `protect-env.py` | PreToolUse | Edit/Write/MultiEdit targets any `.env` file |
+| `protect-git-push.py` | PreToolUse | Bash command matches `git … push` (any flag order) |
+| `circuit-breaker.py` | PostToolUse | 3 consecutive tool failures in a session |
+| `session-start-reset.py` | SessionStart | (resets failure counter — never blocks) |
+
+> **Platform note:** Hook scripts use `fcntl` and run on macOS and Linux only.
+
+---
+
+## Step 12 — gate/ship Workflow
+
+Two aliases available in the IMPL pane (added to `zshrc-snippet.sh` — see
+Step 3 for how to apply the snippet):
+
+| Alias | What it runs | When to use |
+|-------|-------------|-------------|
+| `gate` | Full pytest suite; exits non-zero on failure | Before handing off to AUDIT |
+| `ship` | `gate` + interactive `git add -p` + `git commit` | When tests pass and work is commit-ready |
+
+### Usage in the IMPL pane
+
+```bash
+# After making changes:
+gate
+# → ... pytest output ...
+# → ✅ GATE PASSED
+
+# When ready to commit:
+ship
+# → runs gate, then prompts for staged hunks + commit message
+```
+
+`gate` and `ship` are defined only when `$ITERM_PROFILE == DEV-IMPL`. Running
+them in other panes is a harmless no-op.
+
+### The IMPL → AUDIT handoff rule
+
+```
+IMPL → implement → gate (must pass) → AUDIT → findings → IMPL → fix → gate → AUDIT
+```
+
+Never send work to AUDIT until `gate` passes. Sending failing code to the review
+pane wastes its context window on defects the test suite already catches.
+
+---
+
+## Step 13 — SESSION_LOG Cold-Start Fix
+
+### The problem
+
+When an IMPL session starts with an empty or missing `SESSION_LOG.md`, Claude
+has no prior context. It begins cold — asking for a project overview rather
+than resuming from where the last session ended.
+
+### The fix
+
+Two parts:
+
+1. **`session-start-reset.py` hook** (see Step 11) fires on `SessionStart` and
+   resets the circuit-breaker state. It is also the entry point for any
+   session-initialisation logic you add later.
+
+2. **CLAUDE.md instruction** (see Step 14): instruct Claude to read
+   `SESSION_LOG.md` on session start and surface the most recent "Next:" items
+   before doing anything else.
+
+### Minimal SESSION_LOG.md format
+
+Keep a `SESSION_LOG.md` in your project root. Append a new entry at the end of
+every session; never overwrite old entries.
+
+```markdown
+### YYYY-MM-DD — one-line task summary
+- **Done**: what was completed this session
+- **Decisions**: any architectural choices made
+- **Next**: open items or follow-ups for the next session
+```
+
+At the start of every IMPL session, Claude reads the last 60 lines of
+`SESSION_LOG.md` to pick up where work stopped.
+
+---
+
+## Step 14 — CLAUDE.md Split Pattern
+
+### Why it's needed
+
+A single `CLAUDE.md` grows with both global rules (coding style, error handling,
+tool preferences) and project-specific decisions (architecture, sprint context,
+active constraints). Mixing the two means every project's Claude session reads
+noise from unrelated projects, and global rules must be duplicated per repo.
+
+### The pattern
+
+| File | Location | Committed? | Contains |
+|------|----------|------------|---------|
+| Global rules | `~/.claude/CLAUDE.md` | No — personal | Coding conventions, error-handling policy, tool preferences |
+| Project rules | `.claude/CLAUDE.md` (repo) | Yes | Project architecture, active constraints, session continuity |
+
+Claude Code automatically merges both — global first, project-specific second.
+
+### Using the templates
+
+Two starter templates are included in this repo:
+
+- **`CLAUDE.md.template`** — copy to `~/.claude/CLAUDE.md`, fill in your
+  global rules. Do not commit this file.
+- **`REFERENCE.md.template`** — copy to `.claude/REFERENCE.md` inside your
+  project repo and commit it. The AUDIT pane uses it for sprint context and
+  known issues.
+
+> **Tip:** Start `~/.claude/CLAUDE.md` with a one-line role statement
+> ("I am a senior data engineer…") so every session starts with the right frame.
 
 ---
 
@@ -392,8 +538,10 @@ To adapt this setup for a different project:
 │  WORKFLOW                                                │
 ├──────────────────────────────────────────────────────────┤
 │  PLAN → discuss approach (no writes)                     │
-│  IMPL → implement + run tests (must pass)                │
+│  IMPL → implement + gate (must pass) → ship to commit    │
 │  AUDIT → review changed files (read-only)                │
 │  PROMPT → prompt/content changes (separate from code)    │
+│                                                          │
+│  gate = run full test suite    ship = gate + git add -p  │
 └──────────────────────────────────────────────────────────┘
 ```

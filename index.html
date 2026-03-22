@@ -573,6 +573,10 @@
       <li><a href="#s8"><span class="toc-num">08</span> Workflow &amp; tips</a></li>
       <li><a href="#s9"><span class="toc-num">09</span> Daily playbook</a></li>
       <li><a href="#s10"><span class="toc-num">10</span> Adapt for other projects</a></li>
+      <li><a href="#s11"><span class="toc-num">11</span> Two-tier hook architecture</a></li>
+      <li><a href="#s12"><span class="toc-num">12</span> gate/ship workflow</a></li>
+      <li><a href="#s13"><span class="toc-num">13</span> SESSION_LOG cold-start fix</a></li>
+      <li><a href="#s14"><span class="toc-num">14</span> CLAUDE.md split pattern</a></li>
     </ul>
   </div>
 
@@ -1207,7 +1211,7 @@
           <span class="step-title">Create new profiles (or duplicate existing ones)</span>
         </div>
         <div class="step-body">
-          <p>Use a project-specific prefix: <span class="mono">SS-AUDIT</span>, <span class="mono">SS-IMPL</span>, etc. for a project called SensiSpend. Or keep <span class="mono">DEV-*</span> and just change the directory.</p>
+          <p>Use a project-specific prefix: <span class="mono">MYPROJECT-AUDIT</span>, <span class="mono">MYPROJECT-IMPL</span>, etc. Or keep <span class="mono">DEV-*</span> and just change the directory.</p>
         </div>
       </div>
 
@@ -1229,11 +1233,11 @@
         <div class="step-body">
           <p>Add matching entries in both <span class="mono">case</span> blocks for the new names:</p>
           <div class="code-block">
-<div class="comment"># Example for a project called SensiSpend</div>
-<div><span class="str">SS-AUDIT</span>)</div>
+<div class="comment"># Example with a project-specific prefix</div>
+<div><span class="str">MYPROJECT-AUDIT</span>)</div>
 <div>  PANE_ROLE=<span class="str">"AUDIT"</span></div>
 <div>  PROMPT=<span class="str">"%F{magenta}[AUDIT]%f %~ %# "</span> ;;</div>
-<div class="comment"># ... same pattern for SS-IMPL, SS-PROMPT, SS-PLAN</div>
+<div class="comment"># ... same pattern for MYPROJECT-IMPL, MYPROJECT-PROMPT, MYPROJECT-PLAN</div>
           </div>
         </div>
       </div>
@@ -1251,6 +1255,177 @@
   </div>
 
 </div>
+
+  <!-- SECTION 11 -->
+  <div class="section" id="s11">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>Two-Tier Hook Architecture</h2>
+    </div>
+    <p class="section-intro">Hook scripts enforce safety invariants that prompt instructions alone cannot guarantee — blocking dangerous tool calls before they execute and tripping a circuit-breaker on repeated failures.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Copy hook scripts to ~/.claude/hooks/</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>mkdir -p ~/.claude/hooks</div>
+<div>cp hooks/protect-env.py ~/.claude/hooks/</div>
+<div>cp hooks/protect-git-push.py ~/.claude/hooks/</div>
+<div>cp hooks/circuit-breaker.py ~/.claude/hooks/</div>
+<div>cp hooks/session-start-reset.py ~/.claude/hooks/</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Merge hooks/settings.json.example into ~/.claude/settings.json</span>
+        </div>
+        <div class="step-body">
+          <p>Open (or create) <span class="mono">~/.claude/settings.json</span>. Copy the <span class="mono">"hooks"</span> block from <span class="mono">hooks/settings.json.example</span> into the top level of the JSON object. All <span class="mono">"command"</span> values use <span class="mono">$HOME</span> — Claude Code does not expand <span class="mono">~</span>.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <span class="step-title">What each hook does</span>
+        </div>
+        <div class="step-body">
+          <table>
+            <tr><th>Hook</th><th>Tier</th><th>Blocks when</th></tr>
+            <tr><td><span class="mono">protect-env.py</span></td><td>PreToolUse</td><td>Edit/Write/MultiEdit targets any <span class="mono">.env</span> file</td></tr>
+            <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td>Bash command matches <span class="mono">git … push</span></td></tr>
+            <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
+            <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter — never blocks)</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 12 -->
+  <div class="section" id="s12">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <h2>gate/ship Workflow</h2>
+    </div>
+    <p class="section-intro">Two aliases in the IMPL pane create a hard gate between implementation and review.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">The aliases (defined in zshrc-snippet.sh)</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div class="comment"># gate: run full test suite</div>
+<div>alias gate='python3 -m pytest hooks/tests/ -v --tb=short &amp;&amp; echo "✅ GATE PASSED"'</div>
+<div class="comment"># ship: gate + interactive stage + commit</div>
+<div>alias ship='gate &amp;&amp; git add -p &amp;&amp; git commit'</div>
+          </div>
+          <p>Both aliases are only defined when <span class="mono">$ITERM_PROFILE == DEV-IMPL</span>. They are no-ops in other panes.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">The handoff rule</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>IMPL → implement → gate (must pass) → AUDIT → findings → IMPL → fix → gate → AUDIT</div>
+          </div>
+          <p>Never send work to AUDIT until <span class="mono">gate</span> passes. Sending failing code to the review pane wastes its context window on defects the test suite already catches.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 13 -->
+  <div class="section" id="s13">
+    <div class="section-header">
+      <span class="section-num">13</span>
+      <h2>SESSION_LOG Cold-Start Fix</h2>
+    </div>
+    <p class="section-intro">Without a session log, each IMPL session starts cold — Claude asks for a project overview instead of resuming from where work stopped.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Keep SESSION_LOG.md in the project root</span>
+        </div>
+        <div class="step-body">
+          <p>Append a new entry at the end of every session. Never overwrite old entries. Minimum viable format:</p>
+          <div class="code-block">
+<div>### YYYY-MM-DD — one-line task summary</div>
+<div>- **Done**: what was completed this session</div>
+<div>- **Decisions**: any architectural choices made</div>
+<div>- **Next**: open items for the next session</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Instruct Claude to read it on session start</span>
+        </div>
+        <div class="step-body">
+          <p>In your <span class="mono">~/.claude/CLAUDE.md</span> (see Step 14), add a Session Continuity instruction: <em>"At the start of every session, read the last 60 lines of SESSION_LOG.md and surface the most recent 'Next:' items before doing anything else."</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 14 -->
+  <div class="section" id="s14">
+    <div class="section-header">
+      <span class="section-num">14</span>
+      <h2>CLAUDE.md Split Pattern</h2>
+    </div>
+    <p class="section-intro">Separating global rules from project-specific rules reduces noise and prevents cross-project contamination in every Claude session.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Two files, two scopes</span>
+        </div>
+        <div class="step-body">
+          <table>
+            <tr><th>File</th><th>Location</th><th>Committed?</th><th>Contains</th></tr>
+            <tr><td><span class="mono">CLAUDE.md</span></td><td><span class="mono">~/.claude/</span></td><td>No — personal</td><td>Coding conventions, error-handling policy, tool preferences</td></tr>
+            <tr><td><span class="mono">CLAUDE.md</span></td><td><span class="mono">.claude/</span> (repo)</td><td>Yes</td><td>Project architecture, active constraints, session continuity</td></tr>
+          </table>
+          <p>Claude Code merges both automatically — global first, project-specific second.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Use the included templates</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div class="comment"># Global rules — do NOT commit</div>
+<div>cp CLAUDE.md.template ~/.claude/CLAUDE.md</div>
+<div class="comment"># Project reference — commit this</div>
+<div>cp REFERENCE.md.template .claude/REFERENCE.md</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <div class="footer">
   <span>iTerm2 + Claude Code &middot; 4-Pane Setup Guide</span>

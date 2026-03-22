@@ -28,6 +28,7 @@ Run 4 dedicated Claude Code sessions in a single iTerm2 window — each with its
 - **No self-grading** — The model that writes the code never reviews its own work.
 - **Clean context** — Each pane has a focused, independent conversation window.
 - **One-command launch** — A `cc` alias in your shell handles model, effort, and permissions automatically.
+- **Safety hooks** — PreToolUse scripts block `.env` edits and `git push` before they happen; a circuit-breaker halts the session on repeated tool failures.
 
 ---
 
@@ -63,6 +64,7 @@ This workflow depends on iTerm2-specific features:
 3. **Add the shell snippet to `~/.zshrc`** — copy-paste from [`zshrc-snippet.sh`](zshrc-snippet.sh)
 4. **Create a 2x2 pane layout** and save it as the default window arrangement
 5. **Type `cc` in each pane** — Claude Code launches with the correct flags
+6. **Merge hooks config** — copy the four `.py` files from `hooks/` to `~/.claude/hooks/`; merge the `"hooks"` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`
 
 ---
 
@@ -74,6 +76,10 @@ This workflow depends on iTerm2-specific features:
 | [`guide.md`](guide.md) | Markdown version for quick reference |
 | [`zshrc-snippet.sh`](zshrc-snippet.sh) | Copy-paste block for your `~/.zshrc` |
 | [`screenshots/`](screenshots/) | Step-by-step screenshots used in the guide |
+| [`hooks/`](hooks/) | Python hook scripts for PreToolUse/PostToolUse safety enforcement |
+| [`hooks/settings.json.example`](hooks/settings.json.example) | Hooks registration block to merge into `~/.claude/settings.json` |
+| [`CLAUDE.md.template`](CLAUDE.md.template) | Starter template for global `~/.claude/CLAUDE.md` |
+| [`REFERENCE.md.template`](REFERENCE.md.template) | Starter template for project-level `.claude/REFERENCE.md` |
 
 ---
 
@@ -82,8 +88,18 @@ This workflow depends on iTerm2-specific features:
 The setup is project-agnostic. To use it with a different codebase:
 
 1. Update the **Initial Directory** in each profile to your project path
-2. Optionally rename profiles with a project prefix (e.g. `SS-AUDIT`) and add matching `case` entries to `~/.zshrc`
+2. Optionally rename profiles with a project prefix (e.g. `MYPROJECT-AUDIT`) and add matching `case` entries to `~/.zshrc`
 3. Save a separate window arrangement per project
+
+**Session continuity:** Keep a `SESSION_LOG.md` in your project root. At the
+start of each IMPL session, instruct Claude to read the last 60 lines and
+resume from the most recent "Next:" item. See Step 13 in the full guide for
+the minimal entry format.
+
+**CLAUDE.md split:** Store global coding conventions in `~/.claude/CLAUDE.md`
+and project-specific rules in `.claude/CLAUDE.md` (committed to the repo).
+Claude Code merges both automatically. Use `CLAUDE.md.template` and
+`REFERENCE.md.template` as starting points. See Step 14 in the full guide.
 
 ---
 

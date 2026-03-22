@@ -32,3 +32,11 @@ case "$ITERM_PROFILE" in
   DEV-PROMPT) alias cc='claude --model sonnet --effort medium' ;;
   DEV-PLAN)   alias cc='claude --model sonnet --effort low' ;;
 esac
+
+# gate/ship only meaningful in IMPL pane; harmless elsewhere
+if [[ "$ITERM_PROFILE" == "DEV-IMPL" ]]; then
+  # gate: run full test suite; exits non-zero if any test fails
+  alias gate='python3 -m pytest hooks/tests/ -v --tb=short && echo "✅ GATE PASSED"'
+  # ship: gate + interactive stage + commit
+  alias ship='gate && git add -p && git commit'
+fi

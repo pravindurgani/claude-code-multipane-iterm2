@@ -1,0 +1,15 @@
+# Claude Code hook state files
+.claude/circuit-breaker-state.json
+circuit-breaker-state.json
+.claude/compact-state.json
+.claude/gate-check-state-*.json
+.claude/settings.local.json
+
+# Session log archive
+SESSION_LOG.archive.md
+
+# macOS
+.DS_Store
+support-files/
+update_multipane_iterm2.md
+step_guide.md
