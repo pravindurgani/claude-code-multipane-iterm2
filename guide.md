@@ -23,6 +23,11 @@ directory but serve different purposes.
 - Separating review from implementation prevents "self-grading" bias.
 - Each pane keeps a clean, focused context window.
 
+> **Hardware note:** This 4-pane setup runs comfortably on 16GB+ machines.
+> On systems with less than 16GB RAM, consider running 2–3 panes instead of
+> all four, or closing inactive panes between tasks. Monitor with
+> `top -l 1 | grep PhysMem` if you notice slowdowns.
+
 ---
 
 ## Why iTerm2 over macOS Terminal?
@@ -321,6 +326,9 @@ Fix this while preserving existing patterns. Do not touch unrelated files.
 - **Clear stale context:** `/clear` resets the conversation.
 - **Compress instead of clearing:** `/compact` summarises and frees context
   without losing all history.
+- **State sync before review:** Always run `/clear` in the AUDIT pane before
+  starting a review pass on code that IMPL just wrote. This ensures AUDIT reads
+  the current file contents, not stale versions cached in its context.
 
 ### Test-before-audit gate
 
@@ -336,6 +344,7 @@ pane (see Step 12) to run the full test suite before handing off to AUDIT.
 ```
 1. Open iTerm2 (arrangement auto-restores)
 2. Type "cc" in each pane
+2.5  AUDIT pane → /clear (ensures fresh context for first review)
 3. PLAN pane  → review where you left off (git log --oneline -10)
 4. IMPL pane  → quick smoke test (pytest tests/ -x --tb=short)
 5. AUDIT pane → review open issues (grep -A2 "TODO" CLAUDE.md)
@@ -388,6 +397,7 @@ invariants that prompt instructions alone cannot guarantee.
    cp hooks/protect-git-push.py ~/.claude/hooks/
    cp hooks/circuit-breaker.py ~/.claude/hooks/
    cp hooks/session-start-reset.py ~/.claude/hooks/
+   cp hooks/version-check.py ~/.claude/hooks/
    ```
 
 2. Merge the hooks block into `~/.claude/settings.json`:
@@ -409,6 +419,7 @@ invariants that prompt instructions alone cannot guarantee.
 | `protect-git-push.py` | PreToolUse | Bash command matches `git … push` (any flag order) |
 | `circuit-breaker.py` | PostToolUse | 3 consecutive tool failures in a session |
 | `session-start-reset.py` | SessionStart | (resets failure counter — never blocks) |
+| `version-check.py` | SessionStart | (never blocks — prints update checklist when Claude Code version changes) |
 
 > **Platform note:** Hook scripts use `fcntl` and run on macOS and Linux only.
 
@@ -680,6 +691,9 @@ git push
 2. Update the alias block in `~/.zshrc` to match, then `source ~/.zshrc`.
 3. Run `claude --version` to confirm your installed version. This guide was verified against v2.1.81 (March 2026).
 
+> **Tip:** The `version-check.py` hook (Step 11) detects version changes
+> automatically and prints this checklist at session start.
+
 ---
 
 ## Quick Reference Card
@@ -706,6 +720,7 @@ git push
 │  PLAN → discuss approach (no writes)                     │
 │  IMPL → implement + gate (must pass) → ship to commit    │
 │  AUDIT → review changed files (read-only)                │
+│  /clear AUDIT before review (state sync)                 │
 │  PROMPT → prompt/content changes (separate from code)    │
 │                                                          │
 │  gate = run full test suite    ship = gate + git add -p  │

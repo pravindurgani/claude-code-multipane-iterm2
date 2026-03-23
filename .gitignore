@@ -1,4 +1,5 @@
 # Claude Code hook state files
+.claude/.last-known-cc-version
 .claude/circuit-breaker-state.json
 circuit-breaker-state.json
 .claude/compact-state.json

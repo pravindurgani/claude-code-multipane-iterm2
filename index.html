@@ -665,6 +665,11 @@
       <span class="callout-icon">&#128221;</span>
       <div><strong>What this is NOT</strong> This is not an agent orchestrator. There are no background processes, no task queues, no dashboards. You run four focused sessions, you drive each one, you decide when work moves between panes. If you want 50 agents running unattended, other tools exist for that. This setup is for developers who want control, not automation.</div>
     </div>
+
+    <div class="callout tip" style="margin-top:16px">
+      <span class="callout-icon">&#128190;</span>
+      <div><strong>Hardware note:</strong> This 4-pane setup runs comfortably on 16GB+ machines. On systems with less than 16GB RAM, consider running 2&ndash;3 panes instead of all four, or closing inactive panes between tasks. Monitor with <span class="mono">top -l 1 | grep PhysMem</span> if you notice slowdowns.</div>
+    </div>
   </div>
 
   <!-- WHY ITERM2 -->
@@ -1161,6 +1166,7 @@
             <li><strong>Scope AUDIT reviews:</strong> "Focus ONLY on src/auth.py. Do not read any other files."</li>
             <li><strong>Clear stale context:</strong> <span class="mono">/clear</span> resets the conversation entirely.</li>
             <li><strong>Compress instead:</strong> <span class="mono">/compact</span> summarises and frees context without losing history.</li>
+            <li><strong>State sync before review:</strong> Run <span class="mono">/clear</span> in the AUDIT pane before starting a review pass on code that IMPL just wrote. This ensures AUDIT reads current file contents, not stale versions cached in its context.</li>
           </ul>
         </div>
       </div>
@@ -1190,6 +1196,9 @@
 <div class="comment"># 1. Open iTerm2 (arrangement auto-restores)</div>
 <div></div>
 <div class="comment"># 2. Type "cc" in each pane</div>
+<div></div>
+<div class="comment"># 2.5 AUDIT &mdash; /clear (fresh context for first review)</div>
+<div><span class="mono">/clear</span></div>
 <div></div>
 <div class="comment"># 3. PLAN &mdash; review where you left off</div>
 <div><span class="cmd">git</span> log <span class="flag">--oneline</span> <span class="flag">-10</span></div>
@@ -1304,6 +1313,7 @@
 <div>cp hooks/protect-git-push.py ~/.claude/hooks/</div>
 <div>cp hooks/circuit-breaker.py ~/.claude/hooks/</div>
 <div>cp hooks/session-start-reset.py ~/.claude/hooks/</div>
+<div>cp hooks/version-check.py ~/.claude/hooks/</div>
           </div>
         </div>
       </div>
@@ -1335,6 +1345,7 @@
             <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td>Bash command matches <span class="mono">git … push</span></td></tr>
             <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
             <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter — never blocks)</td></tr>
+            <tr><td><span class="mono">version-check.py</span></td><td>SessionStart</td><td>(never blocks &mdash; prints update checklist when Claude Code version changes)</td></tr>
           </table>
           <div class="callout warn">
             <span class="callout-icon">&#9888;&#65039;</span>
@@ -1552,6 +1563,7 @@
 <div>3. PLAN → discuss approach (no writes)</div>
 <div>4. IMPL → implement → <span class="str">gate</span> (must pass)</div>
 <div>5. AUDIT → review changed files → findings back to IMPL</div>
+<div>&nbsp;&nbsp;&nbsp;<span class="mono">/clear</span> AUDIT before reviewing (state sync)</div>
 <div>&nbsp;</div>
 <div class="comment"># End of day</div>
 <div>6. IMPL → <span class="str">ship</span> (gate + stage + commit)</div>
@@ -1573,6 +1585,7 @@
             <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td><span class="mono">git push</span> commands</td></tr>
             <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
             <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter)</td></tr>
+            <tr><td><span class="mono">version-check.py</span></td><td>SessionStart</td><td>(never blocks &mdash; prints update checklist on version change)</td></tr>
           </table>
         </div>
       </div>
@@ -1788,6 +1801,10 @@
             <li><strong>Most stable flags:</strong> <span class="mono">--model</span> and <span class="mono">--effort</span> have been stable across versions. <span class="mono">--permission-mode</span> values are also stable. Check the Claude Code release notes for breaking changes.</li>
           </ol>
           <p style="font-size:14px;color:var(--text-muted);margin-top:8px;">Run <span class="mono">claude --version</span> to check your installed version. This guide was verified against v2.1.81 (March 2026).</p>
+          <div class="callout tip" style="margin-top:12px">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Tip:</strong> The <span class="mono">version-check.py</span> hook (Step 11) detects version changes automatically and prints this checklist at session start.</div>
+          </div>
         </div>
       </div>
 

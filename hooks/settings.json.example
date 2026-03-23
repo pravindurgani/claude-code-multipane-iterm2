@@ -40,6 +40,13 @@
           "command": "python3 $HOME/.claude/hooks/session-start-reset.py",
           "timeout": 5
         }]
+      },
+      {
+        "hooks": [{
+          "type": "command",
+          "command": "python3 $HOME/.claude/hooks/version-check.py",
+          "timeout": 10
+        }]
       }
     ]
   }

@@ -80,6 +80,7 @@ This workflow depends on iTerm2-specific features:
 | [`zshrc-snippet.sh`](zshrc-snippet.sh) | Copy-paste block for your `~/.zshrc` |
 | [`screenshots/`](screenshots/) | Step-by-step screenshots used in the guide |
 | [`hooks/`](hooks/) | Python hook scripts for PreToolUse/PostToolUse safety enforcement |
+| [`hooks/version-check.py`](hooks/version-check.py) | SessionStart hook — detects Claude Code version changes and prints an update checklist |
 | [`hooks/settings.json.example`](hooks/settings.json.example) | Hooks registration block to merge into `~/.claude/settings.json` |
 | [`CLAUDE.md.template`](CLAUDE.md.template) | Starter template for global `~/.claude/CLAUDE.md` |
 | [`REFERENCE.md.template`](REFERENCE.md.template) | Starter template for project-level `.claude/REFERENCE.md` |
