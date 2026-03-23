@@ -13,6 +13,31 @@ Global conventions live in ~/.claude/CLAUDE.md.
   the id="sN" anchor, the <span class="section-num"> display label, and the TOC href.
   When adding a section, update all three together.
 
+- step_guide.md is gitignored and local-only. Append new ╔══╗ phase blocks after each
+  phase commit — they persist locally as a running implementation log but never appear
+  in git status.
+
+- index.html callout divs use class="callout tip" with inner <span class="callout-icon">
+  + <div> for body text. Code-block divs use class="code-block" with nested <div> per
+  line. Read the surrounding section before editing — guide.md alone is not sufficient
+  to infer the exact HTML structure.
+
+---
+
+## Hooks
+
+- protect-env.py blocks writes to ~/.claude/hooks/ at the tool level. Hook templates
+  must be created in the project repo (hooks/) and installed via a manual cp command.
+  Never attempt to Write or Edit directly to ~/.claude/hooks/.
+
+- ~/.claude/settings.json contains # comment lines and is not valid JSON. Any
+  verification script that parses it must strip comment lines first:
+  json.loads(''.join(l for l in open(path) if not l.strip().startswith('#')))
+
+- SessionStart hooks must always exit 0. Print to stdout for informational output but
+  never raise an uncaught exception or call sys.exit() with a non-zero code — doing so
+  blocks every Claude Code session from starting.
+
 ---
 
 ## Version String
