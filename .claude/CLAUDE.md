@@ -1,5 +1,7 @@
 # CLAUDE.md — claude-code-multipane-iterm2
 
+**Weight Class: Tool** — public repo, external users read and install the hooks/skills/commands verbatim, but this is a setup guide / scaffold, not a shipped product with a runtime. Treat changes with Tool-level rigour (BaseLLMClient-style abstraction not required, CI + audit on every change, monitoring optional).
+
 Project-specific invariants for working on this repo.
 Global conventions live in ~/.claude/CLAUDE.md.
 
