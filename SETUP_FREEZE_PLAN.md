@@ -92,6 +92,9 @@ After Bucket 1 + 2 ship today and Bucket 3 ships next weekend:
 
 The test for "genuine blocker": *has this bug/gap stopped me from completing a real work task twice this week?* If no, it goes in `backlog/setup-ideas.md` and waits until 2026-07-14.
 
+**Override log:**
+2026-04-14 21:XX — FREEZE OVERRIDDEN. Reason: friend-install rewrite of M5 Max workstation guide. New freeze begins when rewrite ships. Tracked in SESSION_LOG.md.
+
 ---
 
 ## What to build instead
