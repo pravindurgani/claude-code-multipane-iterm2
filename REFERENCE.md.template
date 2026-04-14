@@ -1,0 +1,47 @@
+# REFERENCE.md — Project Reference
+
+> Commit this file to .claude/REFERENCE.md inside the project repo.
+> It is read by the AUDIT pane for context on the current sprint and known issues.
+> Update it at the end of each session alongside SESSION_LOG.md.
+
+---
+
+## Current Sprint
+
+<!-- What is being built right now? One paragraph or a short bulleted list.
+     Include: goal, deadline (absolute date), and any hard constraints.
+-->
+
+---
+
+## Known Issues
+
+<!-- Active bugs, regressions, or technical debt that reviewers should be
+     aware of. Format: issue description + root cause (if known) + status.
+     Example:
+     - [OPEN] X fails when Y — root cause unknown — added 2026-03-01
+     - [FIXED] Z was broken by commit abc123 — fixed in commit def456
+-->
+
+---
+
+## Decisions Log
+
+<!-- Architectural decisions made during this project.
+     Format: Decision · Date · Reason · Alternatives rejected.
+     Example:
+     - Use plain dicts for config (not TypedDict) · 2026-01-15 ·
+       Simpler and matches existing patterns · TypedDict ruled out: overhead
+       without benefit for this use case.
+-->
+
+---
+
+## External References
+
+<!-- Links to external systems relevant to this project.
+     Example:
+     - Bug tracker: [project name in issue tracker]
+     - Design doc: [location]
+     - Oncall dashboard: [location]
+-->
