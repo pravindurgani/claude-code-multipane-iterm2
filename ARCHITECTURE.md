@@ -44,7 +44,7 @@ Version strings in this repo encode two different claims. They bump on different
 
 Drift here = **HIGH**: the reader sees a wrong current-state claim in the first second on the page.
 
-### Last-verified-against markers (4 places)
+### Last-verified-against markers (5 places)
 
 Claims that someone actually walked the guide against a specific Claude Code version — flags, hook behavior, slash commands, MCP wiring. Bumps **only** when a real re-verification pass happens, not automatically on release.
 
@@ -52,8 +52,7 @@ Claims that someone actually walked the guide against a specific Claude Code ver
 - `guide.md:249` — flag-compatibility note (§5)
 - `guide.md:692` — T7 troubleshooting
 - `index.html:1074` — flag-compatibility note (mirror of `guide.md:249`)
-
-`index.html:1803` mirrors `guide.md:692` — same last-verified claim, two formats.
+- `index.html:1803` — T7 mirror (mirror of `guide.md:692`)
 
 Drift here = **LOW staleness**: the guide may be subtly out of date, but the reader can still run `claude --version` and cross-check. Not a correctness bug.
 

@@ -12,7 +12,8 @@ Adversarial review. Never edit files from this pane.
 - Read `.claude/CLAUDE.md` for project invariants — specifically:
   - SessionStart hooks must always exit 0 (unhandled `OSError` = HIGH finding).
   - Hook templates live in `hooks/`, installed copies in `~/.claude/hooks/` — diverged copies = HIGH finding.
-  - Version-string triad must stay in sync across `guide.md` intro, `guide.md` T7, `index.html` footer.
+  - Current-version marker: `index.html:1818` footer only — bumps every release. AUDIT drift = HIGH.
+  - Last-verified markers (5 places): `guide.md:4`, `guide.md:249`, `guide.md:692`, `index.html:1074`, `index.html:1803` — bump only on re-verification. AUDIT drift = LOW. See `ARCHITECTURE.md §3`.
   - `guide.md` ↔ `index.html` parallel content; section numbering triad in HTML (`id`, `section-num`, TOC href) must stay coupled.
   - `.mcp.json.example` must use placeholders (`YOUR_USERNAME`, `YOUR_READONLY_PAT_HERE`) — real tokens trigger GitHub push protection.
 - Review **only** files changed in the last IMPL session (diff-scope against `git log`).
@@ -65,6 +66,7 @@ Architecture and scope decisions.
 - **[DEFERRED]** AUDIT M3 — circuit-breaker resets on trip instead of sticky-blocking. Intentional (forgive-and-forget across sessions); comment needs clarification.
 - **[DEFERRED]** AUDIT M4 — circuit-breaker state file written under `Path.cwd()`. Plan: move to `Path.home() / ".claude"`.
 - **[DEFERRED]** AUDIT L1 — `reset_at` schema drift between `session-start-reset.py` and `circuit-breaker.py` writers.
+- **[CLOSED as working-as-designed]** AUDIT L2/L3/L4 — no specific action required; behavior is correct and intended. Original findings in plan archive (`~/.claude/plans/adaptive-percolating-sphinx.md`).
 
 All deferred items get one focused session on the weekend after 2026-07-14.
 

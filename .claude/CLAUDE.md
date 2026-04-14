@@ -1,6 +1,6 @@
 # CLAUDE.md — claude-code-multipane-iterm2
 
-**Weight Class: Tool** — public repo, external users read and install the hooks/skills/commands verbatim, but this is a setup guide / scaffold, not a shipped product with a runtime. Treat changes with Tool-level rigour (BaseLLMClient-style abstraction not required, CI + audit on every change, monitoring optional).
+**Weight Class: Tool** — public repo, external users read and install the hooks/skills/commands verbatim, but this is a setup guide / scaffold, not a shipped product with a runtime. Treat changes with Tool-level rigour (BaseLLMClient-style abstraction not required, audit on every change, CI optional for a docs-only scaffold, monitoring optional).
 
 Project-specific invariants for working on this repo.
 Global conventions live in ~/.claude/CLAUDE.md.
@@ -52,11 +52,11 @@ See ARCHITECTURE.md §3 for the full rationale.
   footer shows the reader the wrong current-state claim in the first second on
   the page.
 
-- **Last-verified-against markers (4 places): guide.md:4 intro, guide.md:249
+- **Last-verified-against markers (5 places): guide.md:4 intro, guide.md:249
   flag-compatibility note, guide.md:692 T7 troubleshooting, index.html:1074
-  flag-compatibility note.** Bumps only when someone actually re-walks the guide
-  against a new Claude Code version. AUDIT treats drift here as LOW staleness,
-  not a correctness bug.
+  flag-compatibility note, index.html:1803 T7 mirror.** Bumps only when someone
+  actually re-walks the guide against a new Claude Code version. AUDIT treats
+  drift here as LOW staleness, not a correctness bug.
 
 - `hooks/version-check.py` fires a SessionStart reminder when `claude --version`
   changes — the default response is a footer bump. Re-verify is a separate,
