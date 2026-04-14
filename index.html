@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script defer src="https://cloud.umami.is/script.js" data-website-id="35d535e9-a503-430f-b50f-9b7f39957456"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4-Pane Claude Code Setup for iTerm2 — Complete Guide</title>
+<meta name="description" content="Step-by-step guide to set up a 4-pane iTerm2 workflow for Claude Code with role-based models, coloured prompts, and one-command launch.">
+<meta property="og:title" content="4-Pane Claude Code Setup for iTerm2">
+<meta property="og:description" content="Stop your AI from grading its own code. Run 4 Claude Code sessions in one iTerm2 window — each with a locked role, model, and permission set.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pravindurgani.github.io/claude-code-multipane-iterm2/">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f8f9fb;
+    --surface2: #f0f2f5;
+    --border: #e2e6ed;
+    --border-light: #edf0f4;
+    --text: #1a1d23;
+    --text-secondary: #4b5563;
+    --text-muted: #6b7280;
+    --blue: #2563eb;
+    --blue-light: #eff6ff;
+    --blue-border: #bfdbfe;
+    --amber: #d97706;
+    --amber-light: #fffbeb;
+    --amber-border: #fde68a;
+    --green: #059669;
+    --green-light: #ecfdf5;
+    --green-border: #a7f3d0;
+    --red: #dc2626;
+    --purple: #7c3aed;
+    --purple-light: #f5f3ff;
+    --purple-border: #ddd6fe;
+    --cyan: #0891b2;
+    --cyan-light: #ecfeff;
+    --cyan-border: #a5f3fc;
+    --code-bg: #1e293b;
+    --code-text: #e2e8f0;
+    --radius: 10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  .hero {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white;
+    padding: 64px 40px 56px;
+  }
+  .hero-inner {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.1);
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 18px;
+    color: #94a3b8;
+    max-width: 600px;
+    line-height: 1.6;
+  }
+  .hero-meta {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #64748b;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* CONTAINER */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin: 40px 0;
+  }
+  .toc-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+  .toc-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 32px;
+  }
+  .toc-list a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.15s;
+  }
+  .toc-list a:hover { color: var(--blue); }
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--blue);
+    font-weight: 600;
+    min-width: 24px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin: 56px 0;
+    scroll-margin-top: 24px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-light);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue);
+    background: var(--blue-light);
+    border: 1px solid var(--blue-border);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+  .section h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+  }
+  .section-intro {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 12px 0 24px;
+    line-height: 1.7;
+  }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 20px; margin: 24px 0; }
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .step-n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue);
+    min-width: 28px;
+  }
+  .step-title { font-size: 15px; font-weight: 600; }
+  .step-body {
+    padding: 20px;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .step-body p { margin-bottom: 12px; }
+  .step-body p:last-child { margin-bottom: 0; }
+  .step-body ul { margin: 8px 0 8px 20px; }
+  .step-body li { margin-bottom: 8px; font-size: 15px; }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.9;
+    margin: 12px 0;
+    overflow-x: auto;
+  }
+  .code-block .comment { color: #64748b; }
+  .code-block .cmd { color: #93c5fd; }
+  .code-block .flag { color: #fbbf24; }
+  .code-block .str { color: #86efac; }
+  .code-block .kw { color: #c4b5fd; }
+  .code-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* INLINE CODE */
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* CALLOUTS */
+  .callout {
+    display: flex;
+    gap: 14px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout.tip { background: var(--blue-light); border: 1px solid var(--blue-border); }
+  .callout.warn { background: var(--amber-light); border: 1px solid var(--amber-border); }
+  .callout.success { background: var(--green-light); border: 1px solid var(--green-border); }
+  .callout strong { display: block; margin-bottom: 4px; font-size: 14px; }
+
+  /* TABLES */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 16px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .data-table th {
+    background: var(--surface2);
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-light);
+    vertical-align: top;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .cell-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+  }
+
+  /* SCREENSHOT */
+  .screenshot {
+    margin: 20px 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  }
+  .screenshot img {
+    width: 100%;
+    display: block;
+  }
+  .screenshot-caption {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 10px 16px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+
+  /* PANE CARDS */
+  .pane-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .pane-card {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .pane-card-header {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pane-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .pane-card-name { font-weight: 700; font-size: 15px; flex: 1; }
+  .pane-card-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .pane-card-body { padding: 16px; font-size: 14px; line-height: 1.7; }
+  .pane-card-body .detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .pane-card-body .detail:last-child { border-bottom: none; }
+  .detail-label { color: var(--text-muted); font-size: 13px; }
+  .detail-value { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500; }
+  .pane-card-desc {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .pc-audit .pane-card-header { background: var(--purple-light); }
+  .pc-audit .pane-dot { background: var(--purple); }
+  .pc-audit .pane-card-name { color: var(--purple); }
+  .pc-audit .pane-card-badge { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
+
+  .pc-impl .pane-card-header { background: var(--green-light); }
+  .pc-impl .pane-dot { background: var(--green); }
+  .pc-impl .pane-card-name { color: var(--green); }
+  .pc-impl .pane-card-badge { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+
+  .pc-prompt .pane-card-header { background: var(--cyan-light); }
+  .pc-prompt .pane-dot { background: var(--cyan); }
+  .pc-prompt .pane-card-name { color: var(--cyan); }
+  .pc-prompt .pane-card-badge { background: var(--cyan-light); color: var(--cyan); border: 1px solid var(--cyan-border); }
+
+  .pc-plan .pane-card-header { background: var(--amber-light); }
+  .pc-plan .pane-dot { background: var(--amber); }
+  .pc-plan .pane-card-name { color: var(--amber); }
+  .pc-plan .pane-card-badge { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-border); }
+
+  /* LAYOUT DIAGRAM */
+  .layout-diagram {
+    background: var(--code-bg);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 20px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #94a3b8;
+  }
+  .layout-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .layout-pane {
+    flex: 1;
+    border-radius: 8px;
+    padding: 14px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .layout-pane-title { font-size: 11px; font-weight: 700; letter-spacing: 1px; }
+  .layout-pane-sub { font-size: 10px; opacity: 0.7; margin-top: 4px; }
+  .layout-pane-model { font-size: 10px; margin-top: 8px; opacity: 0.8; }
+
+  .lp-audit { background: rgba(124,58,237,0.12); border: 1px solid rgba(124,58,237,0.3); color: #c4b5fd; }
+  .lp-impl { background: rgba(5,150,105,0.12); border: 1px solid rgba(5,150,105,0.3); color: #6ee7b7; }
+  .lp-prompt { background: rgba(8,145,178,0.12); border: 1px solid rgba(8,145,178,0.3); color: #67e8f9; }
+  .lp-plan { background: rgba(217,119,6,0.12); border: 1px solid rgba(217,119,6,0.3); color: #fcd34d; }
+
+  /* SHORTCUT GRID */
+  .shortcut-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  .shortcut-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .shortcut-keys {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    display: flex;
+    gap: 3px;
+    flex-shrink: 0;
+  }
+  .key {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .shortcut-desc { font-size: 13px; color: var(--text-secondary); }
+
+  /* FOOTER */
+  .footer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 28px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* COMPARE CARDS (mobile-only alternative to the 3-col table) */
+  .iterm-compare-cards { display: none; }
+  .compare-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+  }
+  .compare-card-title { font-weight: 600; font-size: 14px; margin-bottom: 8px; }
+  .compare-row {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+  }
+  .compare-row.yes { color: var(--green); }
+  .compare-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    min-width: 58px;
+    flex-shrink: 0;
+  }
+  .compare-row.yes .compare-label { color: var(--green); }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .hero { padding: 40px 20px 36px; }
+    .hero h1 { font-size: 26px; letter-spacing: -0.5px; }
+    .hero h1 br { display: none; }
+    .hero p { font-size: 16px; }
+    .container { padding: 0 16px 60px; }
+
+    .toc { padding: 20px; }
+    .toc-list, .pane-grid, .shortcut-grid { grid-template-columns: 1fr; }
+
+    .section { margin: 40px 0; }
+    .section-header { flex-wrap: wrap; gap: 8px; }
+    .section h2 { font-size: 20px; }
+
+    .step-body, .step-header { padding: 14px 16px; }
+    .step-header { flex-wrap: wrap; }
+
+    .code-block { padding: 14px 16px; font-size: 12px; line-height: 1.8; }
+
+    /* Tables: horizontal scroll wrapper */
+    .data-table { font-size: 13px; }
+    .data-table th, .data-table td { padding: 8px 10px; }
+    .step-body .data-table,
+    .callout .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+    /* Pane cards */
+    .pane-card-desc { font-size: 12px; }
+
+    /* Layout diagram */
+    .layout-diagram { padding: 16px; }
+    .layout-row { flex-direction: column; }
+    .layout-pane { min-height: 60px; }
+
+    /* Shortcut items */
+    .shortcut-item { flex-direction: column; align-items: flex-start; gap: 6px; padding: 10px 12px; }
+    .shortcut-desc { font-size: 12px; }
+
+    /* Callouts */
+    .callout { flex-direction: column; gap: 8px; padding: 14px 16px; }
+    .callout-icon { font-size: 16px; }
+
+    /* Footer */
+    .footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px 16px; }
+
+    /* Why iTerm2: swap table for stacked cards */
+    .iterm-compare-table { display: none !important; }
+    .iterm-compare-cards { display: block; }
+  }
+
+  /* Mid-size tablets */
+  @media (max-width: 768px) and (min-width: 641px) {
+    .hero h1 { font-size: 32px; }
+    .shortcut-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">iTerm2 + Claude Code</div>
+    <h1>Stop Your AI From Grading <br>Its Own Code</h1>
+    <p>Run 4 Claude Code sessions in one iTerm2 window. Opus reviews. Sonnet builds. Each pane has a locked role, model, and permission set &mdash; the reviewer is physically incapable of writing files.</p>
+    <div class="hero-meta">macOS only &middot; iTerm2 &middot; Claude Code CLI &middot; ~15 min setup &middot; zero dependencies</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">In this guide</div>
+    <ul class="toc-list">
+      <li><a href="#s1"><span class="toc-num">01</span> The 4-pane concept</a></li>
+      <li><a href="#s2"><span class="toc-num">02</span> Create iTerm2 profiles</a></li>
+      <li><a href="#s3"><span class="toc-num">03</span> Startup commands &amp; directory</a></li>
+      <li><a href="#s4"><span class="toc-num">04</span> Shell prompts &amp; launch alias</a></li>
+      <li><a href="#s5"><span class="toc-num">05</span> Window layout &amp; arrangement</a></li>
+      <li><a href="#s6"><span class="toc-num">06</span> Launch Claude Code</a></li>
+      <li><a href="#s7"><span class="toc-num">07</span> Keyboard shortcuts</a></li>
+      <li><a href="#s8"><span class="toc-num">08</span> Workflow &amp; tips</a></li>
+      <li><a href="#s9"><span class="toc-num">09</span> Daily playbook</a></li>
+      <li><a href="#s10"><span class="toc-num">10</span> Adapt for other projects</a></li>
+      <li><a href="#s11"><span class="toc-num">11</span> Two-tier hook architecture</a></li>
+      <li><a href="#s12"><span class="toc-num">12</span> gate/ship workflow</a></li>
+      <li><a href="#s13"><span class="toc-num">13</span> SESSION_LOG cold-start fix</a></li>
+      <li><a href="#s14"><span class="toc-num">14</span> CLAUDE.md split pattern</a></li>
+      <li><a href="#s15"><span class="toc-num">15</span> Cheatsheet</a></li>
+      <li><a href="#s16"><span class="toc-num">16</span> MCP server, commands &amp; skills</a></li>
+      <li><a href="#s17"><span class="toc-num">17</span> Troubleshooting</a></li>
+    </ul>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>The 4-Pane Concept</h2>
+    </div>
+    <p class="section-intro">Each pane runs a separate Claude Code session with a dedicated role. The AUDIT pane uses Opus for deep review. Everything else uses Sonnet to keep costs down. A <span class="mono">cc</span> alias launches the right configuration automatically.</p>
+
+    <div class="pane-grid">
+      <div class="pane-card pc-audit">
+        <div class="pane-card-header">
+          <div class="pane-dot"></div>
+          <span class="pane-card-name">AUDIT</span>
+          <span class="pane-card-badge">Opus</span>
+        </div>
+        <div class="pane-card-body">
+          <div class="detail"><span class="detail-label">Model</span><span class="detail-value">opus</span></div>
+          <div class="detail"><span class="detail-label">Effort</span><span class="detail-value">high</span></div>
+          <div class="detail"><span class="detail-label">Permission</span><span class="detail-value">plan (read-only)</span></div>
+        </div>
+        <div class="pane-card-desc">Review completed work. Never generates code. Enforced read-only via <span class="mono">--permission-mode plan</span>. Scope reviews with: <em>"Focus ONLY on src/auth.py. Do not read other files."</em></div>
+      </div>
+
+      <div class="pane-card pc-impl">
+        <div class="pane-card-header">
+          <div class="pane-dot"></div>
+          <span class="pane-card-name">IMPL</span>
+          <span class="pane-card-badge">Sonnet</span>
+        </div>
+        <div class="pane-card-body">
+          <div class="detail"><span class="detail-label">Model</span><span class="detail-value">sonnet</span></div>
+          <div class="detail"><span class="detail-label">Effort</span><span class="detail-value">high</span></div>
+          <div class="detail"><span class="detail-label">Permission</span><span class="detail-value">acceptEdits</span></div>
+        </div>
+        <div class="pane-card-desc">Write and edit code. Auto-accepts file edits. Run tests after every change.</div>
+      </div>
+
+      <div class="pane-card pc-prompt">
+        <div class="pane-card-header">
+          <div class="pane-dot"></div>
+          <span class="pane-card-name">PROMPT</span>
+          <span class="pane-card-badge">Sonnet</span>
+        </div>
+        <div class="pane-card-body">
+          <div class="detail"><span class="detail-label">Model</span><span class="detail-value">sonnet</span></div>
+          <div class="detail"><span class="detail-label">Effort</span><span class="detail-value">medium</span></div>
+          <div class="detail"><span class="detail-label">Permission</span><span class="detail-value">default</span></div>
+        </div>
+        <div class="pane-card-desc">Refine prompts, templates, and content. Separate from code changes.</div>
+      </div>
+
+      <div class="pane-card pc-plan">
+        <div class="pane-card-header">
+          <div class="pane-dot"></div>
+          <span class="pane-card-name">PLAN</span>
+          <span class="pane-card-badge">Sonnet</span>
+        </div>
+        <div class="pane-card-body">
+          <div class="detail"><span class="detail-label">Model</span><span class="detail-value">sonnet</span></div>
+          <div class="detail"><span class="detail-label">Effort</span><span class="detail-value">low</span></div>
+          <div class="detail"><span class="detail-label">Permission</span><span class="detail-value">default</span></div>
+        </div>
+        <div class="pane-card-desc">Discuss architecture, plan features, review docs. No file writes.</div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div><strong>Cost awareness</strong> Opus is ~15x more expensive than Sonnet per token. Only use the AUDIT pane for reviewing completed, tested work &mdash; never for code generation.</div>
+    </div>
+
+    <div class="callout tip" style="margin-top:16px">
+      <span class="callout-icon">&#128221;</span>
+      <div><strong>What this is NOT</strong> This is not an agent orchestrator. There are no background processes, no task queues, no dashboards. You run four focused sessions, you drive each one, you decide when work moves between panes. If you want 50 agents running unattended, other tools exist for that. This setup is for developers who want control, not automation.</div>
+    </div>
+
+    <div class="callout tip" style="margin-top:16px">
+      <span class="callout-icon">&#128190;</span>
+      <div><strong>Hardware note:</strong> This 4-pane setup runs comfortably on 16GB+ machines. On systems with less than 16GB RAM, consider running 2&ndash;3 panes instead of all four, or closing inactive panes between tasks. Monitor with <span class="mono">top -l 1 | grep PhysMem</span> if you notice slowdowns.</div>
+    </div>
+  </div>
+
+  <!-- WHY ITERM2 -->
+  <div class="callout tip" style="margin: 0 0 48px; max-width: 800px;">
+    <span class="callout-icon">&#128161;</span>
+    <div>
+      <strong>Why iTerm2 over macOS Terminal?</strong>
+      <p style="margin-top:8px;">This workflow relies on features the default Terminal doesn't have:</p>
+      <table class="data-table iterm-compare-table" style="margin-top:12px; font-size:14px;">
+        <thead><tr><th style="width:35%">Feature</th><th>macOS Terminal</th><th>iTerm2</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Split panes</strong></td><td>Tabs/windows only &mdash; no side-by-side splits</td><td>Unlimited independent panes in a single tab</td></tr>
+          <tr><td><strong>Named profiles</strong></td><td>Basic profiles, no <span class="mono">$ITERM_PROFILE</span> env var</td><td>Auto-sets <span class="mono">$ITERM_PROFILE</span> per pane &mdash; the key to role detection</td></tr>
+          <tr><td><strong>Visual identity</strong></td><td>Basic themes and transparency</td><td>Per-profile backgrounds, tab colours, badges, and 24-bit colour</td></tr>
+          <tr><td><strong>Window arrangements</strong></td><td>No saved layouts</td><td>Save &amp; auto-restore multi-pane layouts on launch</td></tr>
+          <tr><td><strong>Productivity</strong></td><td>Standard find and copy</td><td>Paste history, Instant Replay, triggers, shell integration</td></tr>
+        </tbody>
+      </table>
+      <!-- Mobile-only stacked version of the same comparison -->
+      <div class="iterm-compare-cards" style="margin-top:12px;">
+        <div class="compare-card">
+          <div class="compare-card-title">Split panes</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Tabs/windows only</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Unlimited independent panes in one tab</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Named profiles</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> No <span class="mono">$ITERM_PROFILE</span> env var</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Auto-sets <span class="mono">$ITERM_PROFILE</span> per pane</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Visual identity</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Basic themes only</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Per-profile backgrounds, tab colours, badges</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Saved layouts</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Not supported</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Save &amp; auto-restore on launch</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Productivity</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Standard find and copy</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Paste history, Instant Replay, triggers</div>
+        </div>
+      </div>
+      <p style="margin-top:8px; color: var(--text-muted); font-size: 14px;">The <span class="mono">$ITERM_PROFILE</span> environment variable is especially critical &mdash; it's what lets the <span class="mono">cc</span> alias automatically launch the right model and permissions per pane, and it survives window arrangement restores.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Create iTerm2 Profiles</h2>
+    </div>
+    <p class="section-intro">Create 4 named profiles, each with a distinct background tint, tab colour, and badge so you can instantly tell which pane you're in.</p>
+
+    <div class="callout warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div><strong>macOS + iTerm2 required</strong> This guide requires macOS with iTerm2 3.3+. The <span class="mono">$ITERM_PROFILE</span> environment variable that drives role detection is iTerm2-specific. A WSL2 + Windows Terminal equivalent (<span class="mono">$WT_PROFILE_ID</span> as the role signal) is possible but not documented here.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2.1</span>
+          <span class="step-title">Create and name 4 profiles</span>
+        </div>
+        <div class="step-body">
+          <p>Open <strong>iTerm2 &rarr; Settings &rarr; Profiles</strong> (<span class="mono">&#8984;,</span>). Click the <strong>+</strong> button four times. Double-click each "New Profile" name to rename it:</p>
+          <table class="data-table">
+            <thead><tr><th>Profile Name</th><th>Background</th><th>Tab Colour</th><th>Role</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-mono">DEV-AUDIT</td><td class="cell-mono">#0d0b18</td><td class="cell-mono" style="color:var(--purple)">#a855f7</td><td>Code review</td></tr>
+              <tr><td class="cell-mono">DEV-IMPL</td><td class="cell-mono">#080f0b</td><td class="cell-mono" style="color:var(--green)">#22c55e</td><td>Implementation</td></tr>
+              <tr><td class="cell-mono">DEV-PROMPT</td><td class="cell-mono">#080e10</td><td class="cell-mono" style="color:var(--cyan)">#06b6d4</td><td>Prompt engineering</td></tr>
+              <tr><td class="cell-mono">DEV-PLAN</td><td class="cell-mono">#0d0b00</td><td class="cell-mono" style="color:var(--amber)">#f59e0b</td><td>Architecture &amp; planning</td></tr>
+            </tbody>
+          </table>
+
+          <div class="screenshot">
+            <img src="screenshots/01-create-profiles.png" alt="iTerm2 Settings showing 4 named profiles in the sidebar">
+            <div class="screenshot-caption">All 4 profiles created and named in the sidebar</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2.2</span>
+          <span class="step-title">Set background &amp; tab colour</span>
+        </div>
+        <div class="step-body">
+          <p>For each profile, click the <strong>Colors</strong> sub-tab:</p>
+          <ul>
+            <li>Click the <strong>Background</strong> swatch in the "Defaults" row. In the macOS colour picker, switch to <strong>Hex mode</strong> (sliders icon &rarr; dropdown at bottom) and enter the hex value from the table above.</li>
+            <li>Scroll down to <strong>"Tab:"</strong>, tick <strong>"Use custom tab color"</strong>, and set the accent colour.</li>
+          </ul>
+
+          <div class="screenshot">
+            <img src="screenshots/02-colors-tab.png" alt="iTerm2 Colors tab showing tab color checkbox and badge color">
+            <div class="screenshot-caption">Scrolled down in Colors tab &mdash; Tab colour and Badge colour visible at the bottom</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2.3</span>
+          <span class="step-title">Set title, badge, and font</span>
+        </div>
+        <div class="step-body">
+          <p>Click the <strong>General</strong> sub-tab for each profile:</p>
+          <ul>
+            <li><strong>Title:</strong> Click the dropdown. Under "Foreground Job", <strong>uncheck "Job Name"</strong> (leave only "Session Name" checked under "Name"). This prevents the tab title from showing <span class="mono">-zsh</span> or <span class="mono">(claude)</span> after the role name.</li>
+            <li><strong>Badge:</strong> Type the role name (<span class="mono">AUDIT</span>, <span class="mono">IMPL</span>, <span class="mono">PROMPT</span>, or <span class="mono">PLAN</span>). This overlays a faint watermark on the pane background.</li>
+          </ul>
+          <p>Then click the <strong>Text</strong> sub-tab and set font to <strong>JetBrains Mono 13pt</strong> (or Menlo 13pt).</p>
+
+          <div class="screenshot">
+            <img src="screenshots/03-general-tab.png" alt="iTerm2 General tab showing title, badge, and command settings">
+            <div class="screenshot-caption">General tab &mdash; badge set to "AUDIT", command and initial directory configured</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Startup Commands &amp; Initial Directory</h2>
+    </div>
+    <p class="section-intro">Each profile needs a startup command (to cd into the project directory and open an interactive shell) and an initial directory setting (as a fallback for window arrangement restores).</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3.1</span>
+          <span class="step-title">Set the startup command</span>
+        </div>
+        <div class="step-body">
+          <p>In each profile &rarr; <strong>General</strong> sub-tab &rarr; change the <strong>Command</strong> dropdown from "Login Shell" to <strong>"Custom Shell"</strong> and paste the corresponding command:</p>
+          <div class="code-block">
+<div class="comment"># DEV-AUDIT</div>
+<div><span class="cmd">/bin/zsh</span> <span class="flag">-c</span> <span class="str">'cd ~/Desktop/your-project; exec zsh'</span></div>
+<div></div>
+<div class="comment"># Same command for all 4 profiles &mdash; only the directory changes per project.</div>
+<div class="comment"># Role detection uses $ITERM_PROFILE (set automatically by iTerm2),</div>
+<div class="comment"># so the startup command doesn't need to set PANE_ROLE.</div>
+          </div>
+          <p>Replace <span class="mono">your-project</span> with your actual project directory name.</p>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Why <code>exec zsh</code> at the end?</strong> It replaces the subshell with an interactive zsh session. Without it, the pane would close the moment you exit Claude Code or any other command.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3.2</span>
+          <span class="step-title">Set the initial directory</span>
+        </div>
+        <div class="step-body">
+          <p>Still in the <strong>General</strong> sub-tab, find <strong>Initial directory</strong> below the Command field. Change from "Home directory" to <strong>"Directory:"</strong> and enter the full path:</p>
+          <div class="code-block">
+<div>/Users/yourname/Desktop/your-project</div>
+          </div>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <div><strong>Why set both Command and Initial Directory?</strong> iTerm2 window arrangement restore doesn't always re-run the startup command, but it always respects the Initial Directory. Setting both ensures you always land in the right folder regardless of how the pane was opened.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Shell Prompts &amp; Launch Alias</h2>
+    </div>
+    <p class="section-intro">Add a block to your <span class="mono">~/.zshrc</span> that auto-detects which profile you're in and configures coloured prompts, locked tab titles, and a <span class="mono">cc</span> alias to launch Claude Code with the right flags.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">4.1</span>
+          <span class="step-title">Append to ~/.zshrc</span>
+        </div>
+        <div class="step-body">
+          <p>Open your shell config file and paste this block at the very bottom:</p>
+          <div class="code-label">~/.zshrc &mdash; append at bottom</div>
+          <div class="code-block">
+<div class="comment"># ── Multi-pane Claude Code workflow ──</div>
+<div class="comment"># Uses $ITERM_PROFILE (auto-set by iTerm2 on every</div>
+<div class="comment"># session, including arrangement restores).</div>
+<div><span class="kw">case</span> <span class="str">"$ITERM_PROFILE"</span> <span class="kw">in</span></div>
+<div>  <span class="str">DEV-AUDIT</span>)</div>
+<div>    PANE_ROLE=<span class="str">"AUDIT"</span></div>
+<div>    PROMPT=<span class="str">"%F{magenta}[AUDIT]%f %~ %# "</span> ;;</div>
+<div>  <span class="str">DEV-IMPL</span>)</div>
+<div>    PANE_ROLE=<span class="str">"IMPL"</span></div>
+<div>    PROMPT=<span class="str">"%F{green}[IMPL]%f %~ %# "</span> ;;</div>
+<div>  <span class="str">DEV-PROMPT</span>)</div>
+<div>    PANE_ROLE=<span class="str">"PROMPT"</span></div>
+<div>    PROMPT=<span class="str">"%F{cyan}[PROMPT]%f %~ %# "</span> ;;</div>
+<div>  <span class="str">DEV-PLAN</span>)</div>
+<div>    PANE_ROLE=<span class="str">"PLAN"</span></div>
+<div>    PROMPT=<span class="str">"%F{yellow}[PLAN]%f %~ %# "</span> ;;</div>
+<div><span class="kw">esac</span></div>
+<div></div>
+<div><span class="kw">if</span> [[ -n <span class="str">"$PANE_ROLE"</span> ]]; <span class="kw">then</span></div>
+<div>  <span class="cmd">echo</span> <span class="flag">-ne</span> <span class="str">"\033]0;${PANE_ROLE}\007"</span></div>
+<div>  _pane_title_precmd() {</div>
+<div>    <span class="cmd">echo</span> <span class="flag">-ne</span> <span class="str">"\033]0;${PANE_ROLE}\007"</span></div>
+<div>  }</div>
+<div>  precmd_functions+=(_pane_title_precmd)</div>
+<div><span class="kw">fi</span></div>
+<div></div>
+<div class="comment"># ── Claude Code launch alias (role-aware) ──</div>
+<div class="comment"># Type "cc" to launch with the right flags.</div>
+<div><span class="kw">case</span> <span class="str">"$ITERM_PROFILE"</span> <span class="kw">in</span></div>
+<div>  <span class="str">DEV-AUDIT</span>)  <span class="kw">alias</span> cc=<span class="str">'claude --model opus --effort high --permission-mode plan'</span> ;;</div>
+<div>  <span class="str">DEV-IMPL</span>)   <span class="kw">alias</span> cc=<span class="str">'claude --model sonnet --effort high --permission-mode acceptEdits'</span> ;;</div>
+<div>  <span class="str">DEV-PROMPT</span>) <span class="kw">alias</span> cc=<span class="str">'claude --model sonnet --effort medium'</span> ;;</div>
+<div>  <span class="str">DEV-PLAN</span>)   <span class="kw">alias</span> cc=<span class="str">'claude --model sonnet --effort low'</span> ;;</div>
+<div><span class="kw">esac</span></div>
+          </div>
+
+          <p>Then run <span class="mono">source ~/.zshrc</span> in each pane to apply.</p>
+
+          <div class="callout success">
+            <span class="callout-icon">&#10003;</span>
+            <div>
+              <strong>Why this works reliably</strong>
+              <ul style="margin-top:6px;margin-bottom:0">
+                <li><span class="mono">$ITERM_PROFILE</span> is set automatically by iTerm2 on every session &mdash; including arrangement restores. No dependency on startup commands.</li>
+                <li><span class="mono">precmd_functions+=()</span> adds to the hook array rather than overwriting it, so existing hooks from pyenv, fnm, conda, etc. are preserved.</li>
+                <li>Normal terminals (Default profile) are completely unaffected.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Window Layout &amp; Arrangement</h2>
+    </div>
+    <p class="section-intro">Create a 2&times;2 pane layout, save it, and configure iTerm2 to restore it automatically on launch.</p>
+
+    <div class="layout-diagram">
+      <div style="font-size:10px;color:#64748b;margin-bottom:14px;letter-spacing:1.5px;text-transform:uppercase;">Target layout</div>
+      <div class="layout-row">
+        <div class="layout-pane lp-audit">
+          <div><div class="layout-pane-title">AUDIT</div><div class="layout-pane-sub">adversarial review</div></div>
+          <div class="layout-pane-model">opus &middot; high &middot; plan</div>
+        </div>
+        <div class="layout-pane lp-prompt">
+          <div><div class="layout-pane-title">PROMPT</div><div class="layout-pane-sub">prompt engineering</div></div>
+          <div class="layout-pane-model">sonnet &middot; medium</div>
+        </div>
+      </div>
+      <div class="layout-row">
+        <div class="layout-pane lp-impl">
+          <div><div class="layout-pane-title">IMPL</div><div class="layout-pane-sub">code writing</div></div>
+          <div class="layout-pane-model">sonnet &middot; high &middot; acceptEdits</div>
+        </div>
+        <div class="layout-pane lp-plan">
+          <div><div class="layout-pane-title">PLAN</div><div class="layout-pane-sub">architecture &amp; docs</div></div>
+          <div class="layout-pane-model">sonnet &middot; low</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">5.1</span>
+          <span class="step-title">Create the 2&times;2 split</span>
+        </div>
+        <div class="step-body">
+          <ol style="margin-left:20px">
+            <li>Open a new window with the <strong>DEV-AUDIT</strong> profile.</li>
+            <li><span class="mono">&#8984;D</span> &mdash; split right. Right-click the new pane &rarr; <strong>Edit Session</strong> &rarr; change profile to <strong>DEV-PROMPT</strong>.</li>
+            <li>Click back on the left pane (AUDIT). <span class="mono">&#8984;&#8679;D</span> &mdash; split down. Change the new pane to <strong>DEV-IMPL</strong>.</li>
+            <li>Click on the top-right pane (PROMPT). <span class="mono">&#8984;&#8679;D</span> &mdash; split down. Change the new pane to <strong>DEV-PLAN</strong>.</li>
+          </ol>
+
+          <div class="screenshot">
+            <img src="screenshots/04-four-panes.png" alt="4-pane iTerm2 layout with coloured prompts and badges">
+            <div class="screenshot-caption">Final result &mdash; 4 panes with coloured prompts, badges, and distinct background tints</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">5.2</span>
+          <span class="step-title">Save as default arrangement</span>
+        </div>
+        <div class="step-body">
+          <ol style="margin-left:20px">
+            <li><strong>Window &rarr; Arrangements &rarr; Save Window Arrangement</strong> &mdash; give it a name (e.g. your project name).</li>
+            <li>Go to <strong>iTerm2 &rarr; Settings &rarr; General &rarr; Startup</strong> and set <strong>"Window restoration policy"</strong> to <strong>"Open Default Window Arrangement"</strong>.</li>
+            <li>Back in the menu: <strong>Window &rarr; Arrangements &rarr; Save Window Arrangement</strong> once more &mdash; this saves it as the <em>default</em> arrangement that the startup policy will use.</li>
+          </ol>
+
+          <div class="screenshot">
+            <img src="screenshots/06-save-arrangement.png" alt="Window menu showing Save Window Arrangement option">
+            <div class="screenshot-caption">Window &rarr; Arrangements &rarr; Save Window Arrangement</div>
+          </div>
+
+          <div class="screenshot">
+            <img src="screenshots/07-startup-setting.png" alt="iTerm2 General Startup settings showing Open Default Window Arrangement">
+            <div class="screenshot-caption">Settings &rarr; General &rarr; Startup &rarr; "Open Default Window Arrangement"</div>
+          </div>
+
+          <div class="callout success">
+            <span class="callout-icon">&#10003;</span>
+            <div><strong>Result:</strong> Every time you open iTerm2, your 4-pane layout restores automatically with the correct profiles, directories, coloured prompts, and badges. No manual setup needed.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Launch Claude Code</h2>
+    </div>
+    <p class="section-intro">Type <span class="mono">cc</span> in any pane. The alias you set up in Step 4 launches Claude Code with the correct model, effort level, and permissions for that pane.</p>
+
+    <table class="data-table">
+      <thead><tr><th>Pane</th><th><code>cc</code> expands to</th><th>What you see</th></tr></thead>
+      <tbody>
+        <tr>
+          <td style="color:var(--purple);font-weight:600">AUDIT</td>
+          <td class="cell-mono">claude --model opus --effort high --permission-mode plan</td>
+          <td>Opus &middot; plan mode on</td>
+        </tr>
+        <tr>
+          <td style="color:var(--green);font-weight:600">IMPL</td>
+          <td class="cell-mono">claude --model sonnet --effort high --permission-mode acceptEdits</td>
+          <td>Sonnet &middot; accept edits on</td>
+        </tr>
+        <tr>
+          <td style="color:var(--cyan);font-weight:600">PROMPT</td>
+          <td class="cell-mono">claude --model sonnet --effort medium</td>
+          <td>Sonnet &middot; medium effort</td>
+        </tr>
+        <tr>
+          <td style="color:var(--amber);font-weight:600">PLAN</td>
+          <td class="cell-mono">claude --model sonnet --effort low</td>
+          <td>Sonnet &middot; low effort</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="screenshot">
+      <img src="screenshots/05-claude-running.png" alt="All 4 panes with Claude Code running showing different models and effort levels">
+      <div class="screenshot-caption">All 4 panes with Claude Code running &mdash; Opus in AUDIT (plan mode), Sonnet in the rest</div>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">&#128161;</span>
+      <div><strong>Override anytime:</strong> The <span class="mono">cc</span> alias is a convenience, not a lock-in. You can always type the full command with different flags when you need to (e.g. <span class="mono">claude --model opus --effort max</span>).
+      <br><br><strong>Note:</strong> On some systems, <span class="mono">cc</span> is aliased to the C compiler. If you work with C/C++, rename the alias to <span class="mono">cl</span> or <span class="mono">claude-go</span> in your <span class="mono">~/.zshrc</span>.</div>
+    </div>
+
+    <div class="step" style="margin-top:20px">
+      <div class="step-header">
+        <span class="step-n">Ref</span>
+        <span class="step-title">CLI flags reference</span>
+      </div>
+      <div class="step-body">
+        <table class="data-table">
+          <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td class="cell-mono">--model opus|sonnet|haiku</td><td>Model selection (or full IDs like <span class="mono">claude-opus-4-6</span>)</td></tr>
+            <tr><td class="cell-mono">--effort low|medium|high|max</td><td>Thinking budget: <span class="mono">low</span> = fast, minimal reasoning; <span class="mono">medium</span> = balanced; <span class="mono">high</span> = extended reasoning chains, more tokens; <span class="mono">max</span> = maximum depth (slowest, most expensive). PLAN uses <span class="mono">low</span> — architectural discussion doesn't need deep reasoning chains.</td></tr>
+            <tr><td class="cell-mono">--permission-mode plan</td><td>Read-only &mdash; Claude cannot write files</td></tr>
+            <tr><td class="cell-mono">--permission-mode acceptEdits</td><td>Auto-accept file edits without prompting</td></tr>
+            <tr><td class="cell-mono">--append-system-prompt "..."</td><td>Add custom instructions on top of defaults</td></tr>
+            <tr><td class="cell-mono">--continue</td><td>Resume most recent conversation in this directory</td></tr>
+            <tr><td class="cell-mono">--resume</td><td>Resume a specific session by ID</td></tr>
+          </tbody>
+        </table>
+        <div class="callout warn" style="margin-top:12px">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <div><strong>Version note:</strong> Flags verified against Claude Code v2.1.81 (March 2026). CLI tools update frequently &mdash; run <span class="mono">claude --help</span> if a flag isn't recognised.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Keyboard Shortcuts</h2>
+    </div>
+
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">iTerm2 navigation</p>
+    <div class="shortcut-grid">
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8997;</span><span class="key">&larr;/&rarr;</span></div><div class="shortcut-desc">Switch panes (left/right)</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8997;</span><span class="key">&uarr;/&darr;</span></div><div class="shortcut-desc">Switch panes (up/down)</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">D</span></div><div class="shortcut-desc">Split right</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8679;</span><span class="key">D</span></div><div class="shortcut-desc">Split down</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8679;</span><span class="key">&#9166;</span></div><div class="shortcut-desc">Zoom current pane (toggle)</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">M</span></div><div class="shortcut-desc">Set mark (bookmark position)</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8679;</span><span class="key">&uarr;</span></div><div class="shortcut-desc">Jump to previous mark</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">K</span></div><div class="shortcut-desc">Clear terminal buffer</div></div>
+    </div>
+
+    <p style="font-size:13px;color:var(--text-muted);margin:24px 0 12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Claude Code (inside a session)</p>
+    <div class="shortcut-grid">
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">Esc</span></div><div class="shortcut-desc">Interrupt generation</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">Ctrl</span><span class="key">C</span></div><div class="shortcut-desc">Cancel, return to prompt</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/clear</span></div><div class="shortcut-desc">Reset conversation context</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/compact</span></div><div class="shortcut-desc">Compress context (keeps summary)</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/model</span></div><div class="shortcut-desc">Switch model mid-session</div></div>
+      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/effort</span></div><div class="shortcut-desc">Switch effort mid-session</div></div>
+    </div>
+
+    <p style="font-size:13px;color:var(--text-muted);margin:24px 0 12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">iTerm2 triggers (optional)</p>
+    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">Auto-highlight keywords in terminal output. Set up in <strong>Profile &rarr; Advanced &rarr; Triggers &rarr; +</strong></p>
+    <table class="data-table">
+      <tr><th>Regex</th><th>Action</th><th>Colour</th></tr>
+      <tr><td><span class="mono">\b(CRITICAL|ERROR|FAIL(ED)?)\b</span></td><td>Highlight Text</td><td>Red background</td></tr>
+      <tr><td><span class="mono">\b(PASS(ED)?|SUCCESS)\b</span></td><td>Highlight Text</td><td>Green background</td></tr>
+      <tr><td><span class="mono">\b(WARNING|WARN|TODO)\b</span></td><td>Highlight Text</td><td>Yellow background</td></tr>
+    </table>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Workflow &amp; Tips</h2>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">&#8634;</span>
+          <span class="step-title">The change cycle</span>
+        </div>
+        <div class="step-body">
+          <p>Every code change follows this pattern across panes:</p>
+          <div class="code-block">
+<div><span style="color:#fcd34d">PLAN</span>   &rarr; Discuss approach. No file writes. Get design sign-off.</div>
+<div><span style="color:#6ee7b7">IMPL</span>   &rarr; Implement. Run tests (must pass before proceeding).</div>
+<div><span style="color:#c4b5fd">AUDIT</span>  &rarr; Review changed files (read-only). Feed findings to IMPL.</div>
+<div><span style="color:#67e8f9">PROMPT</span> &rarr; Prompt/content changes (always separate from code).</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">&#9889;</span>
+          <span class="step-title">Cross-pane handoff</span>
+        </div>
+        <div class="step-body">
+          <p>When AUDIT finds an issue, copy its output and paste into IMPL:</p>
+          <div class="code-block">
+<div><span class="str">"The AUDIT pane identified: [paste findings].</span></div>
+<div><span class="str">Fix this while preserving existing patterns.</span></div>
+<div><span class="str">Do not touch unrelated files."</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">&#128161;</span>
+          <span class="step-title">Keep context clean</span>
+        </div>
+        <div class="step-body">
+          <ul>
+            <li><strong>Re-anchor on long sessions:</strong> "Re-read CLAUDE.md and confirm the project rules. Then..."</li>
+            <li><strong>Scope AUDIT reviews:</strong> "Focus ONLY on src/auth.py. Do not read any other files."</li>
+            <li><strong>Clear stale context:</strong> <span class="mono">/clear</span> resets the conversation entirely.</li>
+            <li><strong>Compress instead:</strong> <span class="mono">/compact</span> summarises and frees context without losing history.</li>
+            <li><strong>State sync before review:</strong> Run <span class="mono">/clear</span> in the AUDIT pane before starting a review pass on code that IMPL just wrote. This ensures AUDIT reads current file contents, not stale versions cached in its context.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout success" style="margin-top:24px">
+      <span class="callout-icon">&#127919;</span>
+      <div><strong>The golden rule:</strong> When a conversation goes stale &mdash; Claude starts repeating itself or loses track of files &mdash; type <span class="mono">/clear</span> and start fresh with a tightly-scoped prompt. Short, focused sessions always beat long sprawling ones.</div>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>Daily Playbook</h2>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">AM</span>
+          <span class="step-title">Start of session</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div class="comment"># 1. Open iTerm2 (arrangement auto-restores)</div>
+<div></div>
+<div class="comment"># 2. Type "cc" in each pane</div>
+<div></div>
+<div class="comment"># 2.5 AUDIT &mdash; /clear (fresh context for first review)</div>
+<div><span class="mono">/clear</span></div>
+<div></div>
+<div class="comment"># 3. PLAN &mdash; review where you left off</div>
+<div><span class="cmd">git</span> log <span class="flag">--oneline</span> <span class="flag">-10</span></div>
+<div></div>
+<div class="comment"># 4. IMPL &mdash; quick smoke test</div>
+<div><span class="cmd">pytest</span> tests/ <span class="flag">-x</span> <span class="flag">--tb=short</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">PM</span>
+          <span class="step-title">End of session</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div class="comment"># 1. IMPL &mdash; run full test suite</div>
+<div><span class="cmd">pytest</span> tests/ <span class="flag">-v</span> <span class="flag">--tb=short</span></div>
+<div></div>
+<div class="comment"># 2. IMPL &mdash; stage and commit</div>
+<div><span class="cmd">git</span> add <span class="flag">-p</span></div>
+<div><span class="cmd">git</span> commit <span class="flag">-m</span> <span class="str">"feat: ..."</span></div>
+<div></div>
+<div class="comment"># 3. Compress long contexts instead of clearing</div>
+<div class="comment"># Type /compact inside Claude Code</div>
+<div></div>
+<div class="comment"># 4. Save arrangement if layout changed</div>
+<div class="comment"># Window &rarr; Arrangements &rarr; Save Window Arrangement</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 10 -->
+  <div class="section" id="s10">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>Adapt for Other Projects</h2>
+    </div>
+    <p class="section-intro">This setup is project-agnostic. To use it with a different codebase:</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Create new profiles (or duplicate existing ones)</span>
+        </div>
+        <div class="step-body">
+          <p>Use a project-specific prefix: <span class="mono">MYPROJECT-AUDIT</span>, <span class="mono">MYPROJECT-IMPL</span>, etc. Or keep <span class="mono">DEV-*</span> and just change the directory.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Update Initial Directory in each profile</span>
+        </div>
+        <div class="step-body">
+          <p>Point to the new project path in each profile's General tab.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <span class="step-title">Add case entries to ~/.zshrc (if using new profile names)</span>
+        </div>
+        <div class="step-body">
+          <p>Add matching entries in both <span class="mono">case</span> blocks for the new names:</p>
+          <div class="code-block">
+<div class="comment"># Example with a project-specific prefix</div>
+<div><span class="str">MYPROJECT-AUDIT</span>)</div>
+<div>  PANE_ROLE=<span class="str">"AUDIT"</span></div>
+<div>  PROMPT=<span class="str">"%F{magenta}[AUDIT]%f %~ %# "</span> ;;</div>
+<div class="comment"># ... same pattern for MYPROJECT-IMPL, MYPROJECT-PROMPT, MYPROJECT-PLAN</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">4</span>
+          <span class="step-title">Save a new window arrangement per project</span>
+        </div>
+        <div class="step-body">
+          <p>Name it after the project (<strong>Window &rarr; Arrangements &rarr; Save Window Arrangement</strong>). To switch between projects later, use <strong>Window &rarr; Arrangements &rarr; [arrangement name]</strong> &mdash; iTerm2 opens the saved 4-pane layout for that project in a new window.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 11 -->
+  <div class="section" id="s11">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>Two-Tier Hook Architecture</h2>
+    </div>
+    <p class="section-intro">Hook scripts enforce safety invariants that prompt instructions alone cannot guarantee — blocking dangerous tool calls before they execute and tripping a circuit-breaker on repeated failures.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Copy hook scripts to ~/.claude/hooks/</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>mkdir -p ~/.claude/hooks</div>
+<div>cp hooks/protect-env.py ~/.claude/hooks/</div>
+<div>cp hooks/protect-git-push.py ~/.claude/hooks/</div>
+<div>cp hooks/circuit-breaker.py ~/.claude/hooks/</div>
+<div>cp hooks/session-start-reset.py ~/.claude/hooks/</div>
+<div>cp hooks/version-check.py ~/.claude/hooks/</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Merge hooks/settings.json.example into ~/.claude/settings.json</span>
+        </div>
+        <div class="step-body">
+          <p>Open (or create) <span class="mono">~/.claude/settings.json</span>. Copy the <span class="mono">"hooks"</span> block from <span class="mono">hooks/settings.json.example</span> into the top level of the JSON object. All <span class="mono">"command"</span> values use <span class="mono">$HOME</span> — Claude Code does not expand <span class="mono">~</span>.</p>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Why <code>$HOME</code> instead of <code>~</code>?</strong> Claude Code does not expand <span class="mono">~</span> in hook command strings. Use <span class="mono">$HOME</span> which the shell expands at execution time, or replace with your full absolute path.</div>
+          </div>
+          <p>The example also includes <span class="mono">"env": &#123;"CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"&#125;</span>. This tells Claude Code to auto-compact the conversation context when it reaches 50% of the context window. Without this, Claude waits until near the limit before compacting, which can cause abrupt context loss mid-session. Set to <span class="mono">"0"</span> to disable, or remove the <span class="mono">"env"</span> block entirely to use the default threshold.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <span class="step-title">What each hook does</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Hook</th><th>Tier</th><th>Blocks when</th></tr>
+            <tr><td><span class="mono">protect-env.py</span></td><td>PreToolUse</td><td>Edit/Write/MultiEdit targets any <span class="mono">.env</span> file</td></tr>
+            <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td>Bash command matches <span class="mono">git … push</span></td></tr>
+            <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
+            <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter — never blocks)</td></tr>
+            <tr><td><span class="mono">version-check.py</span></td><td>SessionStart</td><td>(never blocks &mdash; prints update checklist when Claude Code version changes)</td></tr>
+          </table>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <div><strong>macOS and Linux only</strong> The hook scripts use <span class="mono">fcntl</span> for file locking, which is not available on Windows. This matches the iTerm2 requirement (macOS only).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 12 -->
+  <div class="section" id="s12">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <h2>gate/ship Workflow</h2>
+    </div>
+    <p class="section-intro">Two aliases in the IMPL pane create a hard gate between implementation and review.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">The aliases (defined in zshrc-snippet.sh)</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div class="comment"># gate: run full test suite; exit code 5 = no tests collected → helpful hint</div>
+<div>alias gate='python3 -m pytest tests/ -x --tb=short &amp;&amp; echo "✅ GATE PASSED" || { _rc=$?; [ $_rc -eq 5 ] &amp;&amp; echo "No tests found — add tests/test_placeholder.py to get started" || false; }'</div>
+<div class="comment"># ship: gate + interactive stage + commit</div>
+<div>alias ship='gate &amp;&amp; git add -p &amp;&amp; git commit'</div>
+          </div>
+          <p>Both aliases are only defined when <span class="mono">$ITERM_PROFILE == DEV-IMPL</span>. They are no-ops in other panes.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">The handoff rule</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>IMPL → implement → gate (must pass) → AUDIT → findings → IMPL → fix → gate → AUDIT</div>
+          </div>
+          <p>Never send work to AUDIT until <span class="mono">gate</span> passes.</p>
+          <div class="callout success">
+            <span class="callout-icon">&#10003;</span>
+            <div><strong>Why this matters</strong> Sending failing code to AUDIT wastes Opus tokens on defects the test suite already catches. The <span class="mono">gate</span> alias makes this impossible to forget.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 13 -->
+  <div class="section" id="s13">
+    <div class="section-header">
+      <span class="section-num">13</span>
+      <h2>SESSION_LOG Cold-Start Fix</h2>
+    </div>
+    <p class="section-intro">Without a session log, each IMPL session starts cold — Claude asks for a project overview instead of resuming from where work stopped.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Keep SESSION_LOG.md in the project root</span>
+        </div>
+        <div class="step-body">
+          <p>Append a new entry at the end of every session. Never overwrite old entries. Minimum viable format:</p>
+          <div class="code-block">
+<div>### YYYY-MM-DD — one-line task summary</div>
+<div>- **Done**: what was completed this session</div>
+<div>- **Decisions**: any architectural choices made</div>
+<div>- **Next**: open items for the next session</div>
+          </div>
+          <p style="font-size:14px;color:var(--text-secondary);margin-top:12px;margin-bottom:4px;">Real example:</p>
+          <div class="code-block">
+<div>### 2026-03-22 — Add rate-limit retry to API client</div>
+<div>- **Done**: Implemented exponential backoff in api_client.py. All 24 tests pass.</div>
+<div>- **Decisions**: Max 3 retries, 2s base delay. Errors logged with context, not raised.</div>
+<div>- **Next**: AUDIT review of api_client.py. Then wire retry into pipeline scheduler.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Instruct Claude to read it on session start</span>
+        </div>
+        <div class="step-body">
+          <p>In your <span class="mono">~/.claude/CLAUDE.md</span> (see Step 14), add a Session Continuity instruction: <em>"At the start of every session, read the last 60 lines of SESSION_LOG.md and surface the most recent 'Next:' items before doing anything else."</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 14 -->
+  <div class="section" id="s14">
+    <div class="section-header">
+      <span class="section-num">14</span>
+      <h2>CLAUDE.md Split Pattern</h2>
+    </div>
+    <p class="section-intro">Separating global rules from project-specific rules reduces noise and prevents cross-project contamination in every Claude session.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Two files, two scopes</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>File</th><th>Location</th><th>Committed?</th><th>Contains</th></tr>
+            <tr><td><span class="mono">CLAUDE.md</span></td><td><span class="mono">~/.claude/</span></td><td>No — personal</td><td>Coding conventions, error-handling policy, tool preferences</td></tr>
+            <tr><td><span class="mono">CLAUDE.md</span></td><td><span class="mono">.claude/</span> (repo)</td><td>Yes</td><td>Project architecture, active constraints, session continuity</td></tr>
+          </table>
+          <p>Claude Code merges both automatically — global first, project-specific second.</p>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Keep global rules lean</strong> Your <span class="mono">~/.claude/CLAUDE.md</span> is loaded into every session across every project. Aim for under 80 lines — move project-specific detail into the repo's <span class="mono">.claude/CLAUDE.md</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Use the included templates</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div class="comment"># Global rules — do NOT commit</div>
+<div>cp CLAUDE.md.template ~/.claude/CLAUDE.md</div>
+<div class="comment"># Project reference — commit this</div>
+<div>cp REFERENCE.md.template .claude/REFERENCE.md</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 15 -->
+  <div class="section" id="s15">
+    <div class="section-header">
+      <span class="section-num">15</span>
+      <h2>Cheatsheet</h2>
+    </div>
+    <p class="section-intro">Everything on one screen — copy, paste, go.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Pane roles</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Pane</th><th>Model</th><th>Effort</th><th>Permission</th><th>Purpose</th></tr>
+            <tr><td><span class="mono">AUDIT</span></td><td>Opus</td><td>high</td><td><span class="mono">plan</span></td><td>Code review (read-only)</td></tr>
+            <tr><td><span class="mono">IMPL</span></td><td>Sonnet</td><td>high</td><td><span class="mono">acceptEdits</span></td><td>Write code + run tests</td></tr>
+            <tr><td><span class="mono">PROMPT</span></td><td>Sonnet</td><td>medium</td><td>default</td><td>Prompt engineering</td></tr>
+            <tr><td><span class="mono">PLAN</span></td><td>Sonnet</td><td>low</td><td>default</td><td>Architecture + planning</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Shell aliases</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Alias</th><th>Pane</th><th>What it does</th></tr>
+            <tr><td><span class="mono">cc</span></td><td>All</td><td>Launch Claude Code with role-correct flags</td></tr>
+            <tr><td><span class="mono">gate</span></td><td>IMPL</td><td>Run full test suite — must pass before AUDIT handoff</td></tr>
+            <tr><td><span class="mono">ship</span></td><td>IMPL</td><td><span class="mono">gate</span> + <span class="mono">git add -p</span> + <span class="mono">git commit</span></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <span class="step-title">Keyboard shortcuts</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Shortcut</th><th>Action</th></tr>
+            <tr><td><span class="mono">⌘⌥ ←/→/↑/↓</span></td><td>Switch panes</td></tr>
+            <tr><td><span class="mono">⌘⇧↵</span></td><td>Zoom/unzoom pane</td></tr>
+            <tr><td><span class="mono">⌘D</span></td><td>Split right</td></tr>
+            <tr><td><span class="mono">⌘⇧D</span></td><td>Split down</td></tr>
+            <tr><td><span class="mono">Esc</span></td><td>Stop Claude generation</td></tr>
+            <tr><td><span class="mono">/clear</span></td><td>Reset conversation context</td></tr>
+            <tr><td><span class="mono">/compact</span></td><td>Compress context (keep history)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">4</span>
+          <span class="step-title">Daily workflow</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div class="comment"># Morning</div>
+<div>1. Open iTerm2 (arrangement auto-restores)</div>
+<div>2. Type <span class="str">cc</span> in each pane</div>
+<div>&nbsp;</div>
+<div class="comment"># Working</div>
+<div>3. PLAN → discuss approach (no writes)</div>
+<div>4. IMPL → implement → <span class="str">gate</span> (must pass)</div>
+<div>5. AUDIT → review changed files → findings back to IMPL</div>
+<div>&nbsp;&nbsp;&nbsp;<span class="mono">/clear</span> AUDIT before reviewing (state sync)</div>
+<div>&nbsp;</div>
+<div class="comment"># End of day</div>
+<div>6. IMPL → <span class="str">ship</span> (gate + stage + commit)</div>
+<div>7. Update SESSION_LOG.md</div>
+<div>8. /compact in long sessions</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">5</span>
+          <span class="step-title">Safety hooks</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Hook</th><th>Event</th><th>Blocks</th></tr>
+            <tr><td><span class="mono">protect-env.py</span></td><td>PreToolUse</td><td>Any edit to <span class="mono">.env</span> files</td></tr>
+            <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td><span class="mono">git push</span> commands</td></tr>
+            <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
+            <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter)</td></tr>
+            <tr><td><span class="mono">version-check.py</span></td><td>SessionStart</td><td>(never blocks &mdash; prints update checklist on version change)</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 16 -->
+  <div class="section" id="s16">
+    <div class="section-header">
+      <span class="section-num">16</span>
+      <h2>MCP Server, Commands &amp; Skills</h2>
+    </div>
+    <p class="section-intro">Phase 6 additions — GitHub MCP integration, the <span class="mono">/reflect</span> command, and contextual skills.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">GitHub MCP Server</span>
+        </div>
+        <div class="step-body">
+          <p>The included <span class="mono">.mcp.json.example</span> configures the GitHub MCP server, giving Claude read access to GitHub issues, PRs, and code search inside any session.</p>
+          <ol style="margin-left:20px">
+            <li>Install the binary — see <a href="https://github.com/github/github-mcp-server" style="color:var(--blue)">github.com/github/github-mcp-server</a>.</li>
+            <li>Copy and configure:
+              <div class="code-block" style="margin-top:8px">
+<div>cp .mcp.json.example ~/.claude/.mcp.json</div>
+<div class="comment"># Edit ~/.claude/.mcp.json:</div>
+<div class="comment">#   - Replace /path/to/github-mcp-server with the actual binary path</div>
+<div class="comment">#   - Replace ghp_your_readonly_pat_here with a real read-only PAT</div>
+              </div>
+            </li>
+            <li>Restart Claude Code. Run <span class="mono">/mcp</span> to confirm the server is connected.</li>
+          </ol>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Scope:</strong> <span class="mono">~/.claude/.mcp.json</span> makes the server available in all projects. For per-project scope, place the file at <span class="mono">.claude/.mcp.json</span> inside the repo instead.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">/reflect slash command</span>
+        </div>
+        <div class="step-body">
+          <p>Run <span class="mono">/reflect</span> at the end of any IMPL or AUDIT session. Claude reads the recent git log and diff, then outputs a formatted table of suggested CLAUDE.md additions — ready to copy and paste.</p>
+          <div class="code-block">
+<div class="comment"># Install once:</div>
+<div>mkdir -p ~/.claude/commands</div>
+<div>cp commands/reflect.md ~/.claude/commands/reflect.md</div>
+          </div>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <div><span class="mono">/reflect</span> never edits CLAUDE.md directly. It outputs suggestions — you decide what to incorporate.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <span class="step-title">Contextual skills</span>
+        </div>
+        <div class="step-body">
+          <p>Three skills that load relevant instructions automatically when Claude is doing review or test work:</p>
+          <table class="data-table">
+            <tr><th>Skill</th><th>Pane</th><th>Adds</th></tr>
+            <tr><td><span class="mono">code-review</span></td><td>AUDIT</td><td>Project-specific review conventions</td></tr>
+            <tr><td><span class="mono">security-audit</span></td><td>AUDIT</td><td>Security checklist and vulnerability patterns</td></tr>
+            <tr><td><span class="mono">testing</span></td><td>IMPL</td><td>pytest conventions matching the project</td></tr>
+          </table>
+          <div class="code-block" style="margin-top:12px">
+<div class="comment"># Install once:</div>
+<div>cp -r skills/ ~/.claude/skills/</div>
+          </div>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">Skills activate automatically — no manual invocation needed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 17 -->
+  <div class="section" id="s17">
+    <div class="section-header">
+      <span class="section-num">17</span>
+      <h2>Troubleshooting</h2>
+    </div>
+    <p class="section-intro">Common failure modes and how to fix them.</p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T1</span>
+          <span class="step-title"><span class="mono">$ITERM_PROFILE</span> is empty &mdash; <span class="mono">cc</span> launches the wrong model</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> <span class="mono">echo $ITERM_PROFILE</span> returns nothing. The <span class="mono">cc</span> alias falls through with no model flags.</p>
+          <p><strong>Cause:</strong> Old iTerm2 version (&lt; 3.3) or the pane was opened before the profile was applied.</p>
+          <p><strong>Fix:</strong></p>
+          <ul>
+            <li>Update iTerm2 to 3.3 or later (Help &rarr; Check For Updates).</li>
+            <li>Close and reopen the pane by selecting the profile explicitly: <strong>Profiles &rarr; [your profile name]</strong> &rarr; Open in current tab.</li>
+            <li>Confirm with: <span class="mono">echo $ITERM_PROFILE</span> &mdash; should print <span class="mono">DEV-AUDIT</span>, etc.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T2</span>
+          <span class="step-title"><span class="mono">cc</span> launches the C compiler instead of Claude</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> <span class="mono">which cc</span> shows <span class="mono">/usr/bin/cc</span>. Typing <span class="mono">cc</span> outputs compiler error messages.</p>
+          <p><strong>Fix:</strong> Rename the alias in <span class="mono">~/.zshrc</span>. Replace all 4 <span class="mono">alias cc=</span> occurrences with <span class="mono">alias cl=</span> (or any name you prefer), then reload:</p>
+          <div class="code-block">
+<div class="comment"># In ~/.zshrc — change all 4 occurrences:</div>
+<div>DEV-AUDIT)  alias cl='claude --model opus --effort high --permission-mode plan' ;;</div>
+<div>DEV-IMPL)   alias cl='claude --model sonnet --effort high --permission-mode acceptEdits' ;;</div>
+<div class="comment"># ... then:</div>
+<div>source ~/.zshrc</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T3</span>
+          <span class="step-title">Hooks not firing &mdash; <span class="mono">.env</span> edits or <span class="mono">git push</span> not blocked</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Check 1 &mdash; Hook files exist:</strong></p>
+          <div class="code-block">
+<div>ls ~/.claude/hooks/</div>
+<div class="comment"># Expected: protect-env.py  protect-git-push.py  circuit-breaker.py  session-start-reset.py</div>
+          </div>
+          <p><strong>Check 2 &mdash; Python 3 is available:</strong></p>
+          <div class="code-block">
+<div>which python3</div>
+<div class="comment"># Must return a path. If missing: brew install python3</div>
+          </div>
+          <p><strong>Check 3 &mdash; settings.json is valid JSON:</strong></p>
+          <div class="code-block">
+<div>python3 -m json.tool ~/.claude/settings.json</div>
+<div class="comment"># Prints formatted JSON on success. Any error = invalid JSON in the file.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T4</span>
+          <span class="step-title">Circuit-breaker stuck &mdash; session halted after tool failures</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> Claude is blocked and won't proceed. The circuit-breaker tripped after 3 consecutive tool failures.</p>
+          <p><strong>Fix A &mdash; Start a new session:</strong> Press <span class="mono">Ctrl+C</span>, then type <span class="mono">cc</span>. The <span class="mono">session-start-reset.py</span> hook fires automatically on session start and resets the counter.</p>
+          <p><strong>Fix B &mdash; Reset the state file directly:</strong></p>
+          <div class="code-block">
+<div class="comment"># Run from your project root (where Claude Code was launched from)</div>
+<div>rm -f ./circuit-breaker-state.json</div>
+<div class="comment"># Then /clear inside Claude Code to reset conversation context.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T5</span>
+          <span class="step-title"><span class="mono">gate</span> fails with "pytest not found" or collects 0 tests</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> <span class="mono">gate</span> exits non-zero immediately or pytest reports <span class="mono">collected 0 items</span>.</p>
+          <ul>
+            <li><strong>Venv not active:</strong> Run <span class="mono">source venv/bin/activate</span> (or <span class="mono">source .venv/bin/activate</span>) before running <span class="mono">gate</span>.</li>
+            <li><strong>pytest not installed:</strong> <span class="mono">which pytest</span> should point inside your venv. If not: <span class="mono">pip install pytest</span>.</li>
+            <li><strong>No test files yet:</strong> Add a placeholder so the intent is explicit: <span class="mono">touch tests/test_placeholder.py</span> with a single passing test.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T6</span>
+          <span class="step-title">Need to push to git &mdash; hook is blocking it</span>
+        </div>
+        <div class="step-body">
+          <p>The <span class="mono">protect-git-push.py</span> hook blocks Claude from running <span class="mono">git push</span> autonomously. <em>You</em> can always push directly from a regular terminal prompt &mdash; hooks only intercept tool calls inside a Claude Code session.</p>
+          <div class="code-block">
+<div class="comment"># Open a new iTerm2 tab (not inside a Claude session) and run:</div>
+<div>git push</div>
+          </div>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <div>This is by design. Review the diff yourself before pushing &mdash; that's the point of the hook.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T7</span>
+          <span class="step-title">Claude CLI update broke the <span class="mono">cc</span> alias</span>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> After <span class="mono">npm update -g @anthropic-ai/claude-code</span>, typing <span class="mono">cc</span> errors with an unknown flag message.</p>
+          <ol style="margin-left:20px">
+            <li>Run <span class="mono">claude --help</span> to see current supported flags.</li>
+            <li>Update the alias block in <span class="mono">~/.zshrc</span> to match, then <span class="mono">source ~/.zshrc</span>.</li>
+            <li><strong>Most stable flags:</strong> <span class="mono">--model</span> and <span class="mono">--effort</span> have been stable across versions. <span class="mono">--permission-mode</span> values are also stable. Check the Claude Code release notes for breaking changes.</li>
+          </ol>
+          <p style="font-size:14px;color:var(--text-muted);margin-top:8px;">Run <span class="mono">claude --version</span> to check your installed version. This guide was verified against v2.1.81 (March 2026).</p>
+          <div class="callout tip" style="margin-top:12px">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Tip:</strong> The <span class="mono">version-check.py</span> hook (Step 11) detects version changes automatically and prints this checklist at session start.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <span>iTerm2 + Claude Code &middot; 4-Pane Setup Guide</span>
+  <span>Verified with Claude Code v2.1.81 &middot; March 2026</span>
+</div>
+
+</body>
+</html>

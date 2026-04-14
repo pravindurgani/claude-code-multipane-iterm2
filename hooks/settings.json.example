@@ -1,0 +1,53 @@
+# Copy the hooks block into your ~/.claude/settings.json. Adjust $HOME if needed.
+# NOTE: This file is NOT valid JSON — strip this comment before using json.load().
+{
+  "env": {
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [{
+          "type": "command",
+          "command": "python3 $HOME/.claude/hooks/protect-env.py",
+          "timeout": 5
+        }]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [{
+          "type": "command",
+          "command": "python3 $HOME/.claude/hooks/protect-git-push.py",
+          "timeout": 5
+        }]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [{
+          "type": "command",
+          "command": "python3 $HOME/.claude/hooks/circuit-breaker.py",
+          "timeout": 5
+        }]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [{
+          "type": "command",
+          "command": "python3 $HOME/.claude/hooks/session-start-reset.py",
+          "timeout": 5
+        }]
+      },
+      {
+        "hooks": [{
+          "type": "command",
+          "command": "python3 $HOME/.claude/hooks/version-check.py",
+          "timeout": 10
+        }]
+      }
+    ]
+  }
+}

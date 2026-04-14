@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Coding Setup — MacBook M3 16GB Quick Start</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8f7f4;
+    --surface: #ffffff;
+    --surface-2: #f0eeea;
+    --surface-3: #e8e6e0;
+    --border: #e0ddd6;
+    --border-dim: #ebe8e2;
+    --accent: #b47a1a;
+    --accent-dim: rgba(180,122,26,0.08);
+    --green: #1a7a5a;
+    --green-dim: rgba(26,122,90,0.07);
+    --red: #c0392b;
+    --red-dim: rgba(192,57,43,0.06);
+    --blue: #2563a8;
+    --blue-dim: rgba(37,99,168,0.06);
+    --purple: #6d3fbf;
+    --purple-dim: rgba(109,63,191,0.06);
+    --cyan: #0e7c8a;
+    --cyan-dim: rgba(14,124,138,0.06);
+    --text: #1a1a1a;
+    --text-muted: #5c5c5c;
+    --text-dim: #8a8a8a;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', -apple-system, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ─── HEADER ─── */
+  header {
+    padding: 2.5rem 3rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -80px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(180,122,26,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-dim);
+    display: inline-block;
+    padding: 0.25rem 0.7rem;
+    border-radius: 100px;
+    border: 1px solid rgba(180,122,26,0.15);
+    margin-bottom: 1rem;
+  }
+
+  header h1 {
+    font-family: var(--mono);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  header h1 span { color: var(--accent); }
+
+  header p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    max-width: 640px;
+  }
+
+  /* ─── NAV ─── */
+  .nav-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(248,247,244,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 3rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+
+  .nav-link {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0.75rem 0.9rem;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+
+  .nav-link:hover { color: var(--text-muted); }
+
+  /* ─── SECTIONS ─── */
+  .section {
+    padding: 2.5rem 3rem;
+    border-bottom: 1px solid var(--border-dim);
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-dim);
+    max-width: 60px;
+  }
+
+  .section h2 {
+    font-family: var(--mono);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .section > p.desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    max-width: 640px;
+    margin-bottom: 1.5rem;
+  }
+
+  /* ─── CODE BLOCKS ─── */
+  .code-block {
+    background: #1a1a2e;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin: 0.8rem 0;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    line-height: 1.7;
+    color: #e0e0e0;
+  }
+
+  .code-block .comment { color: #6a6a8a; }
+  .code-block .cmd { color: #7ec8e3; }
+  .code-block .flag { color: #c9a0dc; }
+  .code-block .string { color: #a8d8a8; }
+
+  /* ─── TABLES ─── */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    font-size: 0.78rem;
+  }
+
+  .info-table th {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 0.6rem 0.8rem;
+    border-bottom: 2px solid var(--border);
+    background: var(--surface-2);
+  }
+
+  .info-table td {
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--border-dim);
+    color: var(--text-muted);
+  }
+
+  .info-table td:first-child {
+    font-family: var(--mono);
+    font-weight: 500;
+    color: var(--text);
+    font-size: 0.74rem;
+  }
+
+  .info-table tr:hover td { background: var(--accent-dim); }
+
+  /* ─── CALLOUTS ─── */
+  .callout {
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+  }
+
+  .callout-icon {
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .callout.tip {
+    background: var(--green-dim);
+    border: 1px solid rgba(26,122,90,0.15);
+    color: var(--green);
+  }
+
+  .callout.warn {
+    background: var(--accent-dim);
+    border: 1px solid rgba(180,122,26,0.15);
+    color: var(--accent);
+  }
+
+  .callout.danger {
+    background: var(--red-dim);
+    border: 1px solid rgba(192,57,43,0.15);
+    color: var(--red);
+  }
+
+  .callout.info {
+    background: var(--blue-dim);
+    border: 1px solid rgba(37,99,168,0.15);
+    color: var(--blue);
+  }
+
+  /* ─── CARDS ─── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.8rem;
+    margin: 1rem 0;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border-dim);
+    border-radius: 10px;
+    padding: 1.2rem;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: var(--border); }
+
+  .card h4 {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    color: var(--accent);
+  }
+
+  .card p, .card li {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .card ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .card li {
+    padding: 0.2rem 0;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .card li::before {
+    content: '\2192';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+  }
+
+  /* ─── COMPARISON TABLE ─── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.76rem;
+  }
+
+  .compare-table th {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.6rem 0.8rem;
+    border-bottom: 2px solid var(--border);
+    text-align: left;
+  }
+
+  .compare-table th:nth-child(1) { color: var(--text-dim); background: var(--surface-2); }
+  .compare-table th:nth-child(2) { color: var(--accent); background: var(--accent-dim); }
+  .compare-table th:nth-child(3) { color: var(--blue); background: var(--blue-dim); }
+  .compare-table th:nth-child(4) { color: var(--text-dim); background: var(--surface-2); }
+
+  .compare-table td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid var(--border-dim);
+    color: var(--text-muted);
+  }
+
+  .compare-table td:first-child {
+    font-family: var(--mono);
+    font-weight: 600;
+    color: var(--text);
+    font-size: 0.72rem;
+  }
+
+  .compare-table tr:hover td { background: rgba(180,122,26,0.03); }
+
+  /* ─── STEP CARDS ─── */
+  .step-list { display: flex; flex-direction: column; gap: 0.6rem; margin: 1rem 0; }
+
+  .step-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border-dim);
+    border-radius: 10px;
+    padding: 1rem 1.4rem;
+    transition: border-color 0.2s;
+  }
+
+  .step-item:hover { border-color: var(--border); }
+
+  .step-num {
+    font-family: var(--mono);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+    width: 28px;
+    text-align: right;
+    margin-top: 0.1rem;
+  }
+
+  .step-content h4 {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+
+  .step-content p {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ─── BADGES ─── */
+  .badge {
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 0.3rem;
+  }
+
+  .badge.cloud { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(180,122,26,0.2); }
+  .badge.local { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(37,99,168,0.2); }
+  .badge.free { background: var(--green-dim); color: var(--green); border: 1px solid rgba(26,122,90,0.2); }
+  .badge.ram { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(109,63,191,0.2); }
+
+  /* ─── CHECKLIST ─── */
+  .checklist {
+    background: var(--surface);
+    border: 1px solid var(--border-dim);
+    border-radius: 10px;
+    padding: 1.4rem;
+    margin: 1rem 0;
+  }
+
+  .checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-dim);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  .checklist-item:last-child { border-bottom: none; }
+
+  .checklist-item input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    background: var(--surface-2);
+    flex-shrink: 0;
+    cursor: pointer;
+    margin-top: 2px;
+    transition: all 0.15s;
+  }
+
+  .checklist-item input[type="checkbox"]:checked {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .checklist-item input[type="checkbox"]:checked::after {
+    content: '\2713';
+    display: block;
+    color: var(--bg);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-align: center;
+    line-height: 14px;
+  }
+
+  .checklist-item input:checked + span { color: var(--text-dim); text-decoration: line-through; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    padding: 1.5rem 3rem;
+    border-top: 1px solid var(--border-dim);
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--text-dim);
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  header > * { animation: fadeIn 0.4s ease both; }
+  header > *:nth-child(1) { animation-delay: 0.05s; }
+  header > *:nth-child(2) { animation-delay: 0.1s; }
+  header > *:nth-child(3) { animation-delay: 0.15s; }
+
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 3px; }
+
+  .sub-heading {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 1.8rem 0 0.6rem;
+  }
+
+  .guide-note {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    background: var(--surface-2);
+    border: 1px solid var(--border-dim);
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    margin-top: 0.8rem;
+    line-height: 1.6;
+    font-family: var(--mono);
+  }
+
+  .guide-note strong { color: var(--text); }
+
+  @media (max-width: 800px) {
+    header, .section, footer { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .nav-bar { padding: 0 1rem; }
+    .card-grid { grid-template-columns: 1fr; }
+    .compare-table { font-size: 0.68rem; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .nav-bar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HEADER ═══════════════════════════ -->
+<header>
+  <div class="header-tag">Quick Start Guide</div>
+  <h1>AI Coding Setup <span>M3 / 16GB</span></h1>
+  <p>Everything you need to turn a MacBook M3 (16GB) into an AI-powered coding machine. No audio, video, or image generation &mdash; just coding tools, local models, and Claude Code.</p>
+</header>
+
+<!-- ═══════════════════════════ NAV ═══════════════════════════ -->
+<nav class="nav-bar">
+  <a class="nav-link" href="#s1">Hardware Reality</a>
+  <a class="nav-link" href="#s2">Install Order</a>
+  <a class="nav-link" href="#s3">Local Models</a>
+  <a class="nav-link" href="#s4">Claude Code</a>
+  <a class="nav-link" href="#s5">Claude vs Ollama</a>
+  <a class="nav-link" href="#s6">Daily Workflow</a>
+  <a class="nav-link" href="#s7">Shell Setup</a>
+  <a class="nav-link" href="#s8">Checklist</a>
+</nav>
+
+<!-- ═══════════════════════════ S1: HARDWARE REALITY ═══════════════════════════ -->
+<div class="section" id="s1">
+  <div class="section-label">Section 01</div>
+  <h2>Your Hardware Reality</h2>
+  <p class="desc">The M3 with 16GB unified memory is a capable coding machine, but you need to be strategic about which local models you run. Here's what you're working with.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>What You Have</h4>
+      <ul>
+        <li>Apple M3 chip &mdash; ~100GB/s memory bandwidth</li>
+        <li>16GB unified memory (shared between CPU, GPU, and models)</li>
+        <li>Hardware-accelerated ML via Metal / Neural Engine</li>
+        <li>Enough for 7B&ndash;14B models comfortably</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>The Constraint</h4>
+      <ul>
+        <li>macOS + apps use ~5&ndash;7GB, leaving ~9&ndash;11GB for models</li>
+        <li>Max comfortable model size: <strong>14B parameters (Q4 quantised)</strong></li>
+        <li>32B+ models will swap to disk &mdash; usable but slow</li>
+        <li>Run <strong>one model at a time</strong> for best performance</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>The Strategy</h4>
+      <ul>
+        <li><strong>Cloud-first:</strong> Claude Code for complex tasks (best quality)</li>
+        <li><strong>Local for:</strong> quick questions, offline work, private data</li>
+        <li><strong>Pick 2&ndash;3 local models</strong> max, not the full roster</li>
+        <li>Don't try to replicate a 64GB workstation &mdash; lean into the hybrid</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ S2: INSTALL ORDER ═══════════════════════════ -->
+<div class="section" id="s2">
+  <div class="section-label">Section 02</div>
+  <h2>Installation Order</h2>
+  <p class="desc">Order matters &mdash; later tools depend on earlier ones. Copy and paste these blocks in sequence.</p>
+
+  <div class="sub-heading">Step 1 &mdash; Package Manager &amp; Core Tools</div>
+  <div class="code-block">
+    <span class="comment"># Homebrew (package manager for macOS)</span><br>
+    <span class="cmd">/bin/bash</span> -c <span class="string">"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span><br>
+    <span class="cmd">echo</span> <span class="string">'eval "$(/opt/homebrew/bin/brew shellenv)"'</span> >> ~/.zshrc<br>
+    <span class="cmd">source</span> ~/.zshrc<br>
+    <br>
+    <span class="comment"># Core dev tools</span><br>
+    <span class="cmd">brew install</span> git python@3.12 node nvm uv pipx wget jq
+  </div>
+
+  <div class="sub-heading">Step 2 &mdash; Terminal &amp; Container</div>
+  <div class="code-block">
+    <span class="comment"># Better terminal</span><br>
+    <span class="cmd">brew install</span> <span class="flag">--cask</span> iterm2<br>
+    <br>
+    <span class="comment"># Docker (for containerised projects)</span><br>
+    <span class="cmd">brew install</span> <span class="flag">--cask</span> docker
+  </div>
+
+  <div class="sub-heading">Step 3 &mdash; AI Tools</div>
+  <div class="code-block">
+    <span class="comment"># Ollama (local LLM inference)</span><br>
+    <span class="cmd">brew install</span> ollama<br>
+    <br>
+    <span class="comment"># Claude Code (cloud AI coding assistant)</span><br>
+    <span class="cmd">npm install</span> <span class="flag">-g</span> @anthropic-ai/claude-code
+  </div>
+
+  <div class="sub-heading">Step 4 &mdash; Python Environment</div>
+  <div class="code-block">
+    <span class="comment"># uv is 10-100x faster than pip for package management</span><br>
+    <span class="cmd">pip install</span> uv <span class="flag">--break-system-packages</span><br>
+    <br>
+    <span class="comment"># For each project:</span><br>
+    <span class="cmd">cd</span> ~/Projects/my-project<br>
+    <span class="cmd">uv venv</span><br>
+    <span class="cmd">source</span> .venv/bin/activate<br>
+    <span class="cmd">uv pip install</span> -r requirements.txt
+  </div>
+
+  <div class="sub-heading">Step 5 &mdash; IDE</div>
+  <div class="code-block">
+    <span class="comment"># VS Code (recommended) or Cursor</span><br>
+    <span class="cmd">brew install</span> <span class="flag">--cask</span> visual-studio-code<br>
+    <br>
+    <span class="comment"># Essential extensions (install from VS Code):</span><br>
+    <span class="comment"># - Claude (Anthropic) &mdash; AI coding in the IDE</span><br>
+    <span class="comment"># - Python (Microsoft) + Pylance</span><br>
+    <span class="comment"># - Ruff &mdash; fast Python linter</span><br>
+    <span class="comment"># - ESLint &mdash; JS/TS linting</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ S3: LOCAL MODELS ═══════════════════════════ -->
+<div class="section" id="s3">
+  <div class="section-label">Section 03</div>
+  <h2>Local Models for 16GB</h2>
+  <p class="desc">With 16GB RAM, you want small-but-capable models. These are the best coding-focused picks that actually fit your machine.</p>
+
+  <div class="callout warn">
+    <span class="callout-icon">!</span>
+    <div><strong>Golden rule:</strong> Run ONE model at a time. Ollama auto-unloads after 5 minutes of inactivity. Don't try to keep multiple loaded.</div>
+  </div>
+
+  <div class="sub-heading">Recommended Model Roster (Pick and Pull)</div>
+
+  <table class="info-table">
+    <thead>
+      <tr>
+        <th>Model</th>
+        <th>RAM Needed</th>
+        <th>Best For</th>
+        <th>Pull Command</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Qwen 3 8B</td>
+        <td>~5GB</td>
+        <td>Daily driver &mdash; fast general coding, questions, drafting</td>
+        <td><code>ollama pull qwen3:8b</code></td>
+      </tr>
+      <tr>
+        <td>Qwen3 Coder 7B</td>
+        <td>~5GB</td>
+        <td>Code generation, debugging, refactoring</td>
+        <td><code>ollama pull qwen3-coder:7b</code></td>
+      </tr>
+      <tr>
+        <td>Gemma 3 4B</td>
+        <td>~3GB</td>
+        <td>Ultra-fast classification, bug triage, simple tasks</td>
+        <td><code>ollama pull gemma3:4b</code></td>
+      </tr>
+      <tr>
+        <td>DeepSeek-R1 14B</td>
+        <td>~9GB</td>
+        <td>Reasoning, step-by-step problem solving, code review</td>
+        <td><code>ollama pull deepseek-r1:14b</code></td>
+      </tr>
+      <tr>
+        <td>Gemma 3 12B</td>
+        <td>~8GB</td>
+        <td>Classification, structured output, fallback general model</td>
+        <td><code>ollama pull gemma3:12b</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout tip">
+    <span class="callout-icon">*</span>
+    <div><strong>Start with just two:</strong> Pull <code>qwen3:8b</code> and <code>qwen3-coder:7b</code> on day one. Add others as you need them. Each model downloads once and stays on disk.</div>
+  </div>
+
+  <div class="code-block">
+    <span class="comment"># Start Ollama server (runs in background)</span><br>
+    <span class="cmd">ollama serve</span> &amp;<br>
+    <br>
+    <span class="comment"># Day 1: Pull your essentials</span><br>
+    <span class="cmd">ollama pull</span> qwen3:8b          <span class="comment"># ~5GB download</span><br>
+    <span class="cmd">ollama pull</span> qwen3-coder:7b    <span class="comment"># ~5GB download</span><br>
+    <br>
+    <span class="comment"># Later: Add reasoning model when you need it</span><br>
+    <span class="cmd">ollama pull</span> deepseek-r1:14b   <span class="comment"># ~9GB download</span><br>
+    <br>
+    <span class="comment"># Test it works</span><br>
+    <span class="cmd">ollama run</span> qwen3:8b <span class="string">"Write a Python function to check if a string is a palindrome"</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ S4: CLAUDE CODE ═══════════════════════════ -->
+<div class="section" id="s4">
+  <div class="section-label">Section 04</div>
+  <h2>Claude Code Setup</h2>
+  <p class="desc">Claude Code is your primary coding tool &mdash; it's an AI assistant that runs in your terminal, reads your project files, writes code, runs tests, and commits to git. Think of it as a senior developer in your terminal.</p>
+
+  <div class="sub-heading">Get Your API Key</div>
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Create an Anthropic account</h4>
+        <p>Go to <strong>console.anthropic.com</strong> and sign up. Add credit ($5&ndash;$20 to start).</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Generate an API key</h4>
+        <p>Go to API Keys in the console. Create a new key. Copy it &mdash; you'll only see it once.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Set it in your shell</h4>
+        <p>Add this line to your <code>~/.zshrc</code> and restart your terminal.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="code-block">
+    <span class="comment"># Add to ~/.zshrc</span><br>
+    <span class="cmd">export</span> ANTHROPIC_API_KEY=<span class="string">"sk-ant-your-key-here"</span><br>
+    <br>
+    <span class="comment"># Reload</span><br>
+    <span class="cmd">source</span> ~/.zshrc
+  </div>
+
+  <div class="sub-heading">Basic Usage</div>
+  <div class="code-block">
+    <span class="comment"># Navigate to your project</span><br>
+    <span class="cmd">cd</span> ~/Projects/my-app<br>
+    <br>
+    <span class="comment"># Start Claude Code</span><br>
+    <span class="cmd">claude</span><br>
+    <br>
+    <span class="comment"># Or start with a specific task</span><br>
+    <span class="cmd">claude</span> <span class="string">"explain how the authentication flow works in this project"</span><br>
+    <br>
+    <span class="comment"># Choose model + effort level</span><br>
+    <span class="cmd">claude</span> <span class="flag">--model sonnet</span>           <span class="comment"># Fast + capable (default, cheapest)</span><br>
+    <span class="cmd">claude</span> <span class="flag">--model opus</span>             <span class="comment"># Most powerful (use for architecture, audits)</span><br>
+    <span class="cmd">claude</span> <span class="flag">--model sonnet --effort high</span> <span class="comment"># Sonnet with deeper thinking</span>
+  </div>
+
+  <div class="callout info">
+    <span class="callout-icon">i</span>
+    <div><strong>Cost tip:</strong> Use <code>--model sonnet</code> for most work (cheaper, fast). Switch to <code>--model opus</code> only for complex architecture decisions, debugging hard bugs, or reviewing code for security. Sonnet handles 80% of tasks.</div>
+  </div>
+
+  <div class="sub-heading">What Claude Code Can Do</div>
+  <div class="card-grid">
+    <div class="card">
+      <h4>Read &amp; Understand</h4>
+      <ul>
+        <li>Read your entire project structure</li>
+        <li>Understand how files relate to each other</li>
+        <li>Explain unfamiliar code</li>
+        <li>Search across files for patterns</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Write &amp; Edit</h4>
+      <ul>
+        <li>Write new files and functions</li>
+        <li>Edit existing code with precision</li>
+        <li>Refactor across multiple files</li>
+        <li>Add tests for your code</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Run &amp; Test</h4>
+      <ul>
+        <li>Execute shell commands</li>
+        <li>Run your test suite</li>
+        <li>Debug failing tests</li>
+        <li>Create git commits and branches</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ S5: CLAUDE vs OLLAMA ═══════════════════════════ -->
+<div class="section" id="s5">
+  <div class="section-label">Section 05</div>
+  <h2>Claude Models vs Local Ollama Equivalents</h2>
+  <p class="desc">Claude is the gold standard, but local models are free, private, and work offline. Here's how they compare for coding tasks &mdash; honest assessment, not marketing.</p>
+
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Task</th>
+        <th>Claude (Cloud)</th>
+        <th>Best Ollama (16GB)</th>
+        <th>How Close?</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Code generation</td>
+        <td>Sonnet 4.6 <span class="badge cloud">CLOUD</span></td>
+        <td>Qwen3 Coder 7B <span class="badge local">LOCAL</span></td>
+        <td>~70% &mdash; handles simple-to-medium tasks well. Struggles with complex multi-file refactors.</td>
+      </tr>
+      <tr>
+        <td>Code review / audit</td>
+        <td>Opus 4.6 <span class="badge cloud">CLOUD</span></td>
+        <td>DeepSeek-R1 14B <span class="badge local">LOCAL</span></td>
+        <td>~55% &mdash; good chain-of-thought reasoning but misses subtle bugs. Use for first-pass only.</td>
+      </tr>
+      <tr>
+        <td>Quick questions</td>
+        <td>Haiku 4.5 <span class="badge cloud">CLOUD</span></td>
+        <td>Qwen 3 8B <span class="badge local">LOCAL</span></td>
+        <td>~80% &mdash; excellent for "how do I X", syntax lookups, quick explanations. Very close.</td>
+      </tr>
+      <tr>
+        <td>Bug classification</td>
+        <td>Haiku 4.5 <span class="badge cloud">CLOUD</span></td>
+        <td>Gemma 3 4B <span class="badge local">LOCAL</span></td>
+        <td>~75% &mdash; fast structured output. Great for triage: bug/feature/question sorting.</td>
+      </tr>
+      <tr>
+        <td>Architecture / planning</td>
+        <td>Opus 4.6 <span class="badge cloud">CLOUD</span></td>
+        <td>DeepSeek-R1 14B <span class="badge local">LOCAL</span></td>
+        <td>~45% &mdash; can outline ideas but lacks the depth for serious architecture. Use Claude.</td>
+      </tr>
+      <tr>
+        <td>Debugging complex issues</td>
+        <td>Opus 4.6 <span class="badge cloud">CLOUD</span></td>
+        <td>Qwen3 Coder 7B <span class="badge local">LOCAL</span></td>
+        <td>~50% &mdash; can help with straightforward bugs. For hairy issues, escalate to Claude.</td>
+      </tr>
+      <tr>
+        <td>Test writing</td>
+        <td>Sonnet 4.6 <span class="badge cloud">CLOUD</span></td>
+        <td>Qwen3 Coder 7B <span class="badge local">LOCAL</span></td>
+        <td>~65% &mdash; generates reasonable pytest scaffolding. May need manual cleanup on edge cases.</td>
+      </tr>
+      <tr>
+        <td>Explaining code</td>
+        <td>Sonnet 4.6 <span class="badge cloud">CLOUD</span></td>
+        <td>Qwen 3 8B <span class="badge local">LOCAL</span></td>
+        <td>~75% &mdash; clear explanations for most code. Misses nuance on very complex patterns.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout tip">
+    <span class="callout-icon">*</span>
+    <div><strong>The honest take:</strong> No 7B&ndash;14B local model matches Claude Sonnet or Opus for serious coding. They're useful for quick, free, offline tasks &mdash; not as replacements. Think of local models as your "quick lookup" tool and Claude as your "pair programmer".</div>
+  </div>
+
+  <div class="sub-heading">When to Use Which</div>
+  <div class="card-grid">
+    <div class="card" style="border-left: 3px solid var(--accent);">
+      <h4>Use Claude Code (Cloud)</h4>
+      <ul>
+        <li>Writing new features or modules</li>
+        <li>Debugging tricky issues</li>
+        <li>Multi-file refactors</li>
+        <li>Architecture decisions</li>
+        <li>Security review / audit</li>
+        <li>Anything that goes to production</li>
+      </ul>
+    </div>
+    <div class="card" style="border-left: 3px solid var(--blue);">
+      <h4>Use Ollama (Local)</h4>
+      <ul>
+        <li>"How do I do X in Python?" quick lookups</li>
+        <li>Explaining unfamiliar code snippets</li>
+        <li>Drafting commit messages or docs</li>
+        <li>Working offline (plane, train, cafe)</li>
+        <li>Working with private/sensitive data</li>
+        <li>Learning &mdash; experimenting without API costs</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ S6: DAILY WORKFLOW ═══════════════════════════ -->
+<div class="section" id="s6">
+  <div class="section-label">Section 06</div>
+  <h2>Daily Workflow</h2>
+  <p class="desc">A simple workflow to get you productive fast. No complex multi-pane setups &mdash; just what you need.</p>
+
+  <div class="step-list">
+    <div class="step-item">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h4>Open your terminal and project</h4>
+        <p>Open iTerm2 (or Terminal). Navigate to your project: <code>cd ~/Projects/my-app</code></p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h4>Start coding with Claude</h4>
+        <p>Type <code>claude</code> to start a session. Describe what you want to build, fix, or understand. Claude reads your files automatically.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h4>Quick local questions with Ollama</h4>
+        <p>For fast, free lookups: <code>ollama run qwen3:8b "how do I parse JSON in Python"</code> &mdash; no API cost, instant.</p>
+      </div>
+    </div>
+    <div class="step-item">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <h4>Test and commit</h4>
+        <p>Ask Claude to run your tests: "run pytest and fix any failures". Then: "create a commit with a good message".</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-heading">Task Routing Cheat Sheet</div>
+  <table class="info-table">
+    <thead>
+      <tr>
+        <th>Situation</th>
+        <th>Tool</th>
+        <th>Command</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Any coding task, no constraints</td>
+        <td>Claude Code</td>
+        <td><code>claude</code></td>
+      </tr>
+      <tr>
+        <td>Quick local question</td>
+        <td>Qwen 3 8B</td>
+        <td><code>ollama run qwen3:8b "..."</code></td>
+      </tr>
+      <tr>
+        <td>Code generation offline</td>
+        <td>Qwen3 Coder</td>
+        <td><code>ollama run qwen3-coder:7b "..."</code></td>
+      </tr>
+      <tr>
+        <td>Reasoning through a problem</td>
+        <td>DeepSeek-R1</td>
+        <td><code>ollama run deepseek-r1:14b "..."</code></td>
+      </tr>
+      <tr>
+        <td>Classify / triage</td>
+        <td>Gemma 3 4B</td>
+        <td><code>ollama run gemma3:4b "..."</code></td>
+      </tr>
+      <tr>
+        <td>Private/sensitive data</td>
+        <td>Any Ollama model</td>
+        <td>Data never leaves your machine</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════ S7: SHELL SETUP ═══════════════════════════ -->
+<div class="section" id="s7">
+  <div class="section-label">Section 07</div>
+  <h2>Shell Aliases</h2>
+  <p class="desc">Add these to your <code>~/.zshrc</code> to make everything quicker. Copy the whole block.</p>
+
+  <div class="code-block">
+    <span class="comment"># ─── AI CODING SETUP ───────────────────────────────────────────</span><br>
+    <br>
+    <span class="comment"># Anthropic API key</span><br>
+    <span class="cmd">export</span> ANTHROPIC_API_KEY=<span class="string">"sk-ant-your-key-here"</span><br>
+    <br>
+    <span class="comment"># Ollama config</span><br>
+    <span class="cmd">export</span> OLLAMA_HOST=<span class="string">"127.0.0.1:11434"</span><br>
+    <span class="cmd">export</span> OLLAMA_KEEP_ALIVE=<span class="string">"5m"</span><br>
+    <br>
+    <span class="comment"># Python (prefer uv-managed environments)</span><br>
+    <span class="cmd">export</span> UV_PYTHON_PREFERENCE=<span class="string">"managed"</span><br>
+    <br>
+    <span class="comment"># ─── QUICK ALIASES ──────────────────────────────────────────────</span><br>
+    <br>
+    <span class="comment"># Claude Code</span><br>
+    <span class="cmd">alias</span> cc=<span class="string">'claude'</span><br>
+    <span class="cmd">alias</span> ccs=<span class="string">'claude --model sonnet'</span>          <span class="comment"># fast + capable</span><br>
+    <span class="cmd">alias</span> cco=<span class="string">'claude --model opus'</span>            <span class="comment"># most powerful</span><br>
+    <br>
+    <span class="comment"># Local models</span><br>
+    <span class="cmd">alias</span> llm=<span class="string">'ollama run'</span><br>
+    <span class="cmd">alias</span> llm-fast=<span class="string">'ollama run qwen3:8b'</span>            <span class="comment"># daily driver</span><br>
+    <span class="cmd">alias</span> llm-code=<span class="string">'ollama run qwen3-coder:7b'</span>      <span class="comment"># code specialist</span><br>
+    <span class="cmd">alias</span> llm-reason=<span class="string">'ollama run deepseek-r1:14b'</span>    <span class="comment"># step-by-step reasoning</span><br>
+    <span class="cmd">alias</span> llm-classify=<span class="string">'ollama run gemma3:4b'</span>        <span class="comment"># ultra-fast classification</span><br>
+    <br>
+    <span class="comment"># Python environment</span><br>
+    <span class="cmd">alias</span> venv=<span class="string">'python3 -m venv .venv && source .venv/bin/activate'</span><br>
+    <span class="cmd">alias</span> activate=<span class="string">'source .venv/bin/activate'</span>
+  </div>
+
+  <div class="guide-note">
+    <strong>After pasting:</strong> Run <code>source ~/.zshrc</code> to reload, or just open a new terminal tab.
+  </div>
+</div>
+
+<!-- ═══════════════════════════ S8: CHECKLIST ═══════════════════════════ -->
+<div class="section" id="s8">
+  <div class="section-label">Section 08</div>
+  <h2>Setup Checklist</h2>
+  <p class="desc">Tick these off as you go. Should take about 30&ndash;45 minutes (plus model download time).</p>
+
+  <div class="checklist">
+    <div class="checklist-item"><input type="checkbox"><span>Homebrew installed and working</span></div>
+    <div class="checklist-item"><input type="checkbox"><span>Git, Python 3.12, Node installed via <code>brew</code></span></div>
+    <div class="checklist-item"><input type="checkbox"><span>iTerm2 installed</span></div>
+    <div class="checklist-item"><input type="checkbox"><span>Docker Desktop installed</span></div>
+    <div class="checklist-item"><input type="checkbox"><span>Ollama installed &mdash; <code>ollama --version</code> works</span></div>
+    <div class="checklist-item"><input type="checkbox"><span>Claude Code installed &mdash; <code>claude --version</code> works</span></div>
+    <div class="checklist-item"><input type="checkbox"><span>Anthropic API key set in <code>~/.zshrc</code></span></div>
+    <div class="checklist-item"><input type="checkbox"><span>Pulled <code>qwen3:8b</code> &mdash; daily driver model</span></div>
+    <div class="checklist-item"><input type="checkbox"><span>Pulled <code>qwen3-coder:7b</code> &mdash; code specialist model</span></div>
+    <div class="checklist-item"><input type="checkbox"><span>Tested Ollama: <code>ollama run qwen3:8b "hello"</code></span></div>
+    <div class="checklist-item"><input type="checkbox"><span>Tested Claude Code: <code>claude "hello"</code></span></div>
+    <div class="checklist-item"><input type="checkbox"><span>VS Code installed with Python + Ruff extensions</span></div>
+    <div class="checklist-item"><input type="checkbox"><span>Shell aliases added to <code>~/.zshrc</code></span></div>
+    <div class="checklist-item"><input type="checkbox"><span><code>uv</code> installed for Python package management</span></div>
+  </div>
+
+  <div class="callout tip">
+    <span class="callout-icon">*</span>
+    <div><strong>You're set!</strong> With Claude Code + a couple of local models, you have a powerful AI coding setup. Start with <code>claude</code> in any project directory and just describe what you want to build. The models will improve over time &mdash; this setup is future-proof.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer>
+  <span>M3 / 16GB Quick Start Guide &mdash; April 2026</span>
+  <span>Built with care by a friend</span>
+</footer>
+
+</body>
+</html>
