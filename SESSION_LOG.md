@@ -76,3 +76,22 @@ Next: AUDIT re-run to confirm clean. Then: ship Unbuilt Issue #2.
 - Moved old_setup_guide.zip to ~/.claude/backups/
 
 Next: index.html surgical rewrite (commit 2)
+
+---
+
+## 2026-04-15 — IMPL (part 2 of 2)
+
+Surgical 9-stage rewrite of index.html to mirror new guide.md structure.
+
+- **STAGE 1:** DEV-AUDIT/IMPL/PROMPT/PLAN → CC-AUDIT/IMPL/PROMPT/PLAN (4 replace_all edits; 1 intentional DEV-* left in "Adapt for Other Projects" section)
+- **STAGE 2:** Footer bumped v2.1.108 → v2.1.109
+- **STAGE 3:** Last-verified markers (v2.1.81, 4 sites) left unchanged — no re-verify done
+- **STAGE 4:** 5 section h2 renames + 2 TOC text renames (Shell Snippet, Cross-Pane Workflow, gate Workflow, SESSION_LOG Pattern, Quick Reference — read as needed)
+- **STAGE 5:** Inserted 4 new sections: Prerequisites (s1), Install Claude Code (s2), Local AI Models/Ollama (s3), Draw Things Optional (s20)
+- **STAGE 6:** All 21 section IDs and section-num labels renumbered (s1–s21, 01–21)
+- **STAGE 7:** TOC rewritten — 21 entries with correct hrefs and display numbers
+- **STAGE 8:** Verify: 21 section IDs ✓, 1 DEV- ✓, 21 CC- ✓, 2025 lines ✓, section-nums 01–21 clean ✓
+
+Commit: feat: rewrite index.html to mirror new guide structure (part 2/2)
+
+Next: AUDIT pane — run /start-audit on updated index.html + guide.md. Confirm CC-* rename, section parity, no orphaned anchors.
