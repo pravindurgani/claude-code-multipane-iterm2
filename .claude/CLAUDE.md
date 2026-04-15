@@ -15,6 +15,9 @@ Global conventions live in ~/.claude/CLAUDE.md.
   the id="sN" anchor, the <span class="section-num"> display label, and the TOC href.
   When adding a section, update all three together.
 
+- guide.md `## Overview` is intentionally rendered as the index.html hero block, not a
+  numbered section. This divergence is ratified — do not re-flag as a parity issue.
+
 - step_guide.md is gitignored and local-only. Append new ╔══╗ phase blocks after each
   phase commit — they persist locally as a running implementation log but never appear
   in git status.

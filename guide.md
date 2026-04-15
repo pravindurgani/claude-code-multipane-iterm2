@@ -113,8 +113,13 @@ Start the server (runs in the background):
 ollama serve &
 ```
 
-> **Tip:** Add `ollama serve &` to your `~/.zshrc` or a startup script if you
-> want it running automatically. Or use `brew services start ollama`.
+> **Make it persistent:** `ollama serve &` only runs until you close the
+> terminal. For Ollama to stay running across reboots (so `cc` and llm-* aliases
+> work without manual server starts), run this once now:
+>
+> ```bash
+> brew services start ollama
+> ```
 
 ### 3.2 Pull models — choose your tier
 
