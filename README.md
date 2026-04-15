@@ -61,7 +61,7 @@ This workflow depends on iTerm2-specific features:
 
 > For detailed step-by-step instructions with screenshots, **[read the full guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**.
 
-1. **Create 4 iTerm2 profiles** — `DEV-AUDIT`, `DEV-IMPL`, `DEV-PROMPT`, `DEV-PLAN` — each with a distinct background colour and tab colour
+1. **Create 4 iTerm2 profiles** — `CC-AUDIT`, `CC-IMPL`, `CC-PROMPT`, `CC-PLAN` — each with a distinct background colour and tab colour
 2. **Set startup command & initial directory** — point each profile at your project folder
 3. **Add the shell snippet to `~/.zshrc`** — copy-paste from [`zshrc-snippet.sh`](zshrc-snippet.sh)
 4. **Create a 2x2 pane layout** and save it as the default window arrangement
@@ -95,7 +95,7 @@ This workflow depends on iTerm2-specific features:
 The setup is project-agnostic. To use it with a different codebase:
 
 1. Update the **Initial Directory** in each profile to your project path
-2. Optionally rename profiles with a project prefix (e.g. `MYPROJECT-AUDIT`) and add matching `case` entries to `~/.zshrc`
+2. The default prefix this repo teaches is `CC-*`; swap `CC` for your project name when adapting. Optionally rename profiles with a project prefix (e.g. `MYPROJECT-AUDIT`) and add matching `case` entries to `~/.zshrc`
 3. Save a separate window arrangement per project
 
 **Session continuity:** Keep a `SESSION_LOG.md` in your project root. At the
