@@ -27,8 +27,9 @@ The four iTerm2 profile names have changed:
 
 ### Removed
 
-- `m5-max-ai-workstation-setup.md` — personal content, moved to private notes
-- `ai-workstation-cheatsheet.html`, `m5-max-quick-reference.html`, `m5-max-quick-reference.md` — superseded by new guide
+- `m5-max-ai-workstation-setup.md` — removed from public repo (local copy retained, gitignored)
+- `m5-max-quick-reference.md`, `ai-workstation-cheatsheet.html` — removed from public repo (local copies retained, gitignored)
+- `m5-max-quick-reference.html` — superseded by new guide (fully deleted)
 
 ### CLAUDE.md.template
 
