@@ -6,7 +6,8 @@ circuit-breaker-state.json
 .claude/gate-check-state-*.json
 .claude/settings.local.json
 
-# Session log archive
+# Session log — local-only audit trail
+SESSION_LOG.md
 SESSION_LOG.archive.md
 
 # Draft pages
