@@ -1,46 +1,70 @@
 # CLAUDE.md — Global Rules
-
-> Copy this file to ~/.claude/CLAUDE.md and fill in each section.
-> This file is personal — do not commit it to any repository.
-> Project-specific rules belong in .claude/CLAUDE.md inside the repo.
+#
+# INSTRUCTIONS:
+#   1. Copy this file to ~/.claude/CLAUDE.md
+#   2. Fill in or delete each section — keep only what you'll actually use
+#   3. Do NOT commit this file; it is personal (project rules go in .claude/CLAUDE.md)
+#
+# Tip: Start with just the Identity and Active Constraints sections.
+# Add more as your workflow matures. A 20-line file you read is better
+# than a 200-line file you ignore.
 
 ---
 
-## Project Overview
+## Identity
 
-<!-- One paragraph: what this project does and who uses it. -->
+<!-- One sentence: your role and primary work context.
+     Claude reads this at the start of every session.
+     Example: "I am a backend engineer working primarily in Python and Go." -->
 
 ---
 
-## Architecture Decisions
+## Stack
 
-<!-- Record active architectural decisions that Claude should respect.
-     Example format:
-     - Use functional-first style (~70% functions, ~30% classes).
-     - Classes only for: dataclasses, Pydantic models, ABCs, framework integrations.
-     - No speculative abstractions — if a function works, do not wrap it.
--->
+<!-- Languages, frameworks, and tools you use regularly.
+     Claude uses this to calibrate suggestions and code style.
+     Example:
+     - Python 3.12, pytest, Pydantic, FastAPI
+     - TypeScript, React, Vite
+     - Docker, GitHub Actions, Fly.io -->
 
 ---
 
 ## Active Constraints
 
-<!-- Hard rules Claude must never violate in this project.
-     Example format:
-     - Never expose API keys or .env file contents.
-     - Never git push without explicit user confirmation.
-     - Never commit large data files (csv, xlsx, db, sqlite).
-     - Never modify .env files without explicit permission.
+<!-- Hard rules Claude must never violate.
+     Be specific — vague rules are ignored.
+     Examples:
+     - Never push to main directly — always branch + PR.
+     - Never edit .env files without my explicit confirmation.
      - Never install packages globally — use project venv.
--->
+     - Never commit secrets, API keys, or large data files. -->
 
 ---
 
-## Session Continuity Instructions
+## Code Style
+
+<!-- Conventions you care about that aren't obvious from the code.
+     Examples:
+     - Functional-first: prefer standalone functions over classes.
+     - Type hints everywhere in Python.
+     - No bare except — always catch a specific exception and log context.
+     - Imports: stdlib → third-party → local (blank line between groups). -->
+
+---
+
+## Session Continuity
 
 <!-- What Claude should do at the start of every session.
-     Example format:
-     1. Read SESSION_LOG.md (last 60 lines) and surface the most recent "Next:" items.
-     2. Run git status and git log --oneline -5 to confirm current branch state.
-     3. Confirm starting state, target state, and scope with me before writing code.
--->
+     Example:
+     1. Read SESSION_LOG.md (last 60 lines) — surface the most recent "Next:" items.
+     2. Run "git status" and "git log --oneline -5" to confirm branch state.
+     3. State the starting point, target, and scope before writing any code. -->
+
+---
+
+## Lessons
+
+<!-- Add entries here when Claude makes a mistake you don't want repeated.
+     Format: "- [date] Don't do X because Y."
+     These are the most valuable lines in this file. -->
