@@ -95,3 +95,120 @@ Surgical 9-stage rewrite of index.html to mirror new guide.md structure.
 Commit: feat: rewrite index.html to mirror new guide structure (part 2/2)
 
 Next: AUDIT pane — run /start-audit on updated index.html + guide.md. Confirm CC-* rename, section parity, no orphaned anchors.
+
+---
+
+## 2026-04-15 — IMPL (AUDIT remediation, commit e122509)
+
+Resolved all 6 AUDIT findings against the part-2/2 index.html rewrite.
+
+- **H1:** Tail reordered — Quick Reference moved from s18 to s21 (final); MCP→Draw Things→Troubleshooting→Quick Reference. Physical DOM move + TOC update.
+- **M1:** s4 "The 4-pane concept" collapsed into s4 (Create iTerm2 Profiles) — pane grid + 3 callouts merged into s4 body; s5–s21 renumbered s4–s20 (count: 21→20).
+- **M2:** Dedicated "iTerm2 Triggers (Optional)" section inserted as s9 between Launch Claude Code and Keyboard Shortcuts; embedded Triggers table removed from Keyboard Shortcuts; s9–s20 renumbered s10–s21 (count: 20→21).
+- **L1:** All section comments normalised to `<!-- SECTION sN: Title -->` format (s4–s21).
+- **L2:** `guide.md:863` h2 `"Quick Reference — Reference: read as needed"` → `"Quick Reference — read as needed"`.
+- **L3:** `.claude/CLAUDE.md §Version String` updated — footer line ~1818→~2024; last-verified places 5→4 (guide.md intro version marker removed in April rewrite); line numbers corrected: guide.md:368/836, index.html:1239/1906.
+
+Verification: 21 section IDs s1–s21 (each unique), 21 TOC entries, 1 DEV- remaining, all TOC hrefs match body IDs, diff clean.
+
+Next: AUDIT pane — re-run /start-audit on commit e122509. Confirm H1/M1/M2/L1/L2/L3 all closed. Check no new findings introduced.
+
+---
+
+## 2026-04-15 — AUDIT (re-audit of commit e122509)
+
+Prior-finding disposition:
+
+| ID | Finding | Verdict |
+|---|---|---|
+| H1 (prior) | Tail reordered — Quick Ref → s21 | **CLOSED** — body + TOC verified monotonic s1–s21, tail order MCP→Draw→Trouble→Quick Ref confirmed |
+| M1 (prior) | s4 "4-pane concept" collapsed | **CLOSED** — content merged into s4 Profiles; count math (21→20) verifiable in diff |
+| M2 (prior) | Triggers inserted as dedicated section | **PARTIAL** — section exists, but placed in wrong slot — see new H1 below |
+| L1 (prior) | Section comments standardised | **PARTIAL** — s4–s21 normalised; s1–s3 still use string placeholders — see new L1 below |
+| L2 (prior) | Quick Ref h2 wording | **CLOSED** — `guide.md:863` matches index.html `s21` |
+| L3 (prior) | CLAUDE.md line numbers | **CLOSED** — all 4 last-verified and 1 footer line refs verified against actual positions |
+
+### NEW HIGH
+
+**H1 — Parallel-doc invariant violated: s9/s10 swapped between guide.md and index.html**
+
+- `guide.md:373` Step 9 = **Keyboard Shortcuts Reference**; `guide.md:405` Step 10 = **iTerm2 Triggers (Optional)**
+- `index.html:s9` = **iTerm2 Triggers (Optional)**; `index.html:s10` = **Keyboard Shortcuts**
+
+`.claude/CLAUDE.md §Repo Structure` invariant: *"guide.md and index.html are parallel documents — the same content must appear in both. When adding a section to one, add the equivalent to the other."* Ordering is implicitly parallel too — a reader cross-referencing "see Step 9" hits different content in each document.
+
+The M2 remediation was correct in concept but picked an ordering that contradicts guide.md. Needs user decision on canonical ordering, then one doc follows the other.
+
+**Recommended fix** (guide.md is canonical): in index.html, move s9 Triggers block to after s10 Keyboard Shortcuts; swap id/section-num labels (s9↔s10) and the two TOC entries. Pure relabel after the DOM swap — no content change.
+
+### NEW MEDIUM
+
+**M1 — H2 wording drift between guide.md and index.html (4 sections)**
+
+| Step | guide.md | index.html | Drift |
+|---|---|---|---|
+| 4 | Create **4** iTerm2 Profiles | Create iTerm2 Profiles | "4" dropped |
+| 5 | **Profile** Startup Commands & Initial Directory | Startup Commands & Initial Directory | "Profile" dropped |
+| 12 | **Session** Playbook | **Daily** Playbook | word swap |
+| 18 | MCP Server, **Slash** Commands & Skills | MCP Server, Commands & Skills | "Slash" dropped |
+
+Same invariant as H1 (parallel-doc content parity). L2 fixed one such drift in this commit; 4 others left behind. User should pick canonical wording per row, then sync.
+
+### NEW LOW
+
+**L1 — L1 closure was partial: 3 section comments still use string placeholders**
+
+`index.html:597/651/693` still read:
+
+```
+<!-- SECTION s-prereq: Prerequisites -->
+<!-- SECTION s-claude: Install Claude Code -->
+<!-- SECTION s-ollama: Local AI Models -->
+```
+
+IMPL's SESSION_LOG explicitly scoped L1 closure as "s4–s21", which leaves s1–s3 in the original pre-rename placeholder format from the Stage 5 insert in the prior commit. No reader impact (HTML comments), but inconsistent with the rest of the file. Normalise to `s1`/`s2`/`s3`.
+
+**L2 — `guide.md` `## Overview` has no h2 peer in index.html**
+
+`guide.md:21` has an `## Overview` h2. index.html instead has the hero block (H1 + tagline) which functionally serves the same purpose but is not an h2 section and does not appear in the TOC.
+
+Arguably by design — the hero is idiomatic for a single-page HTML doc. Flag only so the user ratifies the divergence; no action required if the hero is accepted as the Overview-equivalent.
+
+### Observations (not findings)
+
+- Body section IDs s1–s21 monotonic, all unique ✓
+- TOC has exactly 21 `<li>` entries, all hrefs resolve to existing IDs ✓
+- Single intentional `DEV-` remains (Adapt section) per plan ✓
+- Footer at index.html:2024 reads `v2.1.109` — matches plan Q2 (current marker) ✓
+- 4 last-verified markers still at `v2.1.81` — correct per §Version String semantics (no re-verify done) ✓
+
+### Verdict
+
+**Do not approve.** H1 blocks shipping. M1 should ship in the same commit as H1 (same class of defect — content parity). L1 and L2 are cleanup, ship-when-convenient.
+
+### Verification commands used
+
+```
+grep -n '<div class="section" id="s' index.html
+grep -n '<h2>' index.html
+grep -n '^## ' guide.md
+grep -n '<!-- SECTION' index.html
+grep -n 'Claude Code v2\.1\.\|v2.1.81' index.html guide.md
+```
+
+Next: IMPL pane — fix new H1 (move s9↔s10 in index.html to match guide.md), new M1 (sync 4 h2 titles — user decides canonical wording per row), new L1 (normalise 3 comments). Optionally address new L2 (Overview peer). Commit and hand back to AUDIT for re-check.
+
+---
+
+## 2026-04-15 — IMPL (AUDIT remediation, round 2)
+
+Resolved H1 + M1 + L1 from AUDIT re-review of e122509. L2 ratified as by-design (no edit).
+
+- **H1:** index.html s9↔s10 physically swapped — Keyboard Shortcuts now in s9 slot (line 1246), iTerm2 Triggers in s10 slot (line 1277). Matches guide.md Step 9 / Step 10 order. Both body IDs, section-num spans, section comments, and TOC entries updated.
+- **M1:** 4 h2 titles synced. guide.md canonical for three: `Create 4 iTerm2 Profiles` (s4), `Profile Startup Commands & Initial Directory` (s5), `MCP Server, Slash Commands & Skills` (s18). index.html canonical for one: `Daily Playbook` (s12) — guide.md Step 12 updated from "Session Playbook" → "Daily Playbook".
+- **L1:** 3 placeholder section comments normalised: `s-prereq`/`s-claude`/`s-ollama` → `s1`/`s2`/`s3`.
+- **L2:** Ratified — hero block accepted as Overview-equivalent. No edit.
+
+Verification: 21 section IDs s1–s21 ✓, s9=Keyboard Shortcuts before s10=Triggers ✓, 0 `s-` placeholder comments ✓, all 4 M1 h2 titles correct in both docs ✓.
+
+Next: AUDIT pane — re-run /start-audit. Confirm H1/M1/L1 all closed, L2 ratified. Check no new findings.
