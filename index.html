@@ -712,7 +712,15 @@
         <div class="step-body">
           <div class="code-block">
 <div>brew install ollama</div>
-<div>ollama serve &amp;   <span class="comment"># or: brew services start ollama (auto-start on login)</span></div>
+<div>ollama serve &amp;</div>
+          </div>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Make it persistent</strong> &mdash; <span class="mono">ollama serve &amp;</span> only runs until you close the terminal. For Ollama to stay running across reboots (so <span class="mono">cc</span> and <span class="mono">llm-*</span> aliases work without manual server starts), run this once now:
+              <div class="code-block" style="margin-top:8px;">
+<div>brew services start ollama</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
