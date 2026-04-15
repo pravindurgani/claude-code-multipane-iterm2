@@ -573,12 +573,12 @@
       <li><a href="#s1"><span class="toc-num">01</span> Prerequisites</a></li>
       <li><a href="#s2"><span class="toc-num">02</span> Install Claude Code</a></li>
       <li><a href="#s3"><span class="toc-num">03</span> Local AI Models (Ollama)</a></li>
-      <li><a href="#s4"><span class="toc-num">04</span> The 4-pane concept</a></li>
-      <li><a href="#s5"><span class="toc-num">05</span> Create iTerm2 profiles</a></li>
-      <li><a href="#s6"><span class="toc-num">06</span> Startup commands &amp; directory</a></li>
-      <li><a href="#s7"><span class="toc-num">07</span> Shell snippet</a></li>
-      <li><a href="#s8"><span class="toc-num">08</span> Window layout &amp; arrangement</a></li>
-      <li><a href="#s9"><span class="toc-num">09</span> Launch Claude Code</a></li>
+      <li><a href="#s4"><span class="toc-num">04</span> Create iTerm2 profiles</a></li>
+      <li><a href="#s5"><span class="toc-num">05</span> Startup commands &amp; directory</a></li>
+      <li><a href="#s6"><span class="toc-num">06</span> Shell snippet</a></li>
+      <li><a href="#s7"><span class="toc-num">07</span> Window layout &amp; arrangement</a></li>
+      <li><a href="#s8"><span class="toc-num">08</span> Launch Claude Code</a></li>
+      <li><a href="#s9"><span class="toc-num">09</span> iTerm2 triggers (optional)</a></li>
       <li><a href="#s10"><span class="toc-num">10</span> Keyboard shortcuts</a></li>
       <li><a href="#s11"><span class="toc-num">11</span> Cross-pane workflow</a></li>
       <li><a href="#s12"><span class="toc-num">12</span> Daily playbook</a></li>
@@ -587,10 +587,10 @@
       <li><a href="#s15"><span class="toc-num">15</span> gate Workflow</a></li>
       <li><a href="#s16"><span class="toc-num">16</span> SESSION_LOG pattern</a></li>
       <li><a href="#s17"><span class="toc-num">17</span> CLAUDE.md split pattern</a></li>
-      <li><a href="#s18"><span class="toc-num">18</span> Quick Reference</a></li>
-      <li><a href="#s19"><span class="toc-num">19</span> MCP server, commands &amp; skills</a></li>
-      <li><a href="#s20"><span class="toc-num">20</span> Draw Things (optional)</a></li>
-      <li><a href="#s21"><span class="toc-num">21</span> Troubleshooting</a></li>
+      <li><a href="#s18"><span class="toc-num">18</span> MCP server, commands &amp; skills</a></li>
+      <li><a href="#s19"><span class="toc-num">19</span> Draw Things (optional)</a></li>
+      <li><a href="#s20"><span class="toc-num">20</span> Troubleshooting</a></li>
+      <li><a href="#s21"><span class="toc-num">21</span> Quick Reference</a></li>
     </ul>
   </div>
 
@@ -762,13 +762,63 @@
     </div>
   </div>
 
-  <!-- SECTION 1 -->
+  <!-- WHY ITERM2 -->
+  <div class="callout tip" style="margin: 0 0 48px; max-width: 800px;">
+    <span class="callout-icon">&#128161;</span>
+    <div>
+      <strong>Why iTerm2 over macOS Terminal?</strong>
+      <p style="margin-top:8px;">This workflow relies on features the default Terminal doesn't have:</p>
+      <table class="data-table iterm-compare-table" style="margin-top:12px; font-size:14px;">
+        <thead><tr><th style="width:35%">Feature</th><th>macOS Terminal</th><th>iTerm2</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Split panes</strong></td><td>Tabs/windows only &mdash; no side-by-side splits</td><td>Unlimited independent panes in a single tab</td></tr>
+          <tr><td><strong>Named profiles</strong></td><td>Basic profiles, no <span class="mono">$ITERM_PROFILE</span> env var</td><td>Auto-sets <span class="mono">$ITERM_PROFILE</span> per pane &mdash; the key to role detection</td></tr>
+          <tr><td><strong>Visual identity</strong></td><td>Basic themes and transparency</td><td>Per-profile backgrounds, tab colours, badges, and 24-bit colour</td></tr>
+          <tr><td><strong>Window arrangements</strong></td><td>No saved layouts</td><td>Save &amp; auto-restore multi-pane layouts on launch</td></tr>
+          <tr><td><strong>Productivity</strong></td><td>Standard find and copy</td><td>Paste history, Instant Replay, triggers, shell integration</td></tr>
+        </tbody>
+      </table>
+      <!-- Mobile-only stacked version of the same comparison -->
+      <div class="iterm-compare-cards" style="margin-top:12px;">
+        <div class="compare-card">
+          <div class="compare-card-title">Split panes</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Tabs/windows only</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Unlimited independent panes in one tab</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Named profiles</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> No <span class="mono">$ITERM_PROFILE</span> env var</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Auto-sets <span class="mono">$ITERM_PROFILE</span> per pane</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Visual identity</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Basic themes only</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Per-profile backgrounds, tab colours, badges</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Saved layouts</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Not supported</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Save &amp; auto-restore on launch</div>
+        </div>
+        <div class="compare-card">
+          <div class="compare-card-title">Productivity</div>
+          <div class="compare-row"><span class="compare-label">Terminal</span> Standard find and copy</div>
+          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Paste history, Instant Replay, triggers</div>
+        </div>
+      </div>
+      <p style="margin-top:8px; color: var(--text-muted); font-size: 14px;">The <span class="mono">$ITERM_PROFILE</span> environment variable is especially critical &mdash; it's what lets the <span class="mono">cc</span> alias automatically launch the right model and permissions per pane, and it survives window arrangement restores.</p>
+    </div>
+  </div>
+
+  <!-- SECTION s4: Create iTerm2 Profiles -->
   <div class="section" id="s4">
     <div class="section-header">
       <span class="section-num">04</span>
-      <h2>The 4-Pane Concept</h2>
+      <h2>Create iTerm2 Profiles</h2>
     </div>
-    <p class="section-intro">Each pane runs a separate Claude Code session with a dedicated role. The AUDIT pane uses Opus for deep review. Everything else uses Sonnet to keep costs down. A <span class="mono">cc</span> alias launches the right configuration automatically.</p>
+    <p class="section-intro">Create 4 named profiles, each with a distinct background tint, tab colour, and badge so you can instantly tell which pane you're in.</p>
+
+    <p>Each pane runs a separate Claude Code session with a dedicated role. The AUDIT pane uses Opus for deep review. Everything else uses Sonnet to keep costs down. A <span class="mono">cc</span> alias launches the right configuration automatically.</p>
 
     <div class="pane-grid">
       <div class="pane-card pc-audit">
@@ -842,63 +892,6 @@
       <span class="callout-icon">&#128190;</span>
       <div><strong>Hardware note:</strong> This 4-pane setup runs comfortably on 16GB+ machines. On systems with less than 16GB RAM, consider running 2&ndash;3 panes instead of all four, or closing inactive panes between tasks. Monitor with <span class="mono">top -l 1 | grep PhysMem</span> if you notice slowdowns.</div>
     </div>
-  </div>
-
-  <!-- WHY ITERM2 -->
-  <div class="callout tip" style="margin: 0 0 48px; max-width: 800px;">
-    <span class="callout-icon">&#128161;</span>
-    <div>
-      <strong>Why iTerm2 over macOS Terminal?</strong>
-      <p style="margin-top:8px;">This workflow relies on features the default Terminal doesn't have:</p>
-      <table class="data-table iterm-compare-table" style="margin-top:12px; font-size:14px;">
-        <thead><tr><th style="width:35%">Feature</th><th>macOS Terminal</th><th>iTerm2</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Split panes</strong></td><td>Tabs/windows only &mdash; no side-by-side splits</td><td>Unlimited independent panes in a single tab</td></tr>
-          <tr><td><strong>Named profiles</strong></td><td>Basic profiles, no <span class="mono">$ITERM_PROFILE</span> env var</td><td>Auto-sets <span class="mono">$ITERM_PROFILE</span> per pane &mdash; the key to role detection</td></tr>
-          <tr><td><strong>Visual identity</strong></td><td>Basic themes and transparency</td><td>Per-profile backgrounds, tab colours, badges, and 24-bit colour</td></tr>
-          <tr><td><strong>Window arrangements</strong></td><td>No saved layouts</td><td>Save &amp; auto-restore multi-pane layouts on launch</td></tr>
-          <tr><td><strong>Productivity</strong></td><td>Standard find and copy</td><td>Paste history, Instant Replay, triggers, shell integration</td></tr>
-        </tbody>
-      </table>
-      <!-- Mobile-only stacked version of the same comparison -->
-      <div class="iterm-compare-cards" style="margin-top:12px;">
-        <div class="compare-card">
-          <div class="compare-card-title">Split panes</div>
-          <div class="compare-row"><span class="compare-label">Terminal</span> Tabs/windows only</div>
-          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Unlimited independent panes in one tab</div>
-        </div>
-        <div class="compare-card">
-          <div class="compare-card-title">Named profiles</div>
-          <div class="compare-row"><span class="compare-label">Terminal</span> No <span class="mono">$ITERM_PROFILE</span> env var</div>
-          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Auto-sets <span class="mono">$ITERM_PROFILE</span> per pane</div>
-        </div>
-        <div class="compare-card">
-          <div class="compare-card-title">Visual identity</div>
-          <div class="compare-row"><span class="compare-label">Terminal</span> Basic themes only</div>
-          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Per-profile backgrounds, tab colours, badges</div>
-        </div>
-        <div class="compare-card">
-          <div class="compare-card-title">Saved layouts</div>
-          <div class="compare-row"><span class="compare-label">Terminal</span> Not supported</div>
-          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Save &amp; auto-restore on launch</div>
-        </div>
-        <div class="compare-card">
-          <div class="compare-card-title">Productivity</div>
-          <div class="compare-row"><span class="compare-label">Terminal</span> Standard find and copy</div>
-          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Paste history, Instant Replay, triggers</div>
-        </div>
-      </div>
-      <p style="margin-top:8px; color: var(--text-muted); font-size: 14px;">The <span class="mono">$ITERM_PROFILE</span> environment variable is especially critical &mdash; it's what lets the <span class="mono">cc</span> alias automatically launch the right model and permissions per pane, and it survives window arrangement restores.</p>
-    </div>
-  </div>
-
-  <!-- SECTION 2 -->
-  <div class="section" id="s5">
-    <div class="section-header">
-      <span class="section-num">05</span>
-      <h2>Create iTerm2 Profiles</h2>
-    </div>
-    <p class="section-intro">Create 4 named profiles, each with a distinct background tint, tab colour, and badge so you can instantly tell which pane you're in.</p>
 
     <div class="callout warn">
       <span class="callout-icon">&#9888;&#65039;</span>
@@ -971,10 +964,10 @@
     </div>
   </div>
 
-  <!-- SECTION 3 -->
-  <div class="section" id="s6">
+  <!-- SECTION s5: Startup Commands & Initial Directory -->
+  <div class="section" id="s5">
     <div class="section-header">
-      <span class="section-num">06</span>
+      <span class="section-num">05</span>
       <h2>Startup Commands &amp; Initial Directory</h2>
     </div>
     <p class="section-intro">Each profile needs a startup command (to cd into the project directory and open an interactive shell) and an initial directory setting (as a fallback for window arrangement restores).</p>
@@ -1022,10 +1015,10 @@
     </div>
   </div>
 
-  <!-- SECTION 4 -->
-  <div class="section" id="s7">
+  <!-- SECTION s6: Shell Snippet -->
+  <div class="section" id="s6">
     <div class="section-header">
-      <span class="section-num">07</span>
+      <span class="section-num">06</span>
       <h2>Shell Snippet</h2>
     </div>
     <p class="section-intro">Add a block to your <span class="mono">~/.zshrc</span> that auto-detects which profile you're in and configures coloured prompts, locked tab titles, and a <span class="mono">cc</span> alias to launch Claude Code with the right flags.</p>
@@ -1094,10 +1087,10 @@
     </div>
   </div>
 
-  <!-- SECTION 5 -->
-  <div class="section" id="s8">
+  <!-- SECTION s7: Window Layout & Arrangement -->
+  <div class="section" id="s7">
     <div class="section-header">
-      <span class="section-num">08</span>
+      <span class="section-num">07</span>
       <h2>Window Layout &amp; Arrangement</h2>
     </div>
     <p class="section-intro">Create a 2&times;2 pane layout, save it, and configure iTerm2 to restore it automatically on launch.</p>
@@ -1178,10 +1171,10 @@
     </div>
   </div>
 
-  <!-- SECTION 6 -->
-  <div class="section" id="s9">
+  <!-- SECTION s8: Launch Claude Code -->
+  <div class="section" id="s8">
     <div class="section-header">
-      <span class="section-num">09</span>
+      <span class="section-num">08</span>
       <h2>Launch Claude Code</h2>
     </div>
     <p class="section-intro">Type <span class="mono">cc</span> in any pane. The alias you set up in Step 4 launches Claude Code with the correct model, effort level, and permissions for that pane.</p>
@@ -1249,7 +1242,25 @@
     </div>
   </div>
 
-  <!-- SECTION 7 -->
+  <!-- SECTION s9: iTerm2 Triggers (Optional) -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>iTerm2 Triggers (Optional)</h2>
+    </div>
+    <p class="section-intro">Auto-highlight keywords in terminal output.</p>
+    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">Set up in <strong>Profile &rarr; Advanced &rarr; Triggers &rarr; +</strong></p>
+    <table class="data-table">
+      <thead><tr><th>Regex</th><th>Action</th><th>Colour</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">\b(CRITICAL|ERROR|FAIL(ED)?)\b</span></td><td>Highlight Text</td><td>Red background</td></tr>
+        <tr><td><span class="mono">\b(PASS(ED)?|SUCCESS)\b</span></td><td>Highlight Text</td><td>Green background</td></tr>
+        <tr><td><span class="mono">\b(WARNING|WARN|TODO)\b</span></td><td>Highlight Text</td><td>Yellow background</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION s10: Keyboard Shortcuts -->
   <div class="section" id="s10">
     <div class="section-header">
       <span class="section-num">10</span>
@@ -1278,17 +1289,9 @@
       <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/effort</span></div><div class="shortcut-desc">Switch effort mid-session</div></div>
     </div>
 
-    <p style="font-size:13px;color:var(--text-muted);margin:24px 0 12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">iTerm2 triggers (optional)</p>
-    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">Auto-highlight keywords in terminal output. Set up in <strong>Profile &rarr; Advanced &rarr; Triggers &rarr; +</strong></p>
-    <table class="data-table">
-      <tr><th>Regex</th><th>Action</th><th>Colour</th></tr>
-      <tr><td><span class="mono">\b(CRITICAL|ERROR|FAIL(ED)?)\b</span></td><td>Highlight Text</td><td>Red background</td></tr>
-      <tr><td><span class="mono">\b(PASS(ED)?|SUCCESS)\b</span></td><td>Highlight Text</td><td>Green background</td></tr>
-      <tr><td><span class="mono">\b(WARNING|WARN|TODO)\b</span></td><td>Highlight Text</td><td>Yellow background</td></tr>
-    </table>
   </div>
 
-  <!-- SECTION 8 -->
+  <!-- SECTION s11: Cross-Pane Workflow -->
   <div class="section" id="s11">
     <div class="section-header">
       <span class="section-num">11</span>
@@ -1350,7 +1353,7 @@
     </div>
   </div>
 
-  <!-- SECTION 9 -->
+  <!-- SECTION s12: Daily Playbook -->
   <div class="section" id="s12">
     <div class="section-header">
       <span class="section-num">12</span>
@@ -1406,7 +1409,7 @@
     </div>
   </div>
 
-  <!-- SECTION 10 -->
+  <!-- SECTION s13: Adapt for Other Projects -->
   <div class="section" id="s13">
     <div class="section-header">
       <span class="section-num">13</span>
@@ -1464,7 +1467,7 @@
     </div>
   </div>
 
-  <!-- SECTION 11 -->
+  <!-- SECTION s14: Two-Tier Hook Architecture -->
   <div class="section" id="s14">
     <div class="section-header">
       <span class="section-num">14</span>
@@ -1528,7 +1531,7 @@
     </div>
   </div>
 
-  <!-- SECTION 12 -->
+  <!-- SECTION s15: gate Workflow -->
   <div class="section" id="s15">
     <div class="section-header">
       <span class="section-num">15</span>
@@ -1572,7 +1575,7 @@
     </div>
   </div>
 
-  <!-- SECTION 13 -->
+  <!-- SECTION s16: SESSION_LOG Pattern -->
   <div class="section" id="s16">
     <div class="section-header">
       <span class="section-num">16</span>
@@ -1616,7 +1619,7 @@
     </div>
   </div>
 
-  <!-- SECTION 14 -->
+  <!-- SECTION s17: CLAUDE.md Split Pattern -->
   <div class="section" id="s17">
     <div class="section-header">
       <span class="section-num">17</span>
@@ -1661,113 +1664,10 @@
     </div>
   </div>
 
-  <!-- SECTION 15 -->
+  <!-- SECTION s18: MCP Server, Commands & Skills -->
   <div class="section" id="s18">
     <div class="section-header">
       <span class="section-num">18</span>
-      <h2>Quick Reference — read as needed</h2>
-    </div>
-    <p class="section-intro">Everything on one screen — copy, paste, go.</p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">1</span>
-          <span class="step-title">Pane roles</span>
-        </div>
-        <div class="step-body">
-          <table class="data-table">
-            <tr><th>Pane</th><th>Model</th><th>Effort</th><th>Permission</th><th>Purpose</th></tr>
-            <tr><td><span class="mono">AUDIT</span></td><td>Opus</td><td>high</td><td><span class="mono">plan</span></td><td>Code review (read-only)</td></tr>
-            <tr><td><span class="mono">IMPL</span></td><td>Sonnet</td><td>high</td><td><span class="mono">acceptEdits</span></td><td>Write code + run tests</td></tr>
-            <tr><td><span class="mono">PROMPT</span></td><td>Sonnet</td><td>medium</td><td>default</td><td>Prompt engineering</td></tr>
-            <tr><td><span class="mono">PLAN</span></td><td>Sonnet</td><td>low</td><td>default</td><td>Architecture + planning</td></tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">2</span>
-          <span class="step-title">Shell aliases</span>
-        </div>
-        <div class="step-body">
-          <table class="data-table">
-            <tr><th>Alias</th><th>Pane</th><th>What it does</th></tr>
-            <tr><td><span class="mono">cc</span></td><td>All</td><td>Launch Claude Code with role-correct flags</td></tr>
-            <tr><td><span class="mono">gate</span></td><td>IMPL</td><td>Run full test suite — must pass before AUDIT handoff</td></tr>
-            <tr><td><span class="mono">ship</span></td><td>IMPL</td><td><span class="mono">gate</span> + <span class="mono">git add -p</span> + <span class="mono">git commit</span></td></tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">3</span>
-          <span class="step-title">Keyboard shortcuts</span>
-        </div>
-        <div class="step-body">
-          <table class="data-table">
-            <tr><th>Shortcut</th><th>Action</th></tr>
-            <tr><td><span class="mono">⌘⌥ ←/→/↑/↓</span></td><td>Switch panes</td></tr>
-            <tr><td><span class="mono">⌘⇧↵</span></td><td>Zoom/unzoom pane</td></tr>
-            <tr><td><span class="mono">⌘D</span></td><td>Split right</td></tr>
-            <tr><td><span class="mono">⌘⇧D</span></td><td>Split down</td></tr>
-            <tr><td><span class="mono">Esc</span></td><td>Stop Claude generation</td></tr>
-            <tr><td><span class="mono">/clear</span></td><td>Reset conversation context</td></tr>
-            <tr><td><span class="mono">/compact</span></td><td>Compress context (keep history)</td></tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">4</span>
-          <span class="step-title">Daily workflow</span>
-        </div>
-        <div class="step-body">
-          <div class="code-block">
-<div class="comment"># Morning</div>
-<div>1. Open iTerm2 (arrangement auto-restores)</div>
-<div>2. Type <span class="str">cc</span> in each pane</div>
-<div>&nbsp;</div>
-<div class="comment"># Working</div>
-<div>3. PLAN → discuss approach (no writes)</div>
-<div>4. IMPL → implement → <span class="str">gate</span> (must pass)</div>
-<div>5. AUDIT → review changed files → findings back to IMPL</div>
-<div>&nbsp;&nbsp;&nbsp;<span class="mono">/clear</span> AUDIT before reviewing (state sync)</div>
-<div>&nbsp;</div>
-<div class="comment"># End of day</div>
-<div>6. IMPL → <span class="str">ship</span> (gate + stage + commit)</div>
-<div>7. Update SESSION_LOG.md</div>
-<div>8. /compact in long sessions</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">5</span>
-          <span class="step-title">Safety hooks</span>
-        </div>
-        <div class="step-body">
-          <table class="data-table">
-            <tr><th>Hook</th><th>Event</th><th>Blocks</th></tr>
-            <tr><td><span class="mono">protect-env.py</span></td><td>PreToolUse</td><td>Any edit to <span class="mono">.env</span> files</td></tr>
-            <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td><span class="mono">git push</span> commands</td></tr>
-            <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
-            <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter)</td></tr>
-            <tr><td><span class="mono">version-check.py</span></td><td>SessionStart</td><td>(never blocks &mdash; prints update checklist on version change)</td></tr>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION 16 -->
-  <div class="section" id="s19">
-    <div class="section-header">
-      <span class="section-num">19</span>
       <h2>MCP Server, Commands &amp; Skills</h2>
     </div>
     <p class="section-intro">Phase 6 additions — GitHub MCP integration, the <span class="mono">/reflect</span> command, and contextual skills.</p>
@@ -1841,10 +1741,10 @@
     </div>
   </div>
 
-  <!-- SECTION s-drawthings: Draw Things (Optional) -->
-  <div class="section" id="s20">
+  <!-- SECTION s19: Draw Things (Optional) -->
+  <div class="section" id="s19">
     <div class="section-header">
-      <span class="section-num">20</span>
+      <span class="section-num">19</span>
       <h2>Draw Things <span style="font-weight:400;color:var(--text-muted)">(Optional &mdash; Creative AI)</span></h2>
     </div>
     <p class="section-intro">Free local image generation on macOS. Runs entirely on-device via Core ML &mdash; no API calls, no sign-up. Completely independent from Claude Code and Ollama.</p>
@@ -1872,10 +1772,10 @@
     </div>
   </div>
 
-  <!-- SECTION 17 -->
-  <div class="section" id="s21">
+  <!-- SECTION s20: Troubleshooting -->
+  <div class="section" id="s20">
     <div class="section-header">
-      <span class="section-num">21</span>
+      <span class="section-num">20</span>
       <h2>Troubleshooting</h2>
     </div>
     <p class="section-intro">Common failure modes and how to fix them.</p>
@@ -2011,6 +1911,109 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- SECTION s21: Quick Reference -->
+  <div class="section" id="s21">
+    <div class="section-header">
+      <span class="section-num">21</span>
+      <h2>Quick Reference — read as needed</h2>
+    </div>
+    <p class="section-intro">Everything on one screen — copy, paste, go.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Pane roles</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Pane</th><th>Model</th><th>Effort</th><th>Permission</th><th>Purpose</th></tr>
+            <tr><td><span class="mono">AUDIT</span></td><td>Opus</td><td>high</td><td><span class="mono">plan</span></td><td>Code review (read-only)</td></tr>
+            <tr><td><span class="mono">IMPL</span></td><td>Sonnet</td><td>high</td><td><span class="mono">acceptEdits</span></td><td>Write code + run tests</td></tr>
+            <tr><td><span class="mono">PROMPT</span></td><td>Sonnet</td><td>medium</td><td>default</td><td>Prompt engineering</td></tr>
+            <tr><td><span class="mono">PLAN</span></td><td>Sonnet</td><td>low</td><td>default</td><td>Architecture + planning</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Shell aliases</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Alias</th><th>Pane</th><th>What it does</th></tr>
+            <tr><td><span class="mono">cc</span></td><td>All</td><td>Launch Claude Code with role-correct flags</td></tr>
+            <tr><td><span class="mono">gate</span></td><td>IMPL</td><td>Run full test suite — must pass before AUDIT handoff</td></tr>
+            <tr><td><span class="mono">ship</span></td><td>IMPL</td><td><span class="mono">gate</span> + <span class="mono">git add -p</span> + <span class="mono">git commit</span></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <span class="step-title">Keyboard shortcuts</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Shortcut</th><th>Action</th></tr>
+            <tr><td><span class="mono">⌘⌥ ←/→/↑/↓</span></td><td>Switch panes</td></tr>
+            <tr><td><span class="mono">⌘⇧↵</span></td><td>Zoom/unzoom pane</td></tr>
+            <tr><td><span class="mono">⌘D</span></td><td>Split right</td></tr>
+            <tr><td><span class="mono">⌘⇧D</span></td><td>Split down</td></tr>
+            <tr><td><span class="mono">Esc</span></td><td>Stop Claude generation</td></tr>
+            <tr><td><span class="mono">/clear</span></td><td>Reset conversation context</td></tr>
+            <tr><td><span class="mono">/compact</span></td><td>Compress context (keep history)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">4</span>
+          <span class="step-title">Daily workflow</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div class="comment"># Morning</div>
+<div>1. Open iTerm2 (arrangement auto-restores)</div>
+<div>2. Type <span class="str">cc</span> in each pane</div>
+<div>&nbsp;</div>
+<div class="comment"># Working</div>
+<div>3. PLAN → discuss approach (no writes)</div>
+<div>4. IMPL → implement → <span class="str">gate</span> (must pass)</div>
+<div>5. AUDIT → review changed files → findings back to IMPL</div>
+<div>&nbsp;&nbsp;&nbsp;<span class="mono">/clear</span> AUDIT before reviewing (state sync)</div>
+<div>&nbsp;</div>
+<div class="comment"># End of day</div>
+<div>6. IMPL → <span class="str">ship</span> (gate + stage + commit)</div>
+<div>7. Update SESSION_LOG.md</div>
+<div>8. /compact in long sessions</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">5</span>
+          <span class="step-title">Safety hooks</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <tr><th>Hook</th><th>Event</th><th>Blocks</th></tr>
+            <tr><td><span class="mono">protect-env.py</span></td><td>PreToolUse</td><td>Any edit to <span class="mono">.env</span> files</td></tr>
+            <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td><span class="mono">git push</span> commands</td></tr>
+            <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
+            <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter)</td></tr>
+            <tr><td><span class="mono">version-check.py</span></td><td>SessionStart</td><td>(never blocks &mdash; prints update checklist on version change)</td></tr>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
 
