@@ -64,3 +64,15 @@ Verification: `grep -n "triad" REFERENCE.md` → 0 version-string hits; `grep -c
 
 Next: AUDIT re-run to confirm clean. Then: ship Unbuilt Issue #2.
 
+
+---
+
+## 2026-04-15 — IMPL (part 1 of 2)
+
+- Rewrote guide.md, zshrc-snippet.sh, CLAUDE.md.template per plan greedy-sniffing-candy.md
+- DEV-* → CC-* profile rename (breaking change, see CHANGELOG.md)
+- Bannered SETUP_FREEZE_PLAN.md; created CHANGELOG.md
+- .gitignored personal files (m3-coding-quickstart.html, optimal-guide.html, prav_build_process.md)
+- Moved old_setup_guide.zip to ~/.claude/backups/
+
+Next: index.html surgical rewrite (commit 2)

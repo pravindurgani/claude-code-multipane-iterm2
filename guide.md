@@ -1,68 +1,184 @@
-# iTerm2 Multi-Pane Claude Code Setup — Universal Reference
+# Mac + Claude Code — AI Workstation Setup Guide
 
-> Corrected, battle-tested version. Implemented and verified on macOS with
-> iTerm2 + Claude Code v2.1.81. Reusable for any project. March 2026.
+> Complete installation guide for tech-literate friends. Covers prerequisites,
+> Claude Code, local AI models (Ollama), and a 4-pane iTerm2 workflow.
+> Every command block is a literal paste — no substitution required unless noted.
+
+**Estimated time:** 3–4 hours total, most of which is waiting for model downloads.
+
+**RAM tiers used throughout this guide:**
+
+| Tier | RAM | What you get |
+|------|-----|-------------|
+| 🟢 **Base** | 16 GB+ | Claude Code + small local models (fast/code/embed) |
+| 🔵 **Mid** | 32 GB+ | Above + reasoning model + larger fast/code models |
+| 🔴 **Full** | 64 GB+ | Above + vision model + 32B code model |
+
+Steps marked 🟢 apply to all tiers. Steps marked 🔵 or 🔴 are additive.
 
 ---
 
 ## Overview
 
-4 dedicated iTerm2 panes, each running a separate Claude Code session with a
-distinct role, model, and visual identity. All panes point at the same project
-directory but serve different purposes.
+What you're building:
 
-| Pane     | Role                          | Model    | Effort   | Permission Mode |
-|----------|-------------------------------|----------|----------|-----------------|
-| AUDIT    | Adversarial review, security  | `opus`   | `high`   | `plan` (read-only) |
-| IMPL     | Code writing & editing        | `sonnet` | `high`   | `acceptEdits`   |
-| PROMPT   | Prompt engineering & content  | `sonnet` | `medium` | default         |
-| PLAN     | Architecture, docs, planning  | `sonnet` | `low`    | default         |
+1. **Claude Code** — Anthropic's official AI coding agent, running in your terminal.
+2. **Local AI models via Ollama** — private inference on your Mac, no API calls.
+3. **4-pane iTerm2 layout** — four specialised Claude Code sessions in one window,
+   each with a locked role, model, and permission set.
 
-**Why this split:**
-- Opus is ~15x more expensive than Sonnet — reserve it for review only.
-- Separating review from implementation prevents "self-grading" bias.
-- Each pane keeps a clean, focused context window.
-
-> **Hardware note:** This 4-pane setup runs comfortably on 16GB+ machines.
-> On systems with less than 16GB RAM, consider running 2–3 panes instead of
-> all four, or closing inactive panes between tasks. Monitor with
-> `top -l 1 | grep PhysMem` if you notice slowdowns.
+The result: one `cc` command launches the right Claude model in each pane, and
+`llm-fast "..."` or `llm-code "..."` routes a prompt to the right local model.
 
 ---
 
-## Why iTerm2 over macOS Terminal?
+## Step 1 — Prerequisites
 
-This workflow relies on features the default Terminal doesn't have:
+### 1.1 Homebrew
 
-| Feature | macOS Terminal | iTerm2 |
-|---------|---------------|--------|
-| **Split panes** | Tabs/windows only — no side-by-side splits | Unlimited independent panes in a single tab |
-| **Named profiles** | Basic profiles, no `$ITERM_PROFILE` env var | Auto-sets `$ITERM_PROFILE` per pane — the key to role detection |
-| **Visual identity** | Basic themes and transparency | Per-profile backgrounds, tab colours, badges, and 24-bit colour |
-| **Window arrangements** | No saved layouts | Save & auto-restore multi-pane layouts on launch |
-| **Productivity** | Standard find and copy | Paste history, Instant Replay, triggers, shell integration |
+```bash
+# Check if Homebrew is already installed:
+command -v brew >/dev/null && echo "Homebrew already installed — skip" || \
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-The `$ITERM_PROFILE` variable is especially critical — it lets the `cc` alias
-automatically launch the right model and permissions per pane, and it survives
-window arrangement restores.
+# Add Homebrew to your PATH (Apple Silicon only — skip if already in ~/.zshrc):
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### 1.2 Node.js (required for Claude Code)
+
+```bash
+brew install node
+```
+
+### 1.3 iTerm2
+
+```bash
+brew install --cask iterm2
+```
+
+Open iTerm2 once to complete the initial setup, then continue in it.
 
 ---
 
-## Step 1 — Create 4 iTerm2 Profiles
+## Step 2 — Install Claude Code
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+### 2.1 Authenticate — browser OAuth (recommended)
+
+```bash
+claude login
+```
+
+This opens a browser window. Sign in with your Anthropic account (Pro or Max plan).
+No API key needed with this method.
+
+<details>
+<summary>API key alternative (if you don't have a Pro/Max subscription)</summary>
+
+```bash
+export ANTHROPIC_API_KEY="sk-ant-your-key-here"
+# Add the above line to ~/.zshrc so it persists across sessions.
+```
+
+Get a key at console.anthropic.com → API Keys.
+</details>
+
+### 2.2 Verify
+
+```bash
+claude --version
+```
+
+---
+
+## Step 3 — Local AI Models (Ollama) 🟢
+
+This step sets up local inference — models that run entirely on your machine,
+no network required after the initial download.
+
+### 3.1 Install Ollama
+
+```bash
+brew install ollama
+```
+
+Start the server (runs in the background):
+
+```bash
+ollama serve &
+```
+
+> **Tip:** Add `ollama serve &` to your `~/.zshrc` or a startup script if you
+> want it running automatically. Or use `brew services start ollama`.
+
+### 3.2 Pull models — choose your tier
+
+Pick the block that matches your RAM. Pull times assume a 100 Mbps connection.
+
+**🟢 16 GB+ (~15 min, ~10 GB)**
+
+```bash
+ollama pull qwen3:8b              # ~5 GB — fast daily driver
+ollama pull qwen3-coder:7b        # ~4.5 GB — code specialist
+ollama pull nomic-embed-text      # ~274 MB — embeddings
+```
+
+**🔵 32 GB+ (~40 min, ~23 GB total) — pull these instead of the 8b/7b versions**
+
+```bash
+ollama pull qwen3:14b             # ~9 GB — replaces qwen3:8b
+ollama pull qwen3-coder:14b       # ~8.5 GB — replaces qwen3-coder:7b
+ollama pull nomic-embed-text      # ~274 MB
+ollama pull deepseek-r1:8b        # ~5 GB — structured reasoning
+```
+
+**🔴 64 GB+ (~90 min, ~55 GB total) — use these instead of the 14b versions**
+
+```bash
+ollama pull qwen3:14b             # ~9 GB
+ollama pull qwen3-coder:32b       # ~20 GB — replaces qwen3-coder:14b
+ollama pull nomic-embed-text      # ~274 MB
+ollama pull deepseek-r1:8b        # ~5 GB
+ollama pull gemma3:27b            # ~16 GB — vision + heavy reasoning
+```
+
+> **RAM note on 16 GB:** The reasoning model (deepseek-r1) competes with
+> Claude Code's working set. Omitted intentionally — upgrade tier to enable.
+
+### 3.3 Shell aliases + router
+
+Append the relevant block from `zshrc-snippet.sh` (the Ollama section at the
+bottom) to your `~/.zshrc`. See Step 6 for full snippet instructions.
+
+After sourcing, you can use:
+
+```bash
+llm-fast "explain this error"        # general queries
+llm-code "refactor this function"    # code tasks
+llm-reason "think through this"      # 🔵 32 GB+ only
+llm-embed "text to embed"            # semantic search / RAG
+llm-smart "prompt" code              # router: picks the right model
+```
+
+---
+
+## Step 4 — Create 4 iTerm2 Profiles
 
 1. Open **iTerm2 → Settings → Profiles** (`⌘,`).
 2. Click **+** four times to create four new profiles.
-3. Name them with a short project prefix:
+3. Name and colour them:
 
 | Profile Name | Background Hex | Tab Colour Hex | Role                   |
-|--------------|---------------|----------------|------------------------|
-| `DEV-AUDIT`  | `#0d0b18`     | `#a855f7` (purple) | Evaluation / Auditing  |
-| `DEV-IMPL`   | `#080f0b`     | `#22c55e` (green)  | Implementation         |
-| `DEV-PROMPT` | `#080e10`     | `#06b6d4` (cyan)   | Prompt Engineering     |
-| `DEV-PLAN`   | `#0d0b00`     | `#f59e0b` (amber)  | Planning / Architecture|
-
-> **Naming convention for project-specific profiles:** Replace `DEV` with a
-> short project prefix (e.g. `PROJ` for your project, `WEB` for a web app).
+|--------------|----------------|----------------|------------------------|
+| `CC-AUDIT`   | `#0d0b18`      | `#a855f7` (purple) | Evaluation / Auditing  |
+| `CC-IMPL`    | `#080f0b`      | `#22c55e` (green)  | Implementation         |
+| `CC-PROMPT`  | `#080e10`      | `#06b6d4` (cyan)   | Prompt Engineering     |
+| `CC-PLAN`    | `#0d0b00`      | `#f59e0b` (amber)  | Planning / Architecture|
 
 For each profile:
 
@@ -77,19 +193,24 @@ For each profile:
 
 ### General tab
 - **Title:** Click the dropdown. Under "Foreground Job", **uncheck "Job Name"**
-  (leave only "Session Name" checked under "Name"). This prevents the tab title
-  from appending `-zsh` or `(claude)` after the role name.
-- **Badge:** Set the badge text to the role name:
+  (leave only "Session Name" checked). This prevents `-zsh` or `(claude)` from
+  appearing after the role name.
+- **Badge:** Set the badge text to the short role name:
   ```
-  DEV-AUDIT  → AUDIT
-  DEV-IMPL   → IMPL
-  DEV-PROMPT → PROMPT
-  DEV-PLAN   → PLAN
+  CC-AUDIT  → AUDIT
+  CC-IMPL   → IMPL
+  CC-PROMPT → PROMPT
+  CC-PLAN   → PLAN
   ```
+
+> **Migrating from DEV-* profiles:** If you already have DEV-AUDIT/DEV-IMPL/
+> DEV-PROMPT/DEV-PLAN profiles, rename them in iTerm Preferences → Profiles.
+> Then update the `case "$ITERM_PROFILE"` blocks in `~/.zshrc` to match the
+> new CC-* names (or run the snippet in Step 6 which uses CC-* already).
 
 ---
 
-## Step 2 — Profile Startup Commands & Initial Directory
+## Step 5 — Profile Startup Commands & Initial Directory
 
 In each profile → **General** tab:
 
@@ -103,7 +224,7 @@ Change the dropdown from "Login Shell" to **"Custom Shell"** and enter:
 /bin/zsh -c 'cd ~/Desktop/your-project; exec zsh'
 ```
 
-Replace `your-project` with the actual project directory name.
+Replace `your-project` with your project directory name.
 
 ### Initial directory
 Change from **"Home directory"** to **"Directory:"** and enter the full path:
@@ -122,42 +243,41 @@ Change from **"Home directory"** to **"Directory:"** and enter the full path:
 
 ---
 
-## Step 3 — Title Locking, Prompt Colours & Launch Alias
+## Step 6 — Shell Snippet
 
-Add to **~/.zshrc** (append at bottom):
+Append `zshrc-snippet.sh` (from this repo) to your `~/.zshrc`:
 
 ```bash
-# ── Multi-pane Claude Code workflow: title locking + prompt colours ──
-# Uses $ITERM_PROFILE (auto-set by iTerm2) instead of custom env vars
-# so it works reliably with Window Arrangement restore.
-case "$ITERM_PROFILE" in
-  DEV-AUDIT)
-    PANE_ROLE="AUDIT"; PROMPT="%F{magenta}[AUDIT]%f %~ %# " ;;
-  DEV-IMPL)
-    PANE_ROLE="IMPL"; PROMPT="%F{green}[IMPL]%f %~ %# " ;;
-  DEV-PROMPT)
-    PANE_ROLE="PROMPT"; PROMPT="%F{cyan}[PROMPT]%f %~ %# " ;;
-  DEV-PLAN)
-    PANE_ROLE="PLAN"; PROMPT="%F{yellow}[PLAN]%f %~ %# " ;;
-esac
-
-if [[ -n "$PANE_ROLE" ]]; then
-  echo -ne "\033]0;${PANE_ROLE}\007"
-  _pane_title_precmd() { echo -ne "\033]0;${PANE_ROLE}\007"; }
-  precmd_functions+=(_pane_title_precmd)
-fi
-
-# ── Claude Code launch aliases (role-aware) ──
-# Type "cc" in any pane to launch with the correct model/effort/permissions.
-case "$ITERM_PROFILE" in
-  DEV-AUDIT)  alias cc='claude --model opus --effort high --permission-mode plan' ;;
-  DEV-IMPL)   alias cc='claude --model sonnet --effort high --permission-mode acceptEdits' ;;
-  DEV-PROMPT) alias cc='claude --model sonnet --effort medium' ;;
-  DEV-PLAN)   alias cc='claude --model sonnet --effort low' ;;
-esac
+cat zshrc-snippet.sh >> ~/.zshrc
 ```
 
-**Key design decisions:**
+The snippet provides:
+- `$PANE_ROLE` and coloured prompt per profile
+- Title-lock so the pane title stays fixed (won't flip to `-zsh`)
+- `cc` alias — launches Claude with the correct model/effort/permissions per pane
+- `gate` and `ship` aliases (IMPL pane only)
+- Ollama env vars and llm-* aliases (uncomment your tier's block)
+- `llm-smart` router function
+
+After appending, activate it:
+
+```bash
+source ~/.zshrc
+```
+
+### Verify the setup
+
+Open a new iTerm2 pane using the **CC-IMPL** profile, then:
+
+```bash
+echo $PANE_ROLE        # should print: IMPL
+echo $ITERM_PROFILE    # should print: CC-IMPL
+```
+
+If `$PANE_ROLE` is empty, the pane was not opened with a CC-* profile — open
+it via **Profiles → CC-IMPL** in the menu bar.
+
+**Key design decisions in the snippet:**
 - Uses `$ITERM_PROFILE` (auto-set by iTerm2 on every session, including
   arrangement restores) instead of a custom env var from the startup command.
 - Uses `precmd_functions+=()` array instead of overwriting `precmd()` directly,
@@ -167,17 +287,17 @@ esac
 
 ---
 
-## Step 4 — Window Layout & Arrangement
+## Step 7 — Window Layout & Arrangement
 
-### Create the 2x2 split
+### Create the 2×2 split
 
-1. Open a new window with the **DEV-AUDIT** profile.
+1. Open a new window with the **CC-AUDIT** profile.
 2. `⌘D` — split right. Right-click the new pane → **Edit Session** → change
-   profile to **DEV-PROMPT**.
+   profile to **CC-PROMPT**.
 3. Click back on the left pane (AUDIT). `⌘⇧D` — split down. Change the new
-   bottom-left pane to **DEV-IMPL**.
+   bottom-left pane to **CC-IMPL**.
 4. Click on the right pane (PROMPT). `⌘⇧D` — split down. Change the new
-   bottom-right pane to **DEV-PLAN**.
+   bottom-right pane to **CC-PLAN**.
 
 Result:
 ```
@@ -196,10 +316,9 @@ Result:
 6. **Set startup policy:** Go to `iTerm2 → Settings → General → Startup`
    → set to **"Open Default Window Arrangement"**.
 7. **Save again as default:** `Window → Save Window Arrangement` → select the
-   same name. This time iTerm2 knows it's the default because of step 6.
+   same name.
 
-Now iTerm2 opens your 4-pane layout automatically on launch. No extra
-windows or tabs.
+Now iTerm2 opens your 4-pane layout automatically on launch.
 
 ### Option B: Separate windows (dual monitor)
 
@@ -212,15 +331,15 @@ Switch between macOS Spaces with `ctrl+1/2/3/4`.
 
 ---
 
-## Step 5 — Launch Claude Code
+## Step 8 — Launch Claude Code
 
 Type `cc` in each pane. That's it.
 
 > **Note on the `cc` alias:** On some systems, `cc` is aliased to the C compiler.
 > If you work with C/C++, rename the alias to `cl` or `claude-go` in your
-> `~/.zshrc` to avoid conflicts.
+> `~/.zshrc`.
 
-The alias (set up in Step 3) expands to the correct command per pane:
+The alias (set up in Step 6) expands to the correct command per pane:
 
 | Pane   | `cc` expands to                                                  |
 |--------|------------------------------------------------------------------|
@@ -234,7 +353,7 @@ The alias (set up in Step 3) expands to the correct command per pane:
 | Flag                              | Purpose                                    |
 |-----------------------------------|--------------------------------------------|
 | `--model opus`                    | Use Opus (aliases: `opus`, `sonnet`, `haiku`, or full ID like `claude-opus-4-6`) |
-| `--effort high`                   | Thinking budget: `low` = fast, minimal reasoning; `medium` = balanced; `high` = extended reasoning, more tokens; `max` = maximum depth. PLAN uses `low` — architectural discussion doesn't need deep reasoning chains. |
+| `--effort high`                   | Thinking budget: `low` = fast; `medium` = balanced; `high` = extended reasoning; `max` = maximum depth |
 | `--permission-mode plan`          | Read-only — Claude can't write files       |
 | `--permission-mode acceptEdits`   | Auto-accept file edits without asking      |
 | `--append-system-prompt "..."`    | Add custom instructions on top of defaults |
@@ -251,7 +370,7 @@ The alias (set up in Step 3) expands to the correct command per pane:
 
 ---
 
-## Step 6 — Keyboard Shortcuts Reference
+## Step 9 — Keyboard Shortcuts Reference
 
 ### iTerm2 navigation
 
@@ -283,7 +402,7 @@ The alias (set up in Step 3) expands to the correct command per pane:
 
 ---
 
-## Step 7 — iTerm2 Triggers (Optional)
+## Step 10 — iTerm2 Triggers (Optional)
 
 Auto-highlight keywords in terminal output.
 
@@ -297,7 +416,7 @@ Auto-highlight keywords in terminal output.
 
 ---
 
-## Step 8 — Cross-Pane Workflow
+## Step 11 — Cross-Pane Workflow
 
 ### The standard change cycle
 
@@ -330,14 +449,22 @@ Fix this while preserving existing patterns. Do not touch unrelated files.
   starting a review pass on code that IMPL just wrote. This ensures AUDIT reads
   the current file contents, not stale versions cached in its context.
 
-### Test-before-audit gate
+### Why this split?
 
-Never send work to AUDIT until tests pass. Use the `gate` alias in the IMPL
-pane (see Step 12) to run the full test suite before handing off to AUDIT.
+| | macOS Terminal | iTerm2 |
+|---------|---------------|--------|
+| **Split panes** | Tabs/windows only | Unlimited independent panes |
+| **Named profiles** | Basic profiles | Auto-sets `$ITERM_PROFILE` per pane — the key to role detection |
+| **Visual identity** | Basic themes | Per-profile backgrounds, tab colours, badges |
+| **Window arrangements** | No saved layouts | Save & auto-restore multi-pane layouts |
+
+The `$ITERM_PROFILE` variable is especially critical — it lets the `cc` alias
+automatically launch the right model and permissions per pane, and it survives
+window arrangement restores.
 
 ---
 
-## Step 9 — Session Playbook
+## Step 12 — Session Playbook
 
 ### Morning boot
 
@@ -362,20 +489,20 @@ pane (see Step 12) to run the full test suite before handing off to AUDIT.
 
 ---
 
-## Step 10 — Customising for a Specific Project
+## Step 13 — Adapt for Other Projects
 
 To adapt this setup for a different project:
 
-1. **Rename profiles:** `DEV-AUDIT` → `MYPROJECT-AUDIT`, etc.
+1. **Rename profiles:** `CC-AUDIT` → `MYPROJECT-AUDIT`, etc.
 2. **Update Initial directory** in each profile to the new project path.
 3. **Update `~/.zshrc`** — add new `case` entries matching the new profile
-   names (e.g. `MYPROJECT-AUDIT`).
+   names.
 4. **Add project-specific slash commands** to `.claude/commands/`.
 5. **Save a project-specific arrangement** named after the project.
 
 ---
 
-## Step 11 — Two-Tier Hook Architecture
+## Step 14 — Two-Tier Hook Architecture
 
 Claude Code hooks run scripts before and after tool use to enforce safety
 invariants that prompt instructions alone cannot guarantee.
@@ -407,9 +534,7 @@ invariants that prompt instructions alone cannot guarantee.
    - All `"command"` values use `$HOME` — Claude Code does not expand `~`.
    - The example also includes `"env": {"CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"}`.
      This tells Claude Code to auto-compact the conversation context when it
-     reaches 50% of the context window, instead of waiting until it's nearly
-     full. Set to `"0"` to disable, or remove the `"env"` block to use the
-     default threshold.
+     reaches 50% of the context window. Set to `"0"` to disable.
 
 ### What each hook does
 
@@ -425,14 +550,14 @@ invariants that prompt instructions alone cannot guarantee.
 
 ---
 
-## Step 12 — gate/ship Workflow
+## Step 15 — gate Workflow
 
-Two aliases available in the IMPL pane (added to `zshrc-snippet.sh` — see
-Step 3 for how to apply the snippet):
+The `gate` alias in the IMPL pane runs your pytest suite and confirms all tests
+pass before you hand work to the AUDIT pane.
 
 | Alias | What it runs | When to use |
 |-------|-------------|-------------|
-| `gate` | Full pytest suite; exits non-zero on failure | Before handing off to AUDIT |
+| `gate` | pytest suite (tests/); exits non-zero on failure | Before handing off to AUDIT |
 | `ship` | `gate` + interactive `git add -p` + `git commit` | When tests pass and work is commit-ready |
 
 ### Usage in the IMPL pane
@@ -448,7 +573,7 @@ ship
 # → runs gate, then prompts for staged hunks + commit message
 ```
 
-`gate` and `ship` are defined only when `$ITERM_PROFILE == DEV-IMPL`. Running
+`gate` and `ship` are defined only when `$ITERM_PROFILE == CC-IMPL`. Running
 them in other panes is a harmless no-op.
 
 ### The IMPL → AUDIT handoff rule
@@ -457,12 +582,16 @@ them in other panes is a harmless no-op.
 IMPL → implement → gate (must pass) → AUDIT → findings → IMPL → fix → gate → AUDIT
 ```
 
-Never send work to AUDIT until `gate` passes. Sending failing code to the review
-pane wastes its context window on defects the test suite already catches.
+Never send work to AUDIT until `gate` passes.
+
+> **Graduating to a full gate:** Once the project matures, you may want `gate`
+> to also run lint, type checking, and a docker build. That's a deliberate
+> upgrade — don't add it on day one. Start with pytest-only; add gates when
+> you know they're load-bearing.
 
 ---
 
-## Step 13 — SESSION_LOG Cold-Start Fix
+## Step 16 — SESSION_LOG Pattern
 
 ### The problem
 
@@ -472,20 +601,12 @@ than resuming from where the last session ended.
 
 ### The fix
 
-Two parts:
-
-1. **`session-start-reset.py` hook** (see Step 11) fires on `SessionStart` and
-   resets the circuit-breaker state. It is also the entry point for any
-   session-initialisation logic you add later.
-
-2. **CLAUDE.md instruction** (see Step 14): instruct Claude to read
-   `SESSION_LOG.md` on session start and surface the most recent "Next:" items
-   before doing anything else.
+1. Keep a `SESSION_LOG.md` in your project root. Append a new entry at the
+   end of every session; never overwrite old entries.
+2. Instruct Claude (in your `CLAUDE.md`) to read the last 60 lines of
+   `SESSION_LOG.md` at session start and surface the most recent "Next:" items.
 
 ### Minimal SESSION_LOG.md format
-
-Keep a `SESSION_LOG.md` in your project root. Append a new entry at the end of
-every session; never overwrite old entries.
 
 ```markdown
 ### YYYY-MM-DD — one-line task summary
@@ -503,19 +624,16 @@ Real example:
 - **Next**: AUDIT review of api_client.py. Then wire retry into pipeline scheduler.
 ```
 
-At the start of every IMPL session, Claude reads the last 60 lines of
-`SESSION_LOG.md` to pick up where work stopped.
-
 ---
 
-## Step 14 — CLAUDE.md Split Pattern
+## Step 17 — CLAUDE.md Split Pattern
 
 ### Why it's needed
 
 A single `CLAUDE.md` grows with both global rules (coding style, error handling,
-tool preferences) and project-specific decisions (architecture, sprint context,
-active constraints). Mixing the two means every project's Claude session reads
-noise from unrelated projects, and global rules must be duplicated per repo.
+tool preferences) and project-specific decisions (architecture, sprint context).
+Mixing the two means every project's Claude session reads noise from unrelated
+projects, and global rules must be duplicated per repo.
 
 ### The pattern
 
@@ -530,18 +648,18 @@ Claude Code automatically merges both — global first, project-specific second.
 
 Two starter templates are included in this repo:
 
-- **`CLAUDE.md.template`** — copy to `~/.claude/CLAUDE.md`, fill in your
-  global rules. Do not commit this file.
+- **`CLAUDE.md.template`** — copy to `~/.claude/CLAUDE.md`, fill in each
+  section with your own rules. Do not commit this file.
 - **`REFERENCE.md.template`** — copy to `.claude/REFERENCE.md` inside your
   project repo and commit it. The AUDIT pane uses it for sprint context and
   known issues.
 
-> **Tip:** Start `~/.claude/CLAUDE.md` with a one-line role statement
-> ("I am a senior data engineer…") so every session starts with the right frame.
+> **Tip:** Start `~/.claude/CLAUDE.md` with a one-line role statement so every
+> session starts with the right frame.
 
 ---
 
-## Step 15 — MCP Server, Slash Commands & Skills
+## Step 18 — MCP Server, Slash Commands & Skills
 
 ### GitHub MCP Server
 
@@ -609,6 +727,32 @@ skill's trigger description — no manual invocation needed.
 
 ---
 
+## Step 19 — Draw Things (Optional — Creative AI)
+
+<details>
+<summary>Creative AI — skip if not interested</summary>
+
+Draw Things is a free macOS app for local image generation. It runs entirely
+on your machine using Core ML — no API calls, no sign-up required.
+
+**Install:**
+1. Download from the Mac App Store: search "Draw Things AI Image Generator."
+2. Open the app and let it download a base model (~2–4 GB).
+
+**Usage:**
+- Drag and drop an image to use as a reference.
+- Prompt directly in the app's text field.
+- Models are downloaded in-app; no terminal commands needed.
+
+**Recommended starting model:** SDXL Turbo (fast) or Flux Schnell (higher quality).
+
+> Draw Things does not interact with Claude Code or Ollama — it is a standalone
+> tool. This step is entirely optional and has no bearing on any other step.
+
+</details>
+
+---
+
 ## Troubleshooting
 
 ### T1 — `$ITERM_PROFILE` is empty, `cc` launches with wrong model
@@ -620,7 +764,7 @@ skill's trigger description — no manual invocation needed.
 **Fix:**
 - Update iTerm2 to 3.3+ (Help → Check For Updates).
 - Reopen the pane via **Profiles → [your profile name] → Open in current tab**.
-- Confirm: `echo $ITERM_PROFILE` should print `DEV-AUDIT`, etc.
+- Confirm: `echo $ITERM_PROFILE` should print `CC-AUDIT`, `CC-IMPL`, etc.
 
 ---
 
@@ -656,7 +800,7 @@ python3 -m json.tool ~/.claude/settings.json  # prints formatted JSON on success
 
 **Fix A:** Press `Ctrl+C`, then `cc`. The `session-start-reset.py` hook fires on session start and resets the counter automatically.
 
-**Fix B:** Delete the state file (it lives in the project root, where Claude Code was launched from):
+**Fix B:** Delete the state file:
 ```bash
 rm -f ./circuit-breaker-state.json
 # Then /clear inside Claude Code to reset conversation context.
@@ -691,12 +835,32 @@ git push
 2. Update the alias block in `~/.zshrc` to match, then `source ~/.zshrc`.
 3. Run `claude --version` to confirm your installed version. This guide was verified against v2.1.81 (March 2026).
 
-> **Tip:** The `version-check.py` hook (Step 11) detects version changes
+> **Tip:** The `version-check.py` hook (Step 14) detects version changes
 > automatically and prints this checklist at session start.
 
 ---
 
-## Quick Reference Card
+### T8 — Ollama: model not found or server not running
+
+**Symptom:** `ollama run qwen3:8b` hangs or returns "model not found."
+
+```bash
+# Check 1 — server is running
+curl http://localhost:11434/      # should return "Ollama is running"
+
+# Check 2 — model is pulled
+ollama list                       # lists all downloaded models
+
+# If server is not running:
+ollama serve &
+
+# If model is missing:
+ollama pull qwen3:8b              # (or whichever model)
+```
+
+---
+
+## Quick Reference — Reference: read as needed
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -708,6 +872,14 @@ git push
 │  IMPL:   sonnet · high effort · acceptEdits              │
 │  PROMPT: sonnet · medium effort                          │
 │  PLAN:   sonnet · low effort                             │
+├──────────────────────────────────────────────────────────┤
+│  LOCAL AI                                                │
+├──────────────────────────────────────────────────────────┤
+│  llm-fast "..."     → qwen3 (general)                    │
+│  llm-code "..."     → qwen3-coder (code)                 │
+│  llm-reason "..."   → deepseek-r1 (reasoning, 32GB+)     │
+│  llm-smart "..." [fast|code|reason|embed]  → router      │
+│  ollama list        → show downloaded models             │
 ├──────────────────────────────────────────────────────────┤
 │  NAVIGATION                                              │
 ├──────────────────────────────────────────────────────────┤
@@ -723,6 +895,6 @@ git push
 │  /clear AUDIT before review (state sync)                 │
 │  PROMPT → prompt/content changes (separate from code)    │
 │                                                          │
-│  gate = run full test suite    ship = gate + git add -p  │
+│  gate = run pytest suite    ship = gate + git add -p     │
 └──────────────────────────────────────────────────────────┘
 ```

@@ -1,3 +1,5 @@
+> **Freeze overridden 2026-04-14** to rewrite the guide as a friend-install path. A new freeze begins when that rewrite ships — see guide.md §1.
+
 # Setup Freeze Plan — Finish the Multipane Setup, Then Build
 
 **Date:** 2026-04-14
