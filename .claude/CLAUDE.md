@@ -47,14 +47,14 @@ Global conventions live in ~/.claude/CLAUDE.md.
 Two different version-string semantics live in this repo — don't conflate them.
 See ARCHITECTURE.md §3 for the full rationale.
 
-- **Current-version marker (1 place): index.html footer (line ~1818).**
+- **Current-version marker (1 place): index.html footer (line ~2024).**
   Bumps on every Claude Code release. AUDIT treats drift here as HIGH — a stale
   footer shows the reader the wrong current-state claim in the first second on
   the page.
 
-- **Last-verified-against markers (5 places): guide.md:4 intro, guide.md:249
-  flag-compatibility note, guide.md:692 T7 troubleshooting, index.html:1074
-  flag-compatibility note, index.html:1803 T7 mirror.** Bumps only when someone
+- **Last-verified-against markers (4 places): guide.md:368
+  flag-compatibility note, guide.md:836 T7 troubleshooting, index.html:1239
+  flag-compatibility note, index.html:1906 T7 mirror.** Bumps only when someone
   actually re-walks the guide against a new Claude Code version. AUDIT treats
   drift here as LOW staleness, not a correctness bug.
 

@@ -860,7 +860,7 @@ ollama pull qwen3:8b              # (or whichever model)
 
 ---
 
-## Quick Reference — Reference: read as needed
+## Quick Reference — read as needed
 
 ```
 ┌──────────────────────────────────────────────────────────┐
