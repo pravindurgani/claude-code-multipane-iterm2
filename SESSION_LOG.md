@@ -212,3 +212,265 @@ Resolved H1 + M1 + L1 from AUDIT re-review of e122509. L2 ratified as by-design 
 Verification: 21 section IDs s1–s21 ✓, s9=Keyboard Shortcuts before s10=Triggers ✓, 0 `s-` placeholder comments ✓, all 4 M1 h2 titles correct in both docs ✓.
 
 Next: AUDIT pane — re-run /start-audit. Confirm H1/M1/L1 all closed, L2 ratified. Check no new findings.
+
+---
+
+## 2026-04-15 — AUDIT (post-c4a56e7: orphan-docs cleanup + Ollama persistence + hero ratification)
+
+Scope: two unaudited IMPL commits landed after round-2 closure — `9c6c154` (orphan docs untracked + .gitignore + CHANGELOG update) and `6dafe5b` (Ollama persistence callout in guide.md §3.1 + index.html mirror + `.claude/CLAUDE.md` hero-as-Overview ratification line).
+
+### Verification of prior-item closure
+
+| Item | Expected | Verified |
+|---|---|---|
+| Orphan cleanup | 3 files untracked, local copies retained, .gitignore extended, CHANGELOG accurate | ✓ `ls` shows all 3 present on disk; `git ls-files \| grep m5-max\|cheatsheet` returns empty; `.gitignore` has 3 new lines; `m5-max-quick-reference.html` confirmed absent (no git history, not on disk) — CHANGELOG "fully deleted" claim accurate |
+| Ollama persistence — guide.md | Old Tip block at :116-117 replaced with "Make it persistent" callout pointing to `brew services start ollama` | ✓ guide.md:116-122 correct; wording matches user's supplied text |
+| Ollama persistence — index.html | Mirror callout inserted after the `ollama serve &` code block in §3 step 3.1; inline comment removed | ✓ index.html:717-724 correct; inline `# or: brew services start ollama (auto-start on login)` comment removed from line 715 |
+| Callout HTML structure | `<div class="callout tip">` + `<span class="callout-icon">` + body `<div>` per `.claude/CLAUDE.md` | ✓ matches; embedded `<div class="code-block" style="margin-top:8px">` pattern idiomatic (also used at index.html:1694, :1742) |
+| Hero ratification | `.claude/CLAUDE.md` §Repo Structure declares the Overview→hero divergence is ratified | ✓ new bullet at lines 18-19 reads verbatim as agreed |
+
+All three items cleanly landed. No regressions in s1–s21 IDs, TOC, or footer.
+
+### Findings
+
+#### CRITICAL
+None.
+
+#### HIGH
+None.
+
+#### MEDIUM
+None.
+
+#### LOW
+
+**L1 — `llm-*` parity drift inside the new "Make it persistent" callout**
+
+The callout body has perfect content parity in both docs, but one token formats inconsistently:
+
+- `guide.md:117`: `(so \`cc\` and llm-* aliases work...)` — `cc` in markdown code, `llm-*` unquoted.
+- `index.html:719`: `(so <span class="mono">cc</span> and <span class="mono">llm-*</span> aliases work...)` — both in mono.
+
+Cosmetic only — renders fine in both formats — but the parallel-doc invariant in `.claude/CLAUDE.md` §Repo Structure calls for the same content in both docs, and "formatting" is reasonably part of content here. Low blast radius; fix is one-character: change `llm-*` → `` `llm-*` `` in guide.md:117.
+
+### Observations (not findings)
+
+- `git status` clean on main ✓
+- Working tree matches HEAD ✓
+- `m5-max-quick-reference.html` correctly absent (neither in working tree nor in git history at HEAD) — CHANGELOG accurate
+- Local copies of the 3 gitignored files still present and usable ✓
+- Footer at index.html still reads `v2.1.109` (current-marker, no drift) ✓
+- No CLAUDE.md.template changes, no hook/skill changes, no parity regressions elsewhere
+
+### Verdict
+
+**Approve.** No CRITICAL/HIGH/MEDIUM findings. L1 is ship-when-convenient polish — does not block anything.
+
+### Verification commands used
+
+```
+git log --oneline -10
+git show --stat 9c6c154
+git show --stat 6dafe5b
+git show 9c6c154 -- .gitignore CHANGELOG.md
+git show 6dafe5b -- guide.md index.html .claude/CLAUDE.md
+git ls-files | grep -iE 'm5-max|cheatsheet'
+ls m5-max-ai-workstation-setup.md m5-max-quick-reference.md ai-workstation-cheatsheet.html
+ls m5-max-quick-reference.html   # expect: not found
+grep -n 'Make it persistent' guide.md index.html
+grep -n 'ollama serve' guide.md index.html
+grep -n 'llm-\*' guide.md index.html
+grep -n 'code-block" style="margin-top' index.html
+```
+
+Next: IMPL pane — L1 one-character fix (guide.md:117 wrap `llm-*` in backticks). Optional; ship on next unrelated edit. Otherwise, all three changes approved — safe to hand to user for real-world friend test.
+
+---
+
+## 2026-04-15 — AUDIT (setup-vs-docs alignment + setup health)
+
+Scope: broad, two-pass adversarial review.
+- **Pass 1 — Docs ↔ Reality:** verify that what guide.md / index.html / CLAUDE.md.template / zshrc-snippet.sh / hooks/ / skills/ / commands/ describe matches what's installed and running on this machine.
+- **Pass 2 — Setup health:** find defects in the running setup independent of docs.
+
+Read-only. No filesystem or `~/.claude/` modifications. Findings only.
+
+### Pass 1 results (docs ↔ reality)
+
+| Check | Artifact | Result |
+|---|---|---|
+| A. iTerm2 profiles | `defaults read com.googlecode.iterm2 "New Bookmarks"` | **Drift** — 4 installed profiles are `DEV-AUDIT/IMPL/PLAN/PROMPT`; repo now teaches `CC-*` (CHANGELOG 2026-04-15). See M1. |
+| B. ~/.zshrc snippet | grep + compare vs `zshrc-snippet.sh` | **Drift** — case block uses `DEV-*`; has 8 `llm-*` aliases + 6 `cc-local-*` + `llm-eval`; repo canonical has 4 aliases + `llm-smart` router. See M2. |
+| C. Installed hooks | `diff -q hooks/*.py ~/.claude/hooks/*.py` | **Match** — all 5 `.py` byte-identical. Executable bits set. `settings.json` wiring matches `settings.json.example` structure (5 hooks, correct matchers, correct timeouts). |
+| D. Installed skills | `diff -rq skills/ ~/.claude/skills/` | **Match** — `code-review`, `security-audit`, `testing` all identical. `prompt-master` is installed-only (Prav's personal — noted). |
+| E. Installed commands | `diff -q commands/reflect.md ~/.claude/commands/reflect.md` | **Match** — `reflect.md` byte-identical. 4 additional installed commands (`start-audit/impl/plan/prompt.md`) are personal, noted as observation. |
+| F. CLAUDE.md ↔ template | section audit | **No template-side drift** — every template section (Identity / Stack / Active Constraints / Code Style / Session Continuity / Lessons) has an equivalent in `~/.claude/CLAUDE.md` (some absorbed into `Code Invariants` / `Prompting Conventions`). |
+| G. Claude Code version | `claude --version` vs footer + last-verified | Installed `v2.1.109` = footer `v2.1.109` ✓. Last-verified markers (4 sites) still `v2.1.81` — 28 minor versions gap. See M5. |
+
+### Pass 2 results (setup health)
+
+| Check | Result |
+|---|---|
+| H. Hook execution health | No hook `.log` files (normal — hooks exit clean). No `circuit-breaker-state.json` or `compact-state.json` in `~/.claude/` (lazy creation — not broken). Installed hooks are `+x` and also invoked via `python3` explicitly per `settings.json`. |
+| I. Ollama health | Server responds `Ollama is running` on `127.0.0.1:11434` ✓. `brew services list` shows `ollama none` — see M3. 8 models installed totalling 131 GB (`~/.ollama`); 3 of 5 guide-canonical 64 GB-tier model names not installed — see M4. |
+| J. SESSION_LOG hygiene | 286 lines — below 500 rotation threshold ✓. Last 3 entries all end with `Next:` line ✓. `SESSION_LOG.archive.md` listed in `.gitignore` but not yet created (acceptable — rotation not due). |
+| K. Git repo health | `git status` clean except for this AUDIT's pending SESSION_LOG append ✓. Last 10 commits are meaningful — no WIP/squashable noise. |
+| L. State files in repo root | `circuit-breaker-state.json` (27 B) present in working tree. Correctly listed in `.gitignore` line 4 AND `git ls-files --error-unmatch` errors → **not tracked**. Clean. |
+| M. README.md sanity | See H1 + L3. |
+
+### Findings
+
+#### CRITICAL
+None.
+
+#### HIGH
+
+**H1 — README.md Quick Start step 1 contradicts the CC-* rename**
+
+`README.md:64` reads:
+> **Create 4 iTerm2 profiles** — `DEV-AUDIT`, `DEV-IMPL`, `DEV-PROMPT`, `DEV-PLAN` — each with a distinct background colour and tab colour
+
+CHANGELOG.md 2026-04-15 announces the rename as a breaking change; `guide.md`, `index.html`, and `zshrc-snippet.sh` all teach `CC-*`. A friend who reads README first (the usual entry point from GitHub) creates profiles that will not match the `case "$ITERM_PROFILE"` block they paste from `zshrc-snippet.sh` — `cc` alias won't bind, no pane badges. Silent failure mode.
+
+**Fix:** `README.md:64` and line 99 ("rename profiles with a project prefix (e.g. `MYPROJECT-AUDIT`)") — update the Quick Start row to `CC-*`. The `MYPROJECT-AUDIT` example is fine (illustrative), but should be paired with a line like "the default prefix this repo teaches is `CC-*`."
+
+#### MEDIUM
+
+**M1 — Prav's iTerm2 profiles have not migrated DEV-* → CC-***
+
+`defaults read com.googlecode.iterm2 "New Bookmarks" | grep Name` returns `DEV-AUDIT`, `DEV-IMPL`, `DEV-PLAN`, `DEV-PROMPT` (plus `Default`). This AUDIT session is running in a `DEV-AUDIT` profile right now. Prav's personal setup is self-consistent with the OLD naming but drifted from what the repo now teaches.
+
+**Not a friend-install blocker** (friends get a clean `CC-*` install from the repo template). **Is a personal setup drift** that the user explicitly asked this AUDIT to surface.
+
+**Fix:** iTerm2 → Preferences → Profiles → rename DEV-* to CC-*. Paired with M2 (`~/.zshrc`) — do both in one sitting or neither.
+
+**M2 — Prav's ~/.zshrc case block uses DEV-* and has 8+6 aliases where repo canonical has 4+router**
+
+`~/.zshrc` lines 68–91 contain both `case` blocks still keyed on `DEV-*`. Also diverges from `zshrc-snippet.sh`:
+
+| In ~/.zshrc | In repo `zshrc-snippet.sh` |
+|---|---|
+| 8 `llm-*` aliases (fast/code/reason/plan/embed/classify/vision/heavy) | 4 aliases (fast/code/reason/embed) + `llm-vision` in 64 GB block commented |
+| 6 `cc-local-*` aliases (fast/plan/audit/impl/vision/heavy) | Not present |
+| `llm-eval` weekly regression function (40+ lines) | Not present |
+| `llm-smart` **not present** | Present as router function (5-way case) |
+| `llm-reason='ollama run deepseek-r1:32b'` | `:8b` (32 GB tier, commented) |
+
+Personal richness is fine — Prav is 64 GB and has earned his model set — but the repo template is the source of truth for what the guide teaches. Profile-name drift in §1 ("DEV-*") is the blocker; alias-set drift is cosmetic.
+
+**Fix:** at minimum swap DEV- → CC- in both case blocks (lines 68, 86, and the 8 case arms). Alias reconciliation is optional.
+
+**M3 — `brew services list` shows `ollama none`; guide now teaches `brew services start ollama`**
+
+```
+$ brew services list | grep ollama
+ollama  none
+$ curl -sf http://127.0.0.1:11434/
+Ollama is running
+```
+
+Ollama IS running — but not via brew services (probably `ollama serve &` from an earlier session or a LaunchAgent). The "Make it persistent" callout we just landed in guide.md:116-122 and index.html:717-724 teaches `brew services start ollama` as the canonical path. Prav's setup does not follow the canonical path. Reboot test would reveal whether Ollama actually auto-starts for him.
+
+**Fix:** `brew services start ollama`, then reboot-and-verify (`brew services list` should show `started`).
+
+**M4 — Three of five guide-canonical 64 GB-tier Ollama models not installed**
+
+User's prompt pinned these 5 as the 64 GB-tier set: `qwen3:14b, qwen3-coder:32b, gemma3:27b, deepseek-r1:8b, nomic-embed-text`. Installed:
+
+| Guide | Installed | Verdict |
+|---|---|---|
+| `qwen3:14b` | `qwen3:14b` (9.3 GB) | ✓ match |
+| `qwen3-coder:32b` | `qwen3-coder:latest` (18 GB) | ≈ same (latest tag → coder family, 18 GB ≈ 32b Q4) |
+| `gemma3:27b` | **missing** — has `gemma4:26b` (17 GB) + `gemma4:31b` (19 GB) | **different model family** |
+| `deepseek-r1:8b` | **missing** — has `deepseek-r1:32b` (19 GB) | bigger variant, different size |
+| `nomic-embed-text` | **missing** — has `qwen3-embedding:8b` (4.7 GB) | different embedding family |
+
+Plus 2 personal extras: `llama3.3:70b-instruct-q4_K_M` (42 GB) and `gemma3:12b` (8.1 GB). `~/.ollama` totals **131 GB** against guide's claim of "~55 GB for 64 GB tier" (L2). Prav's setup works for Prav; does not match what `zshrc-snippet.sh` declares as 64 GB canonical.
+
+**Fix:** decide per-model — either (a) pull the guide-canonical models (`ollama pull gemma3:27b deepseek-r1:8b nomic-embed-text`; +~21 GB) so Prav's setup matches what friends will install, or (b) rewrite `zshrc-snippet.sh`'s 64 GB block to use Prav's preferred models (`gemma4`, `qwen3-embedding:8b`) — but only if those models are intentional picks, not just what got pulled. Do not ship (b) silently.
+
+**M5 — Last-verified markers at v2.1.81; installed is v2.1.109 (28 minor versions gap)**
+
+Per `.claude/CLAUDE.md §Version String`, footer v2.1.109 is current-marker ✓ (matches `claude --version` exactly). Last-verified markers (4 sites at guide.md:373, guide.md:841, index.html:1247, index.html:1914) all still say "v2.1.81 (March 2026)". User's AUDIT instruction: "note staleness if gap > ~5 minor versions" — 28 >> 5.
+
+This is **LOW staleness per project CLAUDE.md semantics**, elevated here to **MEDIUM per the user's AUDIT threshold**. Not a correctness bug; it means no one has re-walked the guide's flag-compatibility claims against v2.1.82–v2.1.109. If Claude Code deprecated or renamed any flag in that window, the guide still claims it works.
+
+**Fix:** dedicated re-verify session (scope: re-walk `--permission-mode`, `--model`, `--effort`, `--dangerously-skip-permissions` against v2.1.109, update the 4 sites). Not urgent unless friends start hitting flag-not-recognised errors.
+
+#### LOW
+
+**L1 — `.claude/CLAUDE.md §Version String` has stale line numbers**
+
+CLAUDE.md claims last-verified sites are at lines 368, 836 (guide.md) and 1239, 1906 (index.html). Actual: 373, 841, 1247, 1914. Drift of 5–8 lines each — the Ollama persistence callout added earlier shifted subsequent lines. Not a runtime issue; line-number references in CLAUDE.md decay naturally.
+
+**Fix:** update the 4 line numbers on the next CLAUDE.md edit, or drop the exact line numbers in favour of anchors (`### Flag compatibility` / `T8 troubleshooting`).
+
+**L2 — `~/.ollama` is 131 GB; guide claims "~55 GB" for 64 GB tier**
+
+76 GB of the 131 is accounted for by Prav's personal extras (llama3.3:70b alone is 42 GB, plus gemma4 variants and gemma3:12b). Not a docs bug — Prav's setup carries models the guide doesn't teach. Worth flagging for disk-space awareness during a fresh-install dry-run.
+
+**L3 — README.md predates the RAM-tier-gated rewrite**
+
+README Quick Start (lines 60–71) lists 7 steps that stop at hooks config. Does not mention: Homebrew / Node.js / Xcode CLT prereqs, Claude Code install, Ollama install + RAM-tier selection + model pulls, the 19-step full path, or creative AI options. Prerequisites section (line 50) lists only macOS/iTerm2/Claude Code — pre-rewrite minimum.
+
+The README correctly defers to `index.html` / `guide.md` as "the full guide" — so reader loss is bounded. Still, first impressions matter; the README Quick Start is the 30-second pitch a friend sees on GitHub before clicking through, and it's currently 2026-03 era.
+
+**Fix:** rewrite Quick Start as "Pick your RAM tier, then follow the full guide" with a tier table + a bullet per major step. Or: replace Quick Start with a single paragraph that points at guide.md and explicitly flags the RAM-tier branch.
+
+### Observations (not findings)
+
+- `SETUP_FREEZE_PLAN.md` banner correctly placed at line 1 (`> Freeze overridden 2026-04-14 to rewrite the guide as a friend-install path...`). Banner text matches PLAN L11 recommendation verbatim. Per Q7 derived decisions, "historical retention with banner" is the accepted resolution — no action.
+- `.mcp.json.example` uses `/path/to/github-mcp-server` + `YOUR_READONLY_PAT_HERE` — matches `.claude/CLAUDE.md §Public Repo Hygiene` fake-placeholder convention ✓.
+- All 3 orphan files (`m5-max-ai-workstation-setup.md`, `m5-max-quick-reference.md`, `ai-workstation-cheatsheet.html`) correctly untracked + local ✓.
+- `version-check.py` state file (`~/.claude/.last-known-cc-version`) reads `2.1.109 (Claude Code)` — matches installed — SessionStart hook won't nag.
+- Installed-only personal assets (expected): `~/.claude/skills/prompt-master/` (Prav's private skill), `~/.claude/commands/{start-audit,start-impl,start-plan,start-prompt}.md` (Prav's slash commands — one of which triggered this AUDIT). Not in repo, not expected to be.
+- CHANGELOG.md 2026-04-15 correctly describes the CC-* rename as a **breaking change** with a migration table ✓.
+
+### Verdict
+
+**Approve with revisions — H1 must be fixed before friend hand-off.**
+
+- **H1** is a single-line README edit; landmine severity but 30-second fix.
+- **M1/M2** are Prav's personal setup debt — not blockers for the public repo, but the user explicitly asked this AUDIT to surface them.
+- **M3/M4** are "Prav's running setup ≠ what guide teaches" items — do whichever reconciliation direction the user prefers.
+- **M5** is a re-verify session — schedule, don't rush.
+- **L1/L2/L3** are polish.
+
+### Verification commands used
+
+```
+tail -80 SESSION_LOG.md
+wc -l SESSION_LOG.md guide.md index.html
+git status && git log --oneline -10
+ls -la hooks/ skills/ commands/
+ls -la ~/.claude/{hooks,skills,commands}/
+claude --version
+for f in circuit-breaker.py protect-env.py protect-git-push.py session-start-reset.py version-check.py; do diff -q hooks/$f ~/.claude/hooks/$f; done
+diff -rq skills/code-review ~/.claude/skills/code-review
+diff -rq skills/security-audit ~/.claude/skills/security-audit
+diff -rq skills/testing ~/.claude/skills/testing
+diff -q commands/reflect.md ~/.claude/commands/reflect.md
+defaults read com.googlecode.iterm2 "New Bookmarks" | grep '    Name ='
+grep -nE 'ITERM_PROFILE|CC-|DEV-|PANE_ROLE|llm-|alias cc' ~/.zshrc
+brew services list | grep ollama
+curl -sf http://127.0.0.1:11434/
+ollama list
+du -sh ~/.ollama
+cat ~/.claude/settings.json
+cat hooks/settings.json.example
+cat zshrc-snippet.sh
+cat .gitignore
+cat README.md
+cat CLAUDE.md.template
+cat .mcp.json.example
+git ls-files --error-unmatch circuit-breaker-state.json   # expect: error
+git check-ignore -v circuit-breaker-state.json
+grep -nE 'v?2\.1\.\d+|March' guide.md index.html
+grep -nE 'DEV-(AUDIT|IMPL|PLAN|PROMPT)' -r .
+awk 'NR==368 || NR==373 || NR==836 || NR==841' guide.md
+awk 'NR==1239 || NR==1247 || NR==1906 || NR==1914' index.html
+head -5 SETUP_FREEZE_PLAN.md
+cat ~/.claude/.last-known-cc-version
+```
+
+Next: user decides severity queue. Suggested order: **H1** (README CC-* fix) → **M1+M2 bundle** (Prav's iTerm profiles + ~/.zshrc DEV→CC migration) → **M3** (`brew services start ollama`) → **M4** (pick model reconciliation direction) → **M5** (re-verify flags against v2.1.109 in a dedicated session) → LOWs. H1 is the only item that would burn a friend on first install.
