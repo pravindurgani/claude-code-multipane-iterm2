@@ -573,13 +573,13 @@
       <li><a href="#s1"><span class="toc-num">01</span> Prerequisites</a></li>
       <li><a href="#s2"><span class="toc-num">02</span> Install Claude Code</a></li>
       <li><a href="#s3"><span class="toc-num">03</span> Local AI Models (Ollama)</a></li>
-      <li><a href="#s4"><span class="toc-num">04</span> Create iTerm2 profiles</a></li>
-      <li><a href="#s5"><span class="toc-num">05</span> Startup commands &amp; directory</a></li>
+      <li><a href="#s4"><span class="toc-num">04</span> Create 4 iTerm2 profiles</a></li>
+      <li><a href="#s5"><span class="toc-num">05</span> Profile startup commands &amp; directory</a></li>
       <li><a href="#s6"><span class="toc-num">06</span> Shell snippet</a></li>
       <li><a href="#s7"><span class="toc-num">07</span> Window layout &amp; arrangement</a></li>
       <li><a href="#s8"><span class="toc-num">08</span> Launch Claude Code</a></li>
-      <li><a href="#s9"><span class="toc-num">09</span> iTerm2 triggers (optional)</a></li>
-      <li><a href="#s10"><span class="toc-num">10</span> Keyboard shortcuts</a></li>
+      <li><a href="#s9"><span class="toc-num">09</span> Keyboard shortcuts</a></li>
+      <li><a href="#s10"><span class="toc-num">10</span> iTerm2 triggers (optional)</a></li>
       <li><a href="#s11"><span class="toc-num">11</span> Cross-pane workflow</a></li>
       <li><a href="#s12"><span class="toc-num">12</span> Daily playbook</a></li>
       <li><a href="#s13"><span class="toc-num">13</span> Adapt for other projects</a></li>
@@ -587,14 +587,14 @@
       <li><a href="#s15"><span class="toc-num">15</span> gate Workflow</a></li>
       <li><a href="#s16"><span class="toc-num">16</span> SESSION_LOG pattern</a></li>
       <li><a href="#s17"><span class="toc-num">17</span> CLAUDE.md split pattern</a></li>
-      <li><a href="#s18"><span class="toc-num">18</span> MCP server, commands &amp; skills</a></li>
+      <li><a href="#s18"><span class="toc-num">18</span> MCP server, slash commands &amp; skills</a></li>
       <li><a href="#s19"><span class="toc-num">19</span> Draw Things (optional)</a></li>
       <li><a href="#s20"><span class="toc-num">20</span> Troubleshooting</a></li>
       <li><a href="#s21"><span class="toc-num">21</span> Quick Reference</a></li>
     </ul>
   </div>
 
-  <!-- SECTION s-prereq: Prerequisites -->
+  <!-- SECTION s1: Prerequisites -->
   <div class="section" id="s1">
     <div class="section-header">
       <span class="section-num">01</span>
@@ -648,7 +648,7 @@
     </div>
   </div>
 
-  <!-- SECTION s-claude: Install Claude Code -->
+  <!-- SECTION s2: Install Claude Code -->
   <div class="section" id="s2">
     <div class="section-header">
       <span class="section-num">02</span>
@@ -690,7 +690,7 @@
     </div>
   </div>
 
-  <!-- SECTION s-ollama: Local AI Models -->
+  <!-- SECTION s3: Local AI Models -->
   <div class="section" id="s3">
     <div class="section-header">
       <span class="section-num">03</span>
@@ -814,7 +814,7 @@
   <div class="section" id="s4">
     <div class="section-header">
       <span class="section-num">04</span>
-      <h2>Create iTerm2 Profiles</h2>
+      <h2>Create 4 iTerm2 Profiles</h2>
     </div>
     <p class="section-intro">Create 4 named profiles, each with a distinct background tint, tab colour, and badge so you can instantly tell which pane you're in.</p>
 
@@ -968,7 +968,7 @@
   <div class="section" id="s5">
     <div class="section-header">
       <span class="section-num">05</span>
-      <h2>Startup Commands &amp; Initial Directory</h2>
+      <h2>Profile Startup Commands &amp; Initial Directory</h2>
     </div>
     <p class="section-intro">Each profile needs a startup command (to cd into the project directory and open an interactive shell) and an initial directory setting (as a fallback for window arrangement restores).</p>
 
@@ -1242,28 +1242,10 @@
     </div>
   </div>
 
-  <!-- SECTION s9: iTerm2 Triggers (Optional) -->
+  <!-- SECTION s9: Keyboard Shortcuts -->
   <div class="section" id="s9">
     <div class="section-header">
       <span class="section-num">09</span>
-      <h2>iTerm2 Triggers (Optional)</h2>
-    </div>
-    <p class="section-intro">Auto-highlight keywords in terminal output.</p>
-    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">Set up in <strong>Profile &rarr; Advanced &rarr; Triggers &rarr; +</strong></p>
-    <table class="data-table">
-      <thead><tr><th>Regex</th><th>Action</th><th>Colour</th></tr></thead>
-      <tbody>
-        <tr><td><span class="mono">\b(CRITICAL|ERROR|FAIL(ED)?)\b</span></td><td>Highlight Text</td><td>Red background</td></tr>
-        <tr><td><span class="mono">\b(PASS(ED)?|SUCCESS)\b</span></td><td>Highlight Text</td><td>Green background</td></tr>
-        <tr><td><span class="mono">\b(WARNING|WARN|TODO)\b</span></td><td>Highlight Text</td><td>Yellow background</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- SECTION s10: Keyboard Shortcuts -->
-  <div class="section" id="s10">
-    <div class="section-header">
-      <span class="section-num">10</span>
       <h2>Keyboard Shortcuts</h2>
     </div>
 
@@ -1289,6 +1271,24 @@
       <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/effort</span></div><div class="shortcut-desc">Switch effort mid-session</div></div>
     </div>
 
+  </div>
+
+  <!-- SECTION s10: iTerm2 Triggers (Optional) -->
+  <div class="section" id="s10">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>iTerm2 Triggers (Optional)</h2>
+    </div>
+    <p class="section-intro">Auto-highlight keywords in terminal output.</p>
+    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">Set up in <strong>Profile &rarr; Advanced &rarr; Triggers &rarr; +</strong></p>
+    <table class="data-table">
+      <thead><tr><th>Regex</th><th>Action</th><th>Colour</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">\b(CRITICAL|ERROR|FAIL(ED)?)\b</span></td><td>Highlight Text</td><td>Red background</td></tr>
+        <tr><td><span class="mono">\b(PASS(ED)?|SUCCESS)\b</span></td><td>Highlight Text</td><td>Green background</td></tr>
+        <tr><td><span class="mono">\b(WARNING|WARN|TODO)\b</span></td><td>Highlight Text</td><td>Yellow background</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- SECTION s11: Cross-Pane Workflow -->
@@ -1668,7 +1668,7 @@
   <div class="section" id="s18">
     <div class="section-header">
       <span class="section-num">18</span>
-      <h2>MCP Server, Commands &amp; Skills</h2>
+      <h2>MCP Server, Slash Commands &amp; Skills</h2>
     </div>
     <p class="section-intro">Phase 6 additions — GitHub MCP integration, the <span class="mono">/reflect</span> command, and contextual skills.</p>
 

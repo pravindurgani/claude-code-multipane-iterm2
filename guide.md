@@ -464,7 +464,7 @@ window arrangement restores.
 
 ---
 
-## Step 12 — Session Playbook
+## Step 12 — Daily Playbook
 
 ### Morning boot
 
