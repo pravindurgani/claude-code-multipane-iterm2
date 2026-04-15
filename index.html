@@ -570,30 +570,202 @@
   <div class="toc">
     <div class="toc-title">In this guide</div>
     <ul class="toc-list">
-      <li><a href="#s1"><span class="toc-num">01</span> The 4-pane concept</a></li>
-      <li><a href="#s2"><span class="toc-num">02</span> Create iTerm2 profiles</a></li>
-      <li><a href="#s3"><span class="toc-num">03</span> Startup commands &amp; directory</a></li>
-      <li><a href="#s4"><span class="toc-num">04</span> Shell prompts &amp; launch alias</a></li>
-      <li><a href="#s5"><span class="toc-num">05</span> Window layout &amp; arrangement</a></li>
-      <li><a href="#s6"><span class="toc-num">06</span> Launch Claude Code</a></li>
-      <li><a href="#s7"><span class="toc-num">07</span> Keyboard shortcuts</a></li>
-      <li><a href="#s8"><span class="toc-num">08</span> Workflow &amp; tips</a></li>
-      <li><a href="#s9"><span class="toc-num">09</span> Daily playbook</a></li>
-      <li><a href="#s10"><span class="toc-num">10</span> Adapt for other projects</a></li>
-      <li><a href="#s11"><span class="toc-num">11</span> Two-tier hook architecture</a></li>
-      <li><a href="#s12"><span class="toc-num">12</span> gate/ship workflow</a></li>
-      <li><a href="#s13"><span class="toc-num">13</span> SESSION_LOG cold-start fix</a></li>
-      <li><a href="#s14"><span class="toc-num">14</span> CLAUDE.md split pattern</a></li>
-      <li><a href="#s15"><span class="toc-num">15</span> Cheatsheet</a></li>
-      <li><a href="#s16"><span class="toc-num">16</span> MCP server, commands &amp; skills</a></li>
-      <li><a href="#s17"><span class="toc-num">17</span> Troubleshooting</a></li>
+      <li><a href="#s1"><span class="toc-num">01</span> Prerequisites</a></li>
+      <li><a href="#s2"><span class="toc-num">02</span> Install Claude Code</a></li>
+      <li><a href="#s3"><span class="toc-num">03</span> Local AI Models (Ollama)</a></li>
+      <li><a href="#s4"><span class="toc-num">04</span> The 4-pane concept</a></li>
+      <li><a href="#s5"><span class="toc-num">05</span> Create iTerm2 profiles</a></li>
+      <li><a href="#s6"><span class="toc-num">06</span> Startup commands &amp; directory</a></li>
+      <li><a href="#s7"><span class="toc-num">07</span> Shell snippet</a></li>
+      <li><a href="#s8"><span class="toc-num">08</span> Window layout &amp; arrangement</a></li>
+      <li><a href="#s9"><span class="toc-num">09</span> Launch Claude Code</a></li>
+      <li><a href="#s10"><span class="toc-num">10</span> Keyboard shortcuts</a></li>
+      <li><a href="#s11"><span class="toc-num">11</span> Cross-pane workflow</a></li>
+      <li><a href="#s12"><span class="toc-num">12</span> Daily playbook</a></li>
+      <li><a href="#s13"><span class="toc-num">13</span> Adapt for other projects</a></li>
+      <li><a href="#s14"><span class="toc-num">14</span> Two-tier hook architecture</a></li>
+      <li><a href="#s15"><span class="toc-num">15</span> gate Workflow</a></li>
+      <li><a href="#s16"><span class="toc-num">16</span> SESSION_LOG pattern</a></li>
+      <li><a href="#s17"><span class="toc-num">17</span> CLAUDE.md split pattern</a></li>
+      <li><a href="#s18"><span class="toc-num">18</span> Quick Reference</a></li>
+      <li><a href="#s19"><span class="toc-num">19</span> MCP server, commands &amp; skills</a></li>
+      <li><a href="#s20"><span class="toc-num">20</span> Draw Things (optional)</a></li>
+      <li><a href="#s21"><span class="toc-num">21</span> Troubleshooting</a></li>
     </ul>
   </div>
 
-  <!-- SECTION 1 -->
+  <!-- SECTION s-prereq: Prerequisites -->
   <div class="section" id="s1">
     <div class="section-header">
       <span class="section-num">01</span>
+      <h2>Prerequisites</h2>
+    </div>
+    <p class="section-intro">Three tools to install before anything else. All three are Homebrew packages &mdash; if you already have them, each check-then-install is a single command.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1.1</span>
+          <span class="step-title">Homebrew</span>
+        </div>
+        <div class="step-body">
+          <div class="code-label">Terminal</div>
+          <div class="code-block">
+<div><span class="comment"># Check then install (skip if already present):</span></div>
+<div>command -v brew &gt;/dev/null &amp;&amp; echo <span class="str">"already installed — skip"</span> || \</div>
+<div>  /bin/bash -c <span class="str">"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span></div>
+<div></div>
+<div><span class="comment"># Apple Silicon only — add to PATH if not already in ~/.zshrc:</span></div>
+<div>echo <span class="str">'eval "$(/opt/homebrew/bin/brew shellenv)"'</span> &gt;&gt; ~/.zshrc &amp;&amp; source ~/.zshrc</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1.2</span>
+          <span class="step-title">Node.js (required for Claude Code)</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>brew install node</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1.3</span>
+          <span class="step-title">iTerm2</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>brew install --cask iterm2</div>
+          </div>
+          <p>Open iTerm2 once to complete initial setup, then continue in it for the rest of this guide.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION s-claude: Install Claude Code -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Install Claude Code</h2>
+    </div>
+    <p class="section-intro">Claude Code is Anthropic&rsquo;s official CLI. Install it globally via npm, then authenticate. Browser OAuth is the recommended path &mdash; no API key required.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2.1</span>
+          <span class="step-title">Install and authenticate</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>npm install -g @anthropic-ai/claude-code</div>
+<div>claude login   <span class="comment"># opens a browser window — sign in with your Anthropic account</span></div>
+          </div>
+          <p>Pro or Max subscription required for browser OAuth. No API key needed with this method.</p>
+
+          <div class="callout tip">
+            <span class="callout-icon">&#128273;</span>
+            <div><strong>API key alternative</strong> If you don&rsquo;t have a subscription, add <span class="mono">export ANTHROPIC_API_KEY="sk-ant-..."</span> to your <span class="mono">~/.zshrc</span>. Get a key at console.anthropic.com &rarr; API Keys.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2.2</span>
+          <span class="step-title">Verify</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>claude --version</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION s-ollama: Local AI Models -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Local AI Models (Ollama)</h2>
+    </div>
+    <p class="section-intro">Run AI models privately on your Mac &mdash; no API calls, no data leaving your machine. Install Ollama, pull the models for your RAM tier, then add the shell aliases.</p>
+
+    <div class="callout tip">
+      <span class="callout-icon">&#129514;</span>
+      <div><strong>RAM tiers</strong> &mdash; pick the block that matches your machine: <strong>&#127802; 16 GB+</strong> (base), <strong>&#128309; 32 GB+</strong> (mid), <strong>&#128308; 64 GB+</strong> (full). Higher tiers are additive.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3.1</span>
+          <span class="step-title">Install Ollama and start the server</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>brew install ollama</div>
+<div>ollama serve &amp;   <span class="comment"># or: brew services start ollama (auto-start on login)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3.2</span>
+          <span class="step-title">Pull models &mdash; choose your tier</span>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <thead><tr><th>Tier</th><th>Models to pull</th><th>Disk / Time</th></tr></thead>
+            <tbody>
+              <tr><td>&#127802; 16 GB+</td><td class="cell-mono">qwen3:8b &nbsp; qwen3-coder:7b &nbsp; nomic-embed-text</td><td>~10 GB / 15 min</td></tr>
+              <tr><td>&#128309; 32 GB+</td><td class="cell-mono">qwen3:14b &nbsp; qwen3-coder:14b &nbsp; nomic-embed-text &nbsp; deepseek-r1:8b</td><td>~23 GB / 40 min</td></tr>
+              <tr><td>&#128308; 64 GB+</td><td class="cell-mono">qwen3:14b &nbsp; qwen3-coder:32b &nbsp; nomic-embed-text &nbsp; deepseek-r1:8b &nbsp; gemma3:27b</td><td>~55 GB / 90 min</td></tr>
+            </tbody>
+          </table>
+          <p>Example (16 GB tier):</p>
+          <div class="code-block">
+<div>ollama pull qwen3:8b</div>
+<div>ollama pull qwen3-coder:7b</div>
+<div>ollama pull nomic-embed-text</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3.3</span>
+          <span class="step-title">Shell aliases</span>
+        </div>
+        <div class="step-body">
+          <p>The Ollama block in <span class="mono">zshrc-snippet.sh</span> adds these aliases. Append the relevant tier block to your <span class="mono">~/.zshrc</span> (see Step 6 for full snippet instructions).</p>
+          <table class="data-table">
+            <thead><tr><th>Alias</th><th>Model</th><th>Use for</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-mono">llm-fast</td><td class="cell-mono">qwen3:8b / :14b</td><td>General queries, summaries</td></tr>
+              <tr><td class="cell-mono">llm-code</td><td class="cell-mono">qwen3-coder:7b / :14b / :32b</td><td>Code generation &amp; review</td></tr>
+              <tr><td class="cell-mono">llm-reason</td><td class="cell-mono">deepseek-r1:8b</td><td>&#128309; Structured reasoning (32 GB+)</td></tr>
+              <tr><td class="cell-mono">llm-embed</td><td class="cell-mono">nomic-embed-text</td><td>Embeddings / RAG</td></tr>
+              <tr><td class="cell-mono">llm-smart</td><td><em>router</em></td><td>Auto-picks by task type</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04</span>
       <h2>The 4-Pane Concept</h2>
     </div>
     <p class="section-intro">Each pane runs a separate Claude Code session with a dedicated role. The AUDIT pane uses Opus for deep review. Everything else uses Sonnet to keep costs down. A <span class="mono">cc</span> alias launches the right configuration automatically.</p>
@@ -721,9 +893,9 @@
   </div>
 
   <!-- SECTION 2 -->
-  <div class="section" id="s2">
+  <div class="section" id="s5">
     <div class="section-header">
-      <span class="section-num">02</span>
+      <span class="section-num">05</span>
       <h2>Create iTerm2 Profiles</h2>
     </div>
     <p class="section-intro">Create 4 named profiles, each with a distinct background tint, tab colour, and badge so you can instantly tell which pane you're in.</p>
@@ -744,10 +916,10 @@
           <table class="data-table">
             <thead><tr><th>Profile Name</th><th>Background</th><th>Tab Colour</th><th>Role</th></tr></thead>
             <tbody>
-              <tr><td class="cell-mono">DEV-AUDIT</td><td class="cell-mono">#0d0b18</td><td class="cell-mono" style="color:var(--purple)">#a855f7</td><td>Code review</td></tr>
-              <tr><td class="cell-mono">DEV-IMPL</td><td class="cell-mono">#080f0b</td><td class="cell-mono" style="color:var(--green)">#22c55e</td><td>Implementation</td></tr>
-              <tr><td class="cell-mono">DEV-PROMPT</td><td class="cell-mono">#080e10</td><td class="cell-mono" style="color:var(--cyan)">#06b6d4</td><td>Prompt engineering</td></tr>
-              <tr><td class="cell-mono">DEV-PLAN</td><td class="cell-mono">#0d0b00</td><td class="cell-mono" style="color:var(--amber)">#f59e0b</td><td>Architecture &amp; planning</td></tr>
+              <tr><td class="cell-mono">CC-AUDIT</td><td class="cell-mono">#0d0b18</td><td class="cell-mono" style="color:var(--purple)">#a855f7</td><td>Code review</td></tr>
+              <tr><td class="cell-mono">CC-IMPL</td><td class="cell-mono">#080f0b</td><td class="cell-mono" style="color:var(--green)">#22c55e</td><td>Implementation</td></tr>
+              <tr><td class="cell-mono">CC-PROMPT</td><td class="cell-mono">#080e10</td><td class="cell-mono" style="color:var(--cyan)">#06b6d4</td><td>Prompt engineering</td></tr>
+              <tr><td class="cell-mono">CC-PLAN</td><td class="cell-mono">#0d0b00</td><td class="cell-mono" style="color:var(--amber)">#f59e0b</td><td>Architecture &amp; planning</td></tr>
             </tbody>
           </table>
 
@@ -800,9 +972,9 @@
   </div>
 
   <!-- SECTION 3 -->
-  <div class="section" id="s3">
+  <div class="section" id="s6">
     <div class="section-header">
-      <span class="section-num">03</span>
+      <span class="section-num">06</span>
       <h2>Startup Commands &amp; Initial Directory</h2>
     </div>
     <p class="section-intro">Each profile needs a startup command (to cd into the project directory and open an interactive shell) and an initial directory setting (as a fallback for window arrangement restores).</p>
@@ -816,7 +988,7 @@
         <div class="step-body">
           <p>In each profile &rarr; <strong>General</strong> sub-tab &rarr; change the <strong>Command</strong> dropdown from "Login Shell" to <strong>"Custom Shell"</strong> and paste the corresponding command:</p>
           <div class="code-block">
-<div class="comment"># DEV-AUDIT</div>
+<div class="comment"># CC-AUDIT</div>
 <div><span class="cmd">/bin/zsh</span> <span class="flag">-c</span> <span class="str">'cd ~/Desktop/your-project; exec zsh'</span></div>
 <div></div>
 <div class="comment"># Same command for all 4 profiles &mdash; only the directory changes per project.</div>
@@ -851,10 +1023,10 @@
   </div>
 
   <!-- SECTION 4 -->
-  <div class="section" id="s4">
+  <div class="section" id="s7">
     <div class="section-header">
-      <span class="section-num">04</span>
-      <h2>Shell Prompts &amp; Launch Alias</h2>
+      <span class="section-num">07</span>
+      <h2>Shell Snippet</h2>
     </div>
     <p class="section-intro">Add a block to your <span class="mono">~/.zshrc</span> that auto-detects which profile you're in and configures coloured prompts, locked tab titles, and a <span class="mono">cc</span> alias to launch Claude Code with the right flags.</p>
 
@@ -872,16 +1044,16 @@
 <div class="comment"># Uses $ITERM_PROFILE (auto-set by iTerm2 on every</div>
 <div class="comment"># session, including arrangement restores).</div>
 <div><span class="kw">case</span> <span class="str">"$ITERM_PROFILE"</span> <span class="kw">in</span></div>
-<div>  <span class="str">DEV-AUDIT</span>)</div>
+<div>  <span class="str">CC-AUDIT</span>)</div>
 <div>    PANE_ROLE=<span class="str">"AUDIT"</span></div>
 <div>    PROMPT=<span class="str">"%F{magenta}[AUDIT]%f %~ %# "</span> ;;</div>
-<div>  <span class="str">DEV-IMPL</span>)</div>
+<div>  <span class="str">CC-IMPL</span>)</div>
 <div>    PANE_ROLE=<span class="str">"IMPL"</span></div>
 <div>    PROMPT=<span class="str">"%F{green}[IMPL]%f %~ %# "</span> ;;</div>
-<div>  <span class="str">DEV-PROMPT</span>)</div>
+<div>  <span class="str">CC-PROMPT</span>)</div>
 <div>    PANE_ROLE=<span class="str">"PROMPT"</span></div>
 <div>    PROMPT=<span class="str">"%F{cyan}[PROMPT]%f %~ %# "</span> ;;</div>
-<div>  <span class="str">DEV-PLAN</span>)</div>
+<div>  <span class="str">CC-PLAN</span>)</div>
 <div>    PANE_ROLE=<span class="str">"PLAN"</span></div>
 <div>    PROMPT=<span class="str">"%F{yellow}[PLAN]%f %~ %# "</span> ;;</div>
 <div><span class="kw">esac</span></div>
@@ -897,10 +1069,10 @@
 <div class="comment"># ── Claude Code launch alias (role-aware) ──</div>
 <div class="comment"># Type "cc" to launch with the right flags.</div>
 <div><span class="kw">case</span> <span class="str">"$ITERM_PROFILE"</span> <span class="kw">in</span></div>
-<div>  <span class="str">DEV-AUDIT</span>)  <span class="kw">alias</span> cc=<span class="str">'claude --model opus --effort high --permission-mode plan'</span> ;;</div>
-<div>  <span class="str">DEV-IMPL</span>)   <span class="kw">alias</span> cc=<span class="str">'claude --model sonnet --effort high --permission-mode acceptEdits'</span> ;;</div>
-<div>  <span class="str">DEV-PROMPT</span>) <span class="kw">alias</span> cc=<span class="str">'claude --model sonnet --effort medium'</span> ;;</div>
-<div>  <span class="str">DEV-PLAN</span>)   <span class="kw">alias</span> cc=<span class="str">'claude --model sonnet --effort low'</span> ;;</div>
+<div>  <span class="str">CC-AUDIT</span>)  <span class="kw">alias</span> cc=<span class="str">'claude --model opus --effort high --permission-mode plan'</span> ;;</div>
+<div>  <span class="str">CC-IMPL</span>)   <span class="kw">alias</span> cc=<span class="str">'claude --model sonnet --effort high --permission-mode acceptEdits'</span> ;;</div>
+<div>  <span class="str">CC-PROMPT</span>) <span class="kw">alias</span> cc=<span class="str">'claude --model sonnet --effort medium'</span> ;;</div>
+<div>  <span class="str">CC-PLAN</span>)   <span class="kw">alias</span> cc=<span class="str">'claude --model sonnet --effort low'</span> ;;</div>
 <div><span class="kw">esac</span></div>
           </div>
 
@@ -923,9 +1095,9 @@
   </div>
 
   <!-- SECTION 5 -->
-  <div class="section" id="s5">
+  <div class="section" id="s8">
     <div class="section-header">
-      <span class="section-num">05</span>
+      <span class="section-num">08</span>
       <h2>Window Layout &amp; Arrangement</h2>
     </div>
     <p class="section-intro">Create a 2&times;2 pane layout, save it, and configure iTerm2 to restore it automatically on launch.</p>
@@ -962,10 +1134,10 @@
         </div>
         <div class="step-body">
           <ol style="margin-left:20px">
-            <li>Open a new window with the <strong>DEV-AUDIT</strong> profile.</li>
-            <li><span class="mono">&#8984;D</span> &mdash; split right. Right-click the new pane &rarr; <strong>Edit Session</strong> &rarr; change profile to <strong>DEV-PROMPT</strong>.</li>
-            <li>Click back on the left pane (AUDIT). <span class="mono">&#8984;&#8679;D</span> &mdash; split down. Change the new pane to <strong>DEV-IMPL</strong>.</li>
-            <li>Click on the top-right pane (PROMPT). <span class="mono">&#8984;&#8679;D</span> &mdash; split down. Change the new pane to <strong>DEV-PLAN</strong>.</li>
+            <li>Open a new window with the <strong>CC-AUDIT</strong> profile.</li>
+            <li><span class="mono">&#8984;D</span> &mdash; split right. Right-click the new pane &rarr; <strong>Edit Session</strong> &rarr; change profile to <strong>CC-PROMPT</strong>.</li>
+            <li>Click back on the left pane (AUDIT). <span class="mono">&#8984;&#8679;D</span> &mdash; split down. Change the new pane to <strong>CC-IMPL</strong>.</li>
+            <li>Click on the top-right pane (PROMPT). <span class="mono">&#8984;&#8679;D</span> &mdash; split down. Change the new pane to <strong>CC-PLAN</strong>.</li>
           </ol>
 
           <div class="screenshot">
@@ -1007,9 +1179,9 @@
   </div>
 
   <!-- SECTION 6 -->
-  <div class="section" id="s6">
+  <div class="section" id="s9">
     <div class="section-header">
-      <span class="section-num">06</span>
+      <span class="section-num">09</span>
       <h2>Launch Claude Code</h2>
     </div>
     <p class="section-intro">Type <span class="mono">cc</span> in any pane. The alias you set up in Step 4 launches Claude Code with the correct model, effort level, and permissions for that pane.</p>
@@ -1078,9 +1250,9 @@
   </div>
 
   <!-- SECTION 7 -->
-  <div class="section" id="s7">
+  <div class="section" id="s10">
     <div class="section-header">
-      <span class="section-num">07</span>
+      <span class="section-num">10</span>
       <h2>Keyboard Shortcuts</h2>
     </div>
 
@@ -1117,10 +1289,10 @@
   </div>
 
   <!-- SECTION 8 -->
-  <div class="section" id="s8">
+  <div class="section" id="s11">
     <div class="section-header">
-      <span class="section-num">08</span>
-      <h2>Workflow &amp; Tips</h2>
+      <span class="section-num">11</span>
+      <h2>Cross-Pane Workflow</h2>
     </div>
 
     <div class="steps">
@@ -1179,9 +1351,9 @@
   </div>
 
   <!-- SECTION 9 -->
-  <div class="section" id="s9">
+  <div class="section" id="s12">
     <div class="section-header">
-      <span class="section-num">09</span>
+      <span class="section-num">12</span>
       <h2>Daily Playbook</h2>
     </div>
 
@@ -1235,9 +1407,9 @@
   </div>
 
   <!-- SECTION 10 -->
-  <div class="section" id="s10">
+  <div class="section" id="s13">
     <div class="section-header">
-      <span class="section-num">10</span>
+      <span class="section-num">13</span>
       <h2>Adapt for Other Projects</h2>
     </div>
     <p class="section-intro">This setup is project-agnostic. To use it with a different codebase:</p>
@@ -1293,9 +1465,9 @@
   </div>
 
   <!-- SECTION 11 -->
-  <div class="section" id="s11">
+  <div class="section" id="s14">
     <div class="section-header">
-      <span class="section-num">11</span>
+      <span class="section-num">14</span>
       <h2>Two-Tier Hook Architecture</h2>
     </div>
     <p class="section-intro">Hook scripts enforce safety invariants that prompt instructions alone cannot guarantee — blocking dangerous tool calls before they execute and tripping a circuit-breaker on repeated failures.</p>
@@ -1357,10 +1529,10 @@
   </div>
 
   <!-- SECTION 12 -->
-  <div class="section" id="s12">
+  <div class="section" id="s15">
     <div class="section-header">
-      <span class="section-num">12</span>
-      <h2>gate/ship Workflow</h2>
+      <span class="section-num">15</span>
+      <h2>gate Workflow</h2>
     </div>
     <p class="section-intro">Two aliases in the IMPL pane create a hard gate between implementation and review.</p>
 
@@ -1377,7 +1549,7 @@
 <div class="comment"># ship: gate + interactive stage + commit</div>
 <div>alias ship='gate &amp;&amp; git add -p &amp;&amp; git commit'</div>
           </div>
-          <p>Both aliases are only defined when <span class="mono">$ITERM_PROFILE == DEV-IMPL</span>. They are no-ops in other panes.</p>
+          <p>Both aliases are only defined when <span class="mono">$ITERM_PROFILE == CC-IMPL</span>. They are no-ops in other panes.</p>
         </div>
       </div>
 
@@ -1401,10 +1573,10 @@
   </div>
 
   <!-- SECTION 13 -->
-  <div class="section" id="s13">
+  <div class="section" id="s16">
     <div class="section-header">
-      <span class="section-num">13</span>
-      <h2>SESSION_LOG Cold-Start Fix</h2>
+      <span class="section-num">16</span>
+      <h2>SESSION_LOG Pattern</h2>
     </div>
     <p class="section-intro">Without a session log, each IMPL session starts cold — Claude asks for a project overview instead of resuming from where work stopped.</p>
 
@@ -1445,9 +1617,9 @@
   </div>
 
   <!-- SECTION 14 -->
-  <div class="section" id="s14">
+  <div class="section" id="s17">
     <div class="section-header">
-      <span class="section-num">14</span>
+      <span class="section-num">17</span>
       <h2>CLAUDE.md Split Pattern</h2>
     </div>
     <p class="section-intro">Separating global rules from project-specific rules reduces noise and prevents cross-project contamination in every Claude session.</p>
@@ -1490,10 +1662,10 @@
   </div>
 
   <!-- SECTION 15 -->
-  <div class="section" id="s15">
+  <div class="section" id="s18">
     <div class="section-header">
-      <span class="section-num">15</span>
-      <h2>Cheatsheet</h2>
+      <span class="section-num">18</span>
+      <h2>Quick Reference — read as needed</h2>
     </div>
     <p class="section-intro">Everything on one screen — copy, paste, go.</p>
 
@@ -1593,9 +1765,9 @@
   </div>
 
   <!-- SECTION 16 -->
-  <div class="section" id="s16">
+  <div class="section" id="s19">
     <div class="section-header">
-      <span class="section-num">16</span>
+      <span class="section-num">19</span>
       <h2>MCP Server, Commands &amp; Skills</h2>
     </div>
     <p class="section-intro">Phase 6 additions — GitHub MCP integration, the <span class="mono">/reflect</span> command, and contextual skills.</p>
@@ -1669,10 +1841,41 @@
     </div>
   </div>
 
-  <!-- SECTION 17 -->
-  <div class="section" id="s17">
+  <!-- SECTION s-drawthings: Draw Things (Optional) -->
+  <div class="section" id="s20">
     <div class="section-header">
-      <span class="section-num">17</span>
+      <span class="section-num">20</span>
+      <h2>Draw Things <span style="font-weight:400;color:var(--text-muted)">(Optional &mdash; Creative AI)</span></h2>
+    </div>
+    <p class="section-intro">Free local image generation on macOS. Runs entirely on-device via Core ML &mdash; no API calls, no sign-up. Completely independent from Claude Code and Ollama.</p>
+
+    <div class="callout tip">
+      <span class="callout-icon">&#128161;</span>
+      <div><strong>Truly optional</strong> &mdash; this section has no bearing on any other step. Skip if you&rsquo;re not interested in image generation.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">&#9654;</span>
+          <span class="step-title">Install and set up</span>
+        </div>
+        <div class="step-body">
+          <ol>
+            <li>Download from the Mac App Store: search <strong>&ldquo;Draw Things AI Image Generator&rdquo;</strong>.</li>
+            <li>Open the app and let it download a base model (~2&ndash;4 GB).</li>
+            <li>Prompt directly in the app&rsquo;s text field. Drag and drop an image as reference.</li>
+          </ol>
+          <p><strong>Recommended starting model:</strong> SDXL Turbo (fast) or Flux Schnell (higher quality). Models are downloaded in-app &mdash; no terminal commands needed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 17 -->
+  <div class="section" id="s21">
+    <div class="section-header">
+      <span class="section-num">21</span>
       <h2>Troubleshooting</h2>
     </div>
     <p class="section-intro">Common failure modes and how to fix them.</p>
@@ -1691,7 +1894,7 @@
           <ul>
             <li>Update iTerm2 to 3.3 or later (Help &rarr; Check For Updates).</li>
             <li>Close and reopen the pane by selecting the profile explicitly: <strong>Profiles &rarr; [your profile name]</strong> &rarr; Open in current tab.</li>
-            <li>Confirm with: <span class="mono">echo $ITERM_PROFILE</span> &mdash; should print <span class="mono">DEV-AUDIT</span>, etc.</li>
+            <li>Confirm with: <span class="mono">echo $ITERM_PROFILE</span> &mdash; should print <span class="mono">CC-AUDIT</span>, etc.</li>
           </ul>
         </div>
       </div>
@@ -1706,8 +1909,8 @@
           <p><strong>Fix:</strong> Rename the alias in <span class="mono">~/.zshrc</span>. Replace all 4 <span class="mono">alias cc=</span> occurrences with <span class="mono">alias cl=</span> (or any name you prefer), then reload:</p>
           <div class="code-block">
 <div class="comment"># In ~/.zshrc — change all 4 occurrences:</div>
-<div>DEV-AUDIT)  alias cl='claude --model opus --effort high --permission-mode plan' ;;</div>
-<div>DEV-IMPL)   alias cl='claude --model sonnet --effort high --permission-mode acceptEdits' ;;</div>
+<div>CC-AUDIT)  alias cl='claude --model opus --effort high --permission-mode plan' ;;</div>
+<div>CC-IMPL)   alias cl='claude --model sonnet --effort high --permission-mode acceptEdits' ;;</div>
 <div class="comment"># ... then:</div>
 <div>source ~/.zshrc</div>
           </div>
@@ -1815,7 +2018,7 @@
 
 <div class="footer">
   <span>iTerm2 + Claude Code &middot; 4-Pane Setup Guide</span>
-  <span>Claude Code v2.1.108 &middot; April 2026</span>
+  <span>Claude Code v2.1.109 &middot; April 2026</span>
 </div>
 
 </body>
