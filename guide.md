@@ -668,26 +668,31 @@ Two starter templates are included in this repo:
 
 ### GitHub MCP Server
 
-The included `.mcp.json.example` configures the GitHub MCP server, giving
-Claude read access to GitHub issues, PRs, and code search inside any session.
+Claude Code registers MCP servers via `claude mcp add`, not by reading a
+config file from disk. The included `.mcp.json.example` is reference JSON
+if you need `claude mcp add-json` instead.
 
 **Setup:**
 
-1. Install the binary — see [github.com/github/github-mcp-server](https://github.com/github/github-mcp-server).
-
-2. Copy and configure:
+1. Install the binary:
    ```bash
-   cp .mcp.json.example ~/.claude/.mcp.json
-   # Edit ~/.claude/.mcp.json:
-   #   - Replace /path/to/github-mcp-server with the actual binary path
-   #   - Replace ghp_your_readonly_pat_here with a real read-only PAT
+   brew install github-mcp-server
    ```
+   Or see [github.com/github/github-mcp-server](https://github.com/github/github-mcp-server) for other install methods.
 
-3. Restart Claude Code and run `/mcp` to confirm the server is connected.
+2. Register with Claude Code (user-scope — available in every project):
+   ```bash
+   claude mcp add github -s user \
+     -e GITHUB_PERSONAL_ACCESS_TOKEN=ghp_your_readonly_token \
+     -- $(which github-mcp-server) stdio
+   ```
+   Generate a read-only PAT at <https://github.com/settings/tokens> with scope
+   `public_repo` (or `repo` for private-repo access). Recommended expiry: 90 days.
 
-> **Scope:** Placing `.mcp.json` in `~/.claude/` makes the server available in
-> all projects. For per-project scope, place it in `.claude/.mcp.json` inside
-> the repo instead.
+3. Verify: `claude mcp list | grep github`
+
+> **Scope:** `-s user` registers the server globally (all projects). Omit
+> `-s user` to restrict to the current project.
 
 ---
 

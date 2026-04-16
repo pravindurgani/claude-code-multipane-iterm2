@@ -67,7 +67,7 @@ This workflow depends on iTerm2-specific features:
 4. **Create a 2x2 pane layout** and save it as the default window arrangement
 5. **Type `cc` in each pane** — Claude Code launches with the correct flags
 6. **Merge hooks config** — copy the five `.py` files from `hooks/` to `~/.claude/hooks/`; merge the `"hooks"` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`
-7. **(Optional) MCP & slash commands** — copy [`.mcp.json.example`](.mcp.json.example) to `~/.claude/.mcp.json` (fill in your PAT and binary path); copy `commands/reflect.md` to `~/.claude/commands/`; copy `skills/` to `~/.claude/skills/`
+7. **(Optional) MCP & slash commands** — `brew install github-mcp-server` then `claude mcp add` to register it (see Step 18 in the guide); copy `commands/reflect.md` to `~/.claude/commands/`; copy `skills/` to `~/.claude/skills/`
 
 ---
 
@@ -84,7 +84,7 @@ This workflow depends on iTerm2-specific features:
 | [`hooks/settings.json.example`](hooks/settings.json.example) | Hooks registration block to merge into `~/.claude/settings.json` |
 | [`CLAUDE.md.template`](CLAUDE.md.template) | Starter template for global `~/.claude/CLAUDE.md` |
 | [`REFERENCE.md.template`](REFERENCE.md.template) | Starter template for project-level `.claude/REFERENCE.md` |
-| [`.mcp.json.example`](.mcp.json.example) | GitHub MCP server config — copy to `~/.claude/.mcp.json` and fill in your PAT |
+| [`.mcp.json.example`](.mcp.json.example) | GitHub MCP server reference JSON — use with `claude mcp add-json` (see Step 18) |
 | [`commands/reflect.md`](commands/reflect.md) | `/reflect` slash command — extracts session learnings for CLAUDE.md |
 | [`skills/`](skills/) | Contextual skills for AUDIT/IMPL panes (code-review, security-audit, testing) |
 
