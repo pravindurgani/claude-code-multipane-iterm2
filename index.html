@@ -1687,22 +1687,27 @@
           <span class="step-title">GitHub MCP Server</span>
         </div>
         <div class="step-body">
-          <p>The included <span class="mono">.mcp.json.example</span> configures the GitHub MCP server, giving Claude read access to GitHub issues, PRs, and code search inside any session.</p>
+          <p>Claude Code registers MCP servers via <span class="mono">claude mcp add</span>, not by reading a config file from disk. The included <span class="mono">.mcp.json.example</span> is reference JSON if you need <span class="mono">claude mcp add-json</span> instead.</p>
           <ol style="margin-left:20px">
-            <li>Install the binary — see <a href="https://github.com/github/github-mcp-server" style="color:var(--blue)">github.com/github/github-mcp-server</a>.</li>
-            <li>Copy and configure:
+            <li>Install the binary:
               <div class="code-block" style="margin-top:8px">
-<div>cp .mcp.json.example ~/.claude/.mcp.json</div>
-<div class="comment"># Edit ~/.claude/.mcp.json:</div>
-<div class="comment">#   - Replace /path/to/github-mcp-server with the actual binary path</div>
-<div class="comment">#   - Replace ghp_your_readonly_pat_here with a real read-only PAT</div>
+<div>brew install github-mcp-server</div>
               </div>
+              Or see <a href="https://github.com/github/github-mcp-server" style="color:var(--blue)">github.com/github/github-mcp-server</a> for other install methods.
             </li>
-            <li>Restart Claude Code. Run <span class="mono">/mcp</span> to confirm the server is connected.</li>
+            <li>Register with Claude Code (user-scope — available in every project):
+              <div class="code-block" style="margin-top:8px">
+<div>claude mcp add github -s user \</div>
+<div>  -e GITHUB_PERSONAL_ACCESS_TOKEN=ghp_your_readonly_token \</div>
+<div>  -- $(which github-mcp-server) stdio</div>
+              </div>
+              Generate a read-only PAT at <a href="https://github.com/settings/tokens" style="color:var(--blue)">github.com/settings/tokens</a> with scope <span class="mono">public_repo</span> (or <span class="mono">repo</span> for private-repo access). Recommended expiry: 90 days.
+            </li>
+            <li>Verify: <span class="mono">claude mcp list | grep github</span></li>
           </ol>
           <div class="callout tip">
             <span class="callout-icon">&#128161;</span>
-            <div><strong>Scope:</strong> <span class="mono">~/.claude/.mcp.json</span> makes the server available in all projects. For per-project scope, place the file at <span class="mono">.claude/.mcp.json</span> inside the repo instead.</div>
+            <div><strong>Scope:</strong> <span class="mono">-s user</span> registers the server globally (all projects). Omit <span class="mono">-s user</span> to restrict to the current project.</div>
           </div>
         </div>
       </div>
