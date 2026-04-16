@@ -31,9 +31,8 @@ Global conventions live in ~/.claude/CLAUDE.md.
 
 ## Hooks
 
-- protect-env.py blocks writes to ~/.claude/hooks/ at the tool level. Hook templates
-  must be created in the project repo (hooks/) and installed via a manual cp command.
-  Never attempt to Write or Edit directly to ~/.claude/hooks/.
+- Hook templates must be created in the project repo (hooks/) and installed via a
+  manual cp command. Never attempt to Write or Edit directly to ~/.claude/hooks/.
 
 - ~/.claude/settings.json contains # comment lines and is not valid JSON. Any
   verification script that parses it must strip comment lines first:

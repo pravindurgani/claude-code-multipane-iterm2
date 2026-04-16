@@ -28,7 +28,7 @@ The two locations are kept in sync by a manual `cp`:
 cp hooks/<name>.py ~/.claude/hooks/<name>.py
 ```
 
-Never `Edit` or `Write` directly into `~/.claude/hooks/` — `protect-env.py` blocks those writes at the tool level, and editing the installed copy in place diverges it from the repo template. Always edit the template, then `cp`.
+Never `Edit` or `Write` directly into `~/.claude/hooks/` — editing the installed copy in place diverges it from the repo template. Always edit the template, then `cp`.
 
 The one-time global install (`~/.claude/settings.json` wiring) is documented in `hooks/settings.json.example`.
 

@@ -788,7 +788,7 @@ on your machine using Core ML — no API calls, no sign-up required.
 ```bash
 # Check 1 — files exist
 ls ~/.claude/hooks/
-# Expected: protect-env.py  protect-git-push.py  circuit-breaker.py  session-start-reset.py
+# Expected: protect-env.py  protect-git-push.py  circuit-breaker.py  session-start-reset.py  version-check.py
 
 # Check 2 — python3 available
 which python3  # must return a path; if missing: brew install python3
