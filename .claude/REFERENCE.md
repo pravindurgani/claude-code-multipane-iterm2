@@ -28,7 +28,7 @@ Adversarial review. Never edit files from this pane.
 Implementation only. Don't re-audit; don't re-plan.
 
 - Read the last 60 lines of `SESSION_LOG.md` — work from the most recent `Next:` line.
-- Hook install pattern: edit templates in `hooks/`, then `cp hooks/<name>.py ~/.claude/hooks/<name>.py`. Never `Edit`/`Write` into `~/.claude/hooks/` — blocked by `protect-env.py` and diverges from the repo template.
+- Hook install pattern: edit templates in `hooks/`, then `cp hooks/<name>.py ~/.claude/hooks/<name>.py`. Never `Edit`/`Write` into `~/.claude/hooks/` — diverges from the repo template.
 - Schema drift awareness: `circuit-breaker-state.json` has fields written by both `session-start-reset.py` and `circuit-breaker.py` — if you touch one writer, check the other.
 - `git push` requires **explicit human approval** (enforced by `protect-git-push.py`). Commit locally, then ask.
 - `.env` edits are blocked at the tool level (`protect-env.py`). If you need to change one, ask the user.
