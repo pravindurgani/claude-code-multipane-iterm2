@@ -1,5 +1,9 @@
 # Copy the hooks block into your ~/.claude/settings.json. Adjust $HOME if needed.
 # NOTE: This file is NOT valid JSON — strip this comment before using json.load().
+#
+# This is the BASE 4-pane setup. If you install the optional pane handoff
+# feature (./handoff/install.sh), the installer adds the Stop hook entry for
+# enforce-handback.py automatically — do NOT add it here.
 {
   "env": {
     "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"

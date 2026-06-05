@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pane Handoff — Operator Guide</title>
+<meta name="description" content="File-based bracketed-paste routing between iTerm panes. Scope-keyed, watcher-managed, multi-project safe. Optional add-on to the 4-pane Claude Code setup.">
+<meta property="og:title" content="Pane Handoff — Operator Guide">
+<meta property="og:description" content="Write a directive to a file in one pane, it arrives as a single paste in the other. Scope-keyed so two projects run in parallel without cross-talk.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pravindurgani.github.io/claude-code-multipane-iterm2/HANDOFF_GUIDE.html">
+<meta name="twitter:card" content="summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+
+  :root {
+    --bg: #ffffff;
+    --surface: #f8f9fb;
+    --surface2: #f0f2f5;
+    --border: #e2e6ed;
+    --border-light: #edf0f4;
+    --text: #1a1d23;
+    --text-secondary: #4b5563;
+    --text-muted: #6b7280;
+    --blue: #2563eb;
+    --blue-light: #eff6ff;
+    --blue-border: #bfdbfe;
+    --amber: #d97706;
+    --amber-light: #fffbeb;
+    --amber-border: #fde68a;
+    --green: #059669;
+    --green-light: #ecfdf5;
+    --green-border: #a7f3d0;
+    --red: #dc2626;
+    --red-light: #fef2f2;
+    --red-border: #fecaca;
+    --purple: #7c3aed;
+    --purple-light: #f5f3ff;
+    --purple-border: #ddd6fe;
+    --code-bg: #1e293b;
+    --code-text: #e2e8f0;
+    --radius: 10px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: white;
+    padding: 64px 40px 56px;
+  }
+  .hero-inner { max-width: 800px; margin: 0 auto; }
+  .hero-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: #60a5fa;
+    background: rgba(96, 165, 250, 0.1);
+    border: 1px solid rgba(96, 165, 250, 0.25);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 18px;
+    color: #94a3b8;
+    max-width: 640px;
+    line-height: 1.6;
+  }
+  .hero-meta {
+    margin-top: 24px;
+    font-size: 13px;
+    color: #64748b;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .hero a { color: #60a5fa; text-decoration: none; border-bottom: 1px dashed rgba(96, 165, 250, 0.4); }
+  .hero a:hover { color: #93c5fd; border-bottom-color: #93c5fd; }
+
+  /* CONTAINER */
+  .container { max-width: 800px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* TOC */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    margin: 40px 0;
+  }
+  .toc-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+  .toc-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 32px;
+  }
+  .toc-list a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 14px;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.15s;
+  }
+  .toc-list a:hover { color: var(--blue); }
+  .toc-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--blue);
+    font-weight: 600;
+    min-width: 24px;
+  }
+
+  /* SECTIONS */
+  .section { margin: 56px 0; scroll-margin-top: 24px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border-light);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue);
+    background: var(--blue-light);
+    border: 1px solid var(--blue-border);
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
+  .section h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.3px; }
+  .section-intro {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 12px 0 24px;
+    line-height: 1.7;
+  }
+  .section h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 28px 0 12px;
+    color: var(--text);
+  }
+  .section p { margin: 12px 0; }
+  .section ul, .section ol { margin: 12px 0 12px 24px; }
+  .section li { margin-bottom: 6px; }
+
+  /* STEPS */
+  .steps { display: flex; flex-direction: column; gap: 20px; margin: 24px 0; }
+  .step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+  .step-n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--blue);
+    min-width: 28px;
+  }
+  .step-title { font-size: 15px; font-weight: 600; }
+  .step-body { padding: 20px; font-size: 15px; color: var(--text); line-height: 1.7; }
+  .step-body p { margin-bottom: 12px; }
+  .step-body p:last-child { margin-bottom: 0; }
+  .step-body ul, .step-body ol { margin: 8px 0 12px 20px; }
+  .step-body li { margin-bottom: 6px; font-size: 15px; }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: var(--code-bg);
+    color: var(--code-text);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.9;
+    margin: 12px 0;
+    overflow-x: auto;
+  }
+  .code-block .comment { color: #64748b; }
+  .code-block .cmd     { color: #93c5fd; }
+  .code-block .flag    { color: #fbbf24; }
+  .code-block .str     { color: #86efac; }
+  .code-block .kw      { color: #c4b5fd; }
+  .code-block .ok      { color: #6ee7b7; }
+  .code-block .warn    { color: #fbbf24; }
+  .code-block .err     { color: #fca5a5; }
+  .code-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* INLINE CODE */
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    background: var(--surface2);
+    padding: 2px 6px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+
+  /* CALLOUTS */
+  .callout {
+    display: flex;
+    gap: 14px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin: 16px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout.tip     { background: var(--blue-light);   border: 1px solid var(--blue-border); }
+  .callout.warn    { background: var(--amber-light);  border: 1px solid var(--amber-border); }
+  .callout.success { background: var(--green-light);  border: 1px solid var(--green-border); }
+  .callout.danger  { background: var(--red-light);    border: 1px solid var(--red-border); }
+  .callout strong { display: block; margin-bottom: 4px; font-size: 14px; }
+  .callout p { margin: 4px 0 0; }
+  .callout p:first-child { margin-top: 0; }
+
+  /* PILLS */
+  .pill {
+    display: inline-block;
+    padding: 1px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+  }
+  .pill.ok    { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+  .pill.err   { background: var(--red-light);   color: var(--red);   border: 1px solid var(--red-border); }
+  .pill.warn  { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-border); }
+  .pill.info  { background: var(--blue-light);  color: var(--blue);  border: 1px solid var(--blue-border); }
+
+  /* TABLES */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 16px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .data-table th {
+    background: var(--surface2);
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-light);
+    vertical-align: top;
+  }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .cell-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+  }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* PANE TAGS */
+  .pane-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-right: 6px;
+    text-transform: uppercase;
+  }
+  .pane-tag.impl    { background: var(--green-light);  color: var(--green);  border: 1px solid var(--green-border); }
+  .pane-tag.audit   { background: var(--purple-light); color: var(--purple); border: 1px solid var(--purple-border); }
+  .pane-tag.any     { background: var(--blue-light);   color: var(--blue);   border: 1px solid var(--blue-border); }
+  .pane-tag.mac     { background: var(--surface2);     color: var(--text-secondary); border: 1px solid var(--border); }
+
+  /* ARCH DIAGRAM */
+  .arch {
+    background: var(--code-bg);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 20px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #cbd5e1;
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .arch .lbl { color: #93c5fd; font-weight: 600; }
+  .arch .arr { color: #fbbf24; }
+  .arch .ok  { color: #6ee7b7; }
+  .arch .com { color: #64748b; }
+
+  /* FOOTER */
+  .footer {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 28px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer a { color: var(--blue); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .hero { padding: 40px 20px 36px; }
+    .hero h1 { font-size: 26px; letter-spacing: -0.5px; }
+    .hero p { font-size: 16px; }
+    .container { padding: 0 16px 60px; }
+    .toc { padding: 20px; }
+    .toc-list { grid-template-columns: 1fr; }
+    .section { margin: 40px 0; }
+    .section-header { flex-wrap: wrap; gap: 8px; }
+    .section h2 { font-size: 20px; }
+    .step-body, .step-header { padding: 14px 16px; }
+    .code-block { padding: 14px 16px; font-size: 12px; line-height: 1.8; }
+    .data-table { font-size: 13px; }
+    .data-table th, .data-table td { padding: 8px 10px; }
+    .step-body .data-table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .callout { flex-direction: column; gap: 8px; padding: 14px 16px; }
+    .callout-icon { font-size: 16px; }
+    .footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Optional add-on · iTerm2 + Claude Code</div>
+    <h1>Pane Handoff —<br>File-Based Routing</h1>
+    <p>Write a directive to a file in one pane, it arrives as a single paste in the other. Scope-keyed so two projects run in parallel without cross-talk. Watcher-managed, launchd-resilient.</p>
+    <div class="hero-meta">macOS only &middot; iTerm2 &middot; fswatch &middot; ~3 min install &middot; <a href="README.md">back to main guide</a></div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- TOC -->
+  <div class="toc">
+    <div class="toc-title">In this guide</div>
+    <ul class="toc-list">
+      <li><a href="#s0"><span class="toc-num">00</span> Quick start cheat sheet</a></li>
+      <li><a href="#s1"><span class="toc-num">01</span> Install</a></li>
+      <li><a href="#s2"><span class="toc-num">02</span> Shell functions</a></li>
+      <li><a href="#s3"><span class="toc-num">03</span> Activate a NEW project</a></li>
+      <li><a href="#s4"><span class="toc-num">04</span> Resume after reboot</a></li>
+      <li><a href="#s5"><span class="toc-num">05</span> Sending work between panes</a></li>
+      <li><a href="#s6"><span class="toc-num">06</span> Pause the loop (HALT)</a></li>
+      <li><a href="#s7"><span class="toc-num">07</span> Troubleshooting</a></li>
+      <li><a href="#s8"><span class="toc-num">08</span> Reference</a></li>
+      <li><a href="#s9"><span class="toc-num">09</span> Multi-project isolation</a></li>
+      <li><a href="#s10"><span class="toc-num">10</span> How it works</a></li>
+      <li><a href="#s11"><span class="toc-num">11</span> Changelog</a></li>
+    </ul>
+  </div>
+
+  <!-- s0: Quick start -->
+  <div class="section" id="s0">
+    <div class="section-header">
+      <span class="section-num">00</span>
+      <h2>Quick start cheat sheet</h2>
+    </div>
+    <p class="section-intro">Four commands cover 95% of day-to-day usage. Read once, memorise, refer back when something doesn&rsquo;t paste.</p>
+
+    <div class="code-label">Daily commands</div>
+    <div class="code-block">
+<div>handoff-on                      <span class="comment"># ARM routing (touch ~/.claude/handoff/active)</span></div>
+<div>handoff-off                     <span class="comment"># DISARM routing</span></div>
+<div>handoff-use <span class="str">&lt;project&gt;</span>           <span class="comment"># Set THIS PANE's scope (once per pane open)</span></div>
+<div>handoff-claim-impl              <span class="comment"># OR handoff-claim-audit — bind this pane to its role</span></div>
+    </div>
+
+    <h3>Mental model — two independent switches</h3>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Switch</th><th>Scope</th><th>Set by</th><th>State lives in</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Watcher running</strong></td><td>Global (whole Mac)</td><td class="cell-mono">launchd</td><td>OS process table</td></tr>
+          <tr><td><strong>Routing armed</strong></td><td>Global</td><td class="cell-mono">handoff-on / handoff-off</td><td class="cell-mono">~/.claude/handoff/active</td></tr>
+          <tr><td><strong>Pane bound</strong></td><td>Per pane</td><td class="cell-mono">handoff-use + handoff-claim-*</td><td class="cell-mono">~/.claude/handoff/*-target.&lt;scope&gt;.id</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">&#128161;</span>
+      <div>
+        <strong>If a paste doesn&rsquo;t arrive, ask three questions in order</strong>
+        <p><strong>1.</strong> Is the watcher running? &mdash; <span class="mono">launchctl list | grep handoff</span></p>
+        <p><strong>2.</strong> Is routing armed? &mdash; <span class="mono">ls ~/.claude/handoff/active</span></p>
+        <p><strong>3.</strong> Is the target pane still bound? &mdash; <span class="mono">handoff-targets</span></p>
+        <p>90% of failures are #3. After an iTerm restart, UUIDs change and you must re-claim.</p>
+      </div>
+    </div>
+
+    <h3>Reading the examples</h3>
+    <p>Every command below has a pane tag showing where to run it:</p>
+    <p>
+      <span class="pane-tag impl">IMPL</span> the pane where Claude implements
+      <span class="pane-tag audit">AUDIT</span> the pane where Claude reviews
+      <span class="pane-tag any">ANY</span> file-only, anywhere
+      <span class="pane-tag mac">MAC</span> plain Mac Terminal outside Claude
+    </p>
+  </div>
+
+  <!-- s1: Install -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Install</h2>
+    </div>
+    <p class="section-intro">One installer covers everything: dependencies, file placement, launchd registration, and arming. Idempotent &mdash; safe to re-run after edits.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header"><span class="step-n">1.1</span><span class="step-title">Install fswatch</span></div>
+        <div class="step-body">
+          <div class="code-label">Mac terminal</div>
+          <div class="code-block">
+<div>brew install fswatch</div>
+          </div>
+          <p>Required dependency. Without it the watcher cannot detect file events.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><span class="step-n">1.2</span><span class="step-title">Run the installer</span></div>
+        <div class="step-body">
+          <div class="code-label">From repo root</div>
+          <div class="code-block">
+<div>./handoff/install.sh</div>
+          </div>
+          <p>The installer:</p>
+          <ol>
+            <li>Verifies <span class="mono">fswatch</span>, <span class="mono">osascript</span>, and iTerm2 are present</li>
+            <li>Copies <span class="mono">pane-handoff.sh</span> &rarr; <span class="mono">~/.claude/hooks/</span></li>
+            <li>Copies <span class="mono">enforce-handback.py</span> &rarr; <span class="mono">~/.claude/hooks/</span></li>
+            <li>Copies <span class="mono">start-impl.md</span> and <span class="mono">start-audit.md</span> &rarr; <span class="mono">~/.claude/commands/</span></li>
+            <li>Renders the launchd plist with your <span class="mono">$HOME</span> and installs to <span class="mono">~/Library/LaunchAgents/com.user.handoff.plist</span></li>
+            <li>Loads the launchd agent (auto-starts at login, restarts on crash)</li>
+            <li>Arms routing (<span class="mono">touch ~/.claude/handoff/active</span>)</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><span class="step-n">1.3</span><span class="step-title">Verify</span></div>
+        <div class="step-body">
+          <div class="code-label">Sanity checks</div>
+          <div class="code-block">
+<div>launchctl list | grep handoff   <span class="comment"># → "&lt;PID&gt;  0  com.user.handoff"</span></div>
+<div>tail /tmp/handoff.log           <span class="comment"># → "[handoff] Watching ~/.claude/handoff"</span></div>
+          </div>
+          <div class="callout success">
+            <span class="callout-icon">&#9989;</span>
+            <div><strong>Healthy state</strong> <span class="mono">launchctl list</span> shows a numeric PID (not <span class="mono">-</span>) and exit code <span class="mono">0</span>. Log shows a startup banner. You&rsquo;re ready for Section 2.</div>
+          </div>
+          <p>To uninstall: <span class="mono">./handoff/install.sh --uninstall</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- s2: Shell functions -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Shell functions</h2>
+    </div>
+    <p class="section-intro">The user-facing API lives in shell functions. Append the block, source <span class="mono">~/.zshrc</span>, you&rsquo;re done.</p>
+
+    <div class="code-label">Append to ~/.zshrc</div>
+    <div class="code-block">
+<div>cat handoff/zshrc-handoff.sh &gt;&gt; ~/.zshrc</div>
+<div>source ~/.zshrc</div>
+    </div>
+
+    <p>You now have these commands available in every pane:</p>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td class="cell-mono">handoff-use &lt;scope&gt;</td><td>Set this pane&rsquo;s <span class="mono">HANDOFF_SCOPE</span>. Required before any other handoff command.</td></tr>
+          <tr><td class="cell-mono">handoff-claim-impl</td><td>Bind this pane as the IMPL target for the current scope.</td></tr>
+          <tr><td class="cell-mono">handoff-claim-audit</td><td>Bind this pane as the AUDIT target for the current scope.</td></tr>
+          <tr><td class="cell-mono">handoff-on / handoff-off</td><td>Arm / disarm routing (creates / removes <span class="mono">~/.claude/handoff/active</span>).</td></tr>
+          <tr><td class="cell-mono">handoff-status</td><td>Print <span class="pill ok">ARMED</span> or <span class="pill warn">DISARMED</span>.</td></tr>
+          <tr><td class="cell-mono">handoff-halt</td><td>Write <span class="mono">HALT.&lt;scope&gt;</span> (reason from stdin) &mdash; pauses only this scope.</td></tr>
+          <tr><td class="cell-mono">handoff-resume</td><td>Remove <span class="mono">HALT.&lt;scope&gt;</span>.</td></tr>
+          <tr><td class="cell-mono">handoff-targets</td><td>List all current bindings (UUID per role per scope).</td></tr>
+          <tr><td class="cell-mono">handoff-scope</td><td>Print this pane&rsquo;s current scope.</td></tr>
+          <tr><td class="cell-mono">send-impl / send-audit</td><td>Pipe stdin to the scoped inbox.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- s3: Activate -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Activate a NEW project</h2>
+    </div>
+    <p class="section-intro">Example uses scope name <span class="mono">myapp</span>. Substitute your project name (lowercase, no spaces).</p>
+
+    <div class="callout tip">
+      <span class="callout-icon">&#128161;</span>
+      <div><strong>Watcher:</strong> you don&rsquo;t start it. It&rsquo;s a launchd daemon (<span class="mono">com.user.handoff</span>) running 24/7 since first install. You only define scopes and claim panes.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header"><span class="step-n">3.1</span><span class="step-title">Open the IMPL pane and claim it</span></div>
+        <div class="step-body">
+          <p>Open iTerm, open a new pane in the <span class="mono">CC-IMPL</span> profile, <span class="mono">cd</span> to the project, start Claude (<span class="mono">cc</span>).</p>
+          <div class="code-label"><span class="pane-tag impl">IMPL</span> shell</div>
+          <div class="code-block">
+<div>cd ~/Desktop/myapp</div>
+<div>cc</div>
+          </div>
+          <p>Then <strong>inside Claude in that pane</strong>, set the scope once and claim:</p>
+          <div class="code-label"><span class="pane-tag impl">IMPL</span> inside Claude</div>
+          <div class="code-block">
+<div>handoff-use myapp</div>
+<div>handoff-claim-impl</div>
+          </div>
+          <p>Expected output:</p>
+          <div class="code-block">
+<div><span class="ok">[handoff]</span> scope set: myapp (pane: &lt;UUID&gt;)</div>
+<div><span class="ok">[handoff]</span> IMPL scope=myapp bound to &lt;UUID&gt;</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><span class="step-n">3.2</span><span class="step-title">Open the AUDIT pane and claim it</span></div>
+        <div class="step-body">
+          <p>Open another iTerm pane in the <span class="mono">CC-AUDIT</span> profile, start Claude there.</p>
+          <div class="code-label"><span class="pane-tag audit">AUDIT</span> shell</div>
+          <div class="code-block">
+<div>cd ~/Desktop/myapp</div>
+<div>cc</div>
+          </div>
+          <p>Inside Claude, set the scope, type <span class="mono">/start-audit</span> to load the audit skill, then claim:</p>
+          <div class="code-label"><span class="pane-tag audit">AUDIT</span> inside Claude</div>
+          <div class="code-block">
+<div>handoff-use myapp</div>
+<div><span class="comment"># then /start-audit, then:</span></div>
+<div>handoff-claim-audit</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><span class="step-n">3.3</span><span class="step-title">Confirm both bindings</span></div>
+        <div class="step-body">
+          <div class="code-label"><span class="pane-tag any">ANY</span></div>
+          <div class="code-block">
+<div>handoff-targets</div>
+          </div>
+          <p>Expected:</p>
+          <div class="code-block">
+<div>audit-target.myapp -&gt; &lt;AUDIT pane UUID&gt;</div>
+<div>impl-target.myapp  -&gt; &lt;IMPL pane UUID&gt;</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><span class="step-n">3.4</span><span class="step-title">Smoke test</span></div>
+        <div class="step-body">
+          <div class="code-label"><span class="pane-tag any">ANY</span></div>
+          <div class="code-block">
+<div>echo <span class="str">"smoke test $(date +%s)"</span> &gt; ~/.claude/handoff/to-impl.myapp.txt</div>
+          </div>
+          <p>Within ~1 second, the IMPL pane should show <span class="mono">smoke test &lt;timestamp&gt;</span> as a single paste.</p>
+          <p>Verify the file was drained AND the watcher logged the delivered-marker:</p>
+          <div class="code-block">
+<div>wc -c &lt; ~/.claude/handoff/to-impl.myapp.txt    <span class="comment"># → 0 = delivered (not failure)</span></div>
+<div>tail -3 /tmp/handoff.log</div>
+          </div>
+          <p>Expected &mdash; two adjacent lines per delivery:</p>
+          <div class="code-block">
+<div><span class="ok">[handoff]</span> -&gt; IMPL scope=myapp (1 lines)</div>
+<div><span class="ok">[handoff]</span>    delivered to IMPL/myapp — file truncated to 0 bytes (delivered-marker)</div>
+          </div>
+          <div class="callout success">
+            <span class="callout-icon">&#9989;</span>
+            <div><strong>Done.</strong> The project is live. If the paste didn&rsquo;t appear &rarr; <a href="#s7">&sect;7 Troubleshooting</a>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- s4: Resume -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Resume an EXISTING project (after reboot or iTerm restart)</h2>
+    </div>
+    <p class="section-intro">iTerm assigns a new session UUID every time a pane opens. Yesterday&rsquo;s <span class="mono">*.id</span> bindings point at UUIDs that no longer exist. You only need to re-claim.</p>
+
+    <div class="callout tip">
+      <span class="callout-icon">&#128161;</span>
+      <div><strong>The watcher is already running.</strong> launchd auto-starts <span class="mono">com.user.handoff</span> at login. You do NOT need to start anything &mdash; just re-claim the panes.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header"><span class="step-n">4.1</span><span class="step-title">Re-claim the IMPL pane</span></div>
+        <div class="step-body">
+          <div class="code-label"><span class="pane-tag impl">IMPL</span> inside Claude</div>
+          <div class="code-block">
+<div>handoff-use myapp</div>
+<div>handoff-claim-impl</div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-header"><span class="step-n">4.2</span><span class="step-title">Re-claim the AUDIT pane</span></div>
+        <div class="step-body">
+          <div class="code-label"><span class="pane-tag audit">AUDIT</span> inside Claude</div>
+          <div class="code-block">
+<div>handoff-use myapp</div>
+<div>handoff-claim-audit</div>
+          </div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-header"><span class="step-n">4.3</span><span class="step-title">Verify</span></div>
+        <div class="step-body">
+          <div class="code-block">
+<div>handoff-targets   <span class="comment"># UUIDs should reflect today's session</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Watcher health check (only if something looks off)</h3>
+    <div class="code-label"><span class="pane-tag mac">MAC</span> terminal</div>
+    <div class="code-block">
+<div>launchctl list | grep handoff   <span class="comment"># PID column must be a number, not "-"</span></div>
+<div>launchctl load -w ~/Library/LaunchAgents/com.user.handoff.plist   <span class="comment"># if missing/dead</span></div>
+    </div>
+  </div>
+
+  <!-- s5: Sending work -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>Sending work between panes</h2>
+    </div>
+    <p class="section-intro">Two directions, two scoped filenames, one delivery contract: write a file, the watcher pastes it.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header"><span class="step-n">5.1</span><span class="step-title">AUDIT → IMPL (issue a directive)</span></div>
+        <div class="step-body">
+          <div class="code-label"><span class="pane-tag audit">AUDIT</span> inside Claude, via Bash tool</div>
+          <div class="code-block">
+<div>cat &gt; ~/.claude/handoff/to-impl.myapp.txt &lt;&lt; <span class="str">'HANDOFF'</span></div>
+<div>Step 4.2 — implement Pydantic contract for User</div>
+<div></div>
+<div>Acceptance:</div>
+<div>- src/contracts/user.py defines model</div>
+<div>- pytest tests/contracts/test_user.py passes</div>
+<div>- Gate clean</div>
+<div></div>
+<div>Begin now.</div>
+<div><span class="str">HANDOFF</span></div>
+          </div>
+          <p>Within ~1s, the IMPL pane receives the full multi-line text as one paste.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><span class="step-n">5.2</span><span class="step-title">IMPL → AUDIT (hand back)</span></div>
+        <div class="step-body">
+          <div class="code-label"><span class="pane-tag impl">IMPL</span> inside Claude, via Bash tool</div>
+          <div class="code-block">
+<div>cat &gt; ~/.claude/handoff/to-audit.myapp.txt &lt;&lt; <span class="str">'HANDOFF'</span></div>
+<div>=== HAND-BACK ===</div>
+<div>Step: 4.2</div>
+<div>Merged SHA: abc1234</div>
+<div>Gate: PASS</div>
+<div>Surface assessment: contract is minimal, no external deps added</div>
+<div>→ handed back</div>
+<div><span class="str">HANDOFF</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header"><span class="step-n">5.3</span><span class="step-title">Convenience aliases (one-liners)</span></div>
+        <div class="step-body">
+          <div class="code-label"><span class="pane-tag any">ANY</span></div>
+          <div class="code-block">
+<div>echo <span class="str">"ping"</span> | HANDOFF_SCOPE=myapp send-impl</div>
+<div>echo <span class="str">"ping"</span> | HANDOFF_SCOPE=myapp send-audit</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div>
+        <strong>Three load-bearing details</strong>
+        <p><strong>Multi-line content is preserved.</strong> Code blocks, blank lines, and indentation survive because the watcher wraps content in bracketed-paste escape codes.</p>
+        <p><strong>Don&rsquo;t add a trailing Enter.</strong> The watcher adds the final newline that submits the paste.</p>
+        <p><strong>Filenames are scoped.</strong> Always <span class="mono">to-impl.&lt;scope&gt;.txt</span> and <span class="mono">to-audit.&lt;scope&gt;.txt</span>. Unscoped writes are refused with a WARN.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- s6: HALT -->
+  <div class="section" id="s6">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>Pause the loop (HALT) — per scope</h2>
+    </div>
+    <p class="section-intro">HALT is <strong>scoped</strong>. A halt in <span class="mono">myapp</span> does not block any other project.</p>
+
+    <div class="code-label"><span class="pane-tag any">ANY</span> pane in the affected project</div>
+    <div class="code-block">
+<div>handoff-halt &lt;&lt;<span class="str">'EOF'</span></div>
+<div>Trigger: gate failure on tests/contracts/test_user.py</div>
+<div>Human action required: review failure, decide rollback vs fix-forward</div>
+<div><span class="str">EOF</span></div>
+    </div>
+
+    <p>This writes <span class="mono">~/.claude/handoff/HALT.$HANDOFF_SCOPE</span>. Equivalent explicit form:</p>
+
+    <div class="code-block">
+<div>cat &gt; ~/.claude/handoff/HALT.myapp &lt;&lt; <span class="str">'EOF'</span></div>
+<div>Reason: ...</div>
+<div>Human action required: ...</div>
+<div><span class="str">EOF</span></div>
+    </div>
+
+    <h3>Effect</h3>
+    <ul>
+      <li>Watcher echoes <span class="mono">⛔ HALT scope=myapp</span> + contents to <span class="mono">/tmp/handoff.log</span></li>
+      <li>macOS notification fires (Basso sound) tagged with the scope</li>
+      <li>AUDIT and IMPL pre-flight in <strong>that scope</strong> see the sentinel and stop</li>
+      <li>Other scopes are unaffected &mdash; they continue to send/receive normally</li>
+    </ul>
+
+    <h3>Resume (after a human resolves the issue)</h3>
+    <div class="code-block">
+<div>handoff-resume   <span class="comment"># or: rm ~/.claude/handoff/HALT.myapp</span></div>
+    </div>
+  </div>
+
+  <!-- s7: Troubleshooting -->
+  <div class="section" id="s7">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Troubleshooting</h2>
+    </div>
+    <p class="section-intro">Common failure modes and how to diagnose them from <span class="mono">/tmp/handoff.log</span>.</p>
+
+    <h3>&ldquo;Inbox file shows 0 bytes &mdash; is that a failure?&rdquo; (FAQ)</h3>
+    <div class="callout success">
+      <span class="callout-icon">&#9989;</span>
+      <div><strong>No.</strong> The <span class="mono">to-{impl,audit}.&lt;scope&gt;.txt</span> files are <em>transport, not state</em>. The watcher truncates them to 0 bytes immediately after successful bracketed-paste delivery as its &ldquo;delivered-marker.&rdquo; The content is already inside the receiving pane&rsquo;s transcript at that point.</div>
+    </div>
+
+    <p>How to tell success from failure (since the file looks the same in both cases):</p>
+    <div class="code-block">
+<div>tail -10 /tmp/handoff.log</div>
+    </div>
+
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Log pattern</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><span class="mono">-&gt; IMPL scope=X (N lines)</span><br>followed by<br><span class="mono">delivered to IMPL/X — file truncated to 0 bytes (delivered-marker)</span></td><td><span class="pill ok">✓ Success</span></td></tr>
+          <tr><td><span class="mono">-&gt; IMPL scope=X (N lines)</span><br>followed by<br><span class="mono">WARN: delivery failed for to-impl.X.txt — file NOT truncated; inspect and retry</span></td><td><span class="pill err">✗ Failure</span> file left intact for inspection</td></tr>
+          <tr><td>No <span class="mono">-&gt; IMPL scope=X</span> line at all</td><td><span class="pill warn">! Silent</span> watcher not running, routing disarmed, or write happened to wrong path</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>&ldquo;Delivery failed &mdash; file NOT truncated&rdquo;</h3>
+    <p>Three causes, in order of likelihood:</p>
+    <ol>
+      <li><strong>Stale binding</strong> (most common after reboot): the bound pane no longer exists. Re-claim from the live pane (<a href="#s4">&sect;4</a>).</li>
+      <li><strong>No binding for that scope</strong>: you wrote <span class="mono">to-impl.foo.txt</span> but <span class="mono">impl-target.foo.id</span> doesn&rsquo;t exist. Run <span class="mono">handoff-claim-impl</span> with <span class="mono">HANDOFF_SCOPE=foo</span> from the intended pane.</li>
+      <li><strong>iTerm AppleScript permission denied</strong>: macOS &rarr; Settings &rarr; Privacy &amp; Security &rarr; Automation &rarr; grant access to iTerm/osascript.</li>
+    </ol>
+
+    <h3>Watcher not running &mdash; check + recover</h3>
+    <div class="code-label"><span class="pane-tag mac">MAC</span> terminal</div>
+    <div class="code-block">
+<div>launchctl list | grep handoff       <span class="comment"># PID column must be a number, not "-"</span></div>
+<div>launchctl load -w ~/Library/LaunchAgents/com.user.handoff.plist   <span class="comment"># if missing/dead</span></div>
+    </div>
+
+    <h3>Force-restart the watcher</h3>
+    <p>The watcher does NOT hot-reload. After editing <span class="mono">~/.claude/hooks/pane-handoff.sh</span>, restart:</p>
+    <div class="code-block">
+<div>pkill -f pane-handoff.sh        <span class="comment"># launchd will respawn within ~1s</span></div>
+<div>pgrep -fl pane-handoff.sh       <span class="comment"># confirm fresh PIDs</span></div>
+<div>handoff-on                      <span class="comment"># re-arm routing (safe to run anyway)</span></div>
+    </div>
+    <div class="callout warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div><strong>Expected steady state:</strong> 2 &times; <span class="mono">pane-handoff.sh</span> (main + fswatch subshell) + 1 &times; <span class="mono">fswatch</span>. If <span class="mono">pgrep</span> shows more, <span class="mono">pkill</span> again &mdash; duplicates cause double-delivery.</div>
+    </div>
+
+    <h3>Routing disarmed (no log lines at all)</h3>
+    <div class="code-block">
+<div>ls ~/.claude/handoff/active     <span class="comment"># if missing, routing is OFF</span></div>
+<div>handoff-on                      <span class="comment"># re-arm</span></div>
+    </div>
+
+    <h3>Why does <span class="mono">pgrep</span> show 2 <span class="mono">pane-handoff.sh</span> processes?</h3>
+    <p>That&rsquo;s correct. The watcher uses <span class="mono">fswatch | while ...</span>, which forks a subshell. Steady state under launchd is <strong>3 processes total</strong>: 2 &times; <span class="mono">pane-handoff.sh</span> (main + while-subshell) + 1 &times; <span class="mono">fswatch</span>. Anything more or fewer is a problem.</p>
+
+    <h3>Pause routing globally without removing bindings</h3>
+    <p>The clean way to deactivate the entire system while keeping pane bindings + scope + watcher process intact. Use it when you want to stop file&rarr;pane delivery temporarily (e.g. taking a break, swapping projects, debugging).</p>
+    <div class="code-block">
+<div>handoff-off       <span class="comment"># disarmed (writes accumulate in inbox, no delivery)</span></div>
+<div>handoff-on        <span class="comment"># re-armed (queued inbox entries deliver on next tick)</span></div>
+    </div>
+    <p><strong>What <span class="mono">handoff-off</span> does NOT do:</strong></p>
+    <ul>
+      <li>Does not stop the watcher process (it keeps running, just skips delivery)</li>
+      <li>Does not remove pane bindings (your <span class="mono">handoff-claim-*</span> state survives)</li>
+      <li>Does not delete <span class="mono">HANDOFF_SCOPE</span> in any pane</li>
+    </ul>
+    <p>To fully deactivate everything (rare &mdash; usually only for OS troubleshooting):</p>
+    <div class="code-block">
+<div>handoff-off                                                           <span class="comment"># disarm routing</span></div>
+<div>launchctl unload ~/Library/LaunchAgents/com.user.handoff.plist        <span class="comment"># stop watcher daemon</span></div>
+    </div>
+
+    <h3>Don&rsquo;t put archives inside the watched dir</h3>
+    <div class="callout danger">
+      <span class="callout-icon">&#128683;</span>
+      <div>The watcher matches <span class="mono">to-{impl,audit}*.txt</span> <strong>recursively</strong>, so files under <span class="mono">~/.claude/handoff/archive/old.txt</span> get routed as scope <span class="mono">old</span>. Always archive to the <strong>sibling</strong> dir <span class="mono">~/.claude/handoff_archive/</span>.</div>
+    </div>
+  </div>
+
+  <!-- s8: Reference -->
+  <div class="section" id="s8">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Reference</h2>
+    </div>
+    <p class="section-intro">Every command, every path, every rule in one place.</p>
+
+    <h3>Critical paths</h3>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Path</th><th>What it is</th></tr></thead>
+        <tbody>
+          <tr><td class="cell-mono">~/.claude/hooks/pane-handoff.sh</td><td>The watcher script</td></tr>
+          <tr><td class="cell-mono">~/.claude/hooks/enforce-handback.py</td><td>Stop hook &mdash; blocks IMPL from claiming &ldquo;&rarr; handed back&rdquo; without writing the file</td></tr>
+          <tr><td class="cell-mono">~/.zshrc</td><td>Defines <span class="mono">handoff-*</span> and <span class="mono">send-*</span> shell functions</td></tr>
+          <tr><td class="cell-mono">~/Library/LaunchAgents/com.user.handoff.plist</td><td>launchd config &mdash; runs watcher on login, restarts on crash</td></tr>
+          <tr><td class="cell-mono">/tmp/handoff.log</td><td>Watcher stdout + stderr</td></tr>
+          <tr><td class="cell-mono">~/.claude/handoff/active</td><td>Flag &mdash; must exist for routing to work</td></tr>
+          <tr><td class="cell-mono">~/.claude/handoff/HALT.&lt;scope&gt;</td><td>Per-scope pause sentinel</td></tr>
+          <tr><td class="cell-mono">~/.claude/handoff/{impl,audit}-target.&lt;scope&gt;.id</td><td>Binding files (one UUID per scope per role)</td></tr>
+          <tr><td class="cell-mono">~/.claude/handoff/to-{impl,audit}.&lt;scope&gt;.txt</td><td>Inbox files (auto-truncated on delivery)</td></tr>
+          <tr><td class="cell-mono">~/.claude/handoff_archive/</td><td><strong>Sibling</strong> dir for old hand-backs &mdash; never inside the watched dir</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Scope rules</h3>
+    <ul>
+      <li>One scope per project. Lowercase, project-name-like (<span class="mono">myapp</span>, <span class="mono">acme_api</span>).</li>
+      <li>The name <span class="mono">meta</span> is reserved for cross-project planning / orchestration.</li>
+      <li>Unscoped sends (<span class="mono">to-impl.txt</span> with no <span class="mono">.&lt;scope&gt;</span>) are refused on purpose.</li>
+      <li>HALT is per-scope: <span class="mono">HALT.&lt;scope&gt;</span> pauses only its scope. There is no global pause.</li>
+    </ul>
+  </div>
+
+  <!-- s9: Isolation -->
+  <div class="section" id="s9">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>Multi-project isolation</h2>
+    </div>
+    <p class="section-intro">Five probes that prove two projects can run concurrently without cross-talk.</p>
+
+    <h3>Pane choreography</h3>
+    <ul>
+      <li><strong>Window M</strong> &mdash; <span class="pane-tag mac">MAC</span> terminal for <span class="mono">tail -f /tmp/handoff.log</span> and direct probe writes</li>
+      <li><strong>Window A</strong> &mdash; iTerm. Two panes: <span class="mono">proj_a</span> IMPL + AUDIT</li>
+      <li><strong>Window B</strong> &mdash; iTerm. One pane: <span class="mono">meta</span> IMPL</li>
+    </ul>
+
+    <h3>Probe 1 &mdash; Scoped delivery isolation</h3>
+    <div class="code-label"><span class="pane-tag mac">MAC</span> Window M</div>
+    <div class="code-block">
+<div>echo <span class="str">"ping A $(date +%s)"</span>    &gt; ~/.claude/handoff/to-impl.proj_a.txt</div>
+<div>echo <span class="str">"ping META $(date +%s)"</span> &gt; ~/.claude/handoff/to-impl.meta.txt</div>
+    </div>
+    <p>Pass: Window A IMPL shows only <span class="mono">ping A …</span>; Window B IMPL shows only <span class="mono">ping META …</span>; log shows two separate <span class="mono">-&gt; IMPL scope=…</span> + delivered-marker pairs. No WARN.</p>
+
+    <h3>Probe 2 &mdash; Unscoped writes refused</h3>
+    <div class="code-block">
+<div>echo <span class="str">"should not arrive"</span> &gt; ~/.claude/handoff/to-impl.txt</div>
+    </div>
+    <p>Pass: log shows <span class="mono">WARN: refusing unscoped to-impl.txt</span>; file drained; neither pane received the text.</p>
+
+    <h3>Probe 3 &mdash; HALT isolation</h3>
+    <div class="code-block">
+<div>cat &gt; ~/.claude/handoff/HALT.proj_a &lt;&lt; <span class="str">'EOF'</span></div>
+<div>Reason: isolation probe</div>
+<div><span class="str">EOF</span></div>
+<div>echo <span class="str">"meta still flows $(date +%s)"</span> &gt; ~/.claude/handoff/to-impl.meta.txt</div>
+<div>rm ~/.claude/handoff/HALT.proj_a   <span class="comment"># cleanup</span></div>
+    </div>
+    <p>Pass: log shows <span class="mono">⛔ HALT scope=proj_a</span> AND meta delivery succeeds despite the HALT.</p>
+
+    <h3>Probe 4 &mdash; Missing scope refused</h3>
+    <div class="code-block">
+<div>unset HANDOFF_SCOPE</div>
+<div>echo <span class="str">"x"</span> | send-impl    <span class="comment"># → ERROR: HANDOFF_SCOPE is not set</span></div>
+    </div>
+    <p>Pass: shell prints the error; no file written; no log line generated.</p>
+
+    <h3>Probe 5 &mdash; /start-audit cold-start sees only its own scope</h3>
+    <p>Restart Claude in the AUDIT pane, run <span class="mono">handoff-use proj_a</span> + <span class="mono">/start-audit</span>. The slash command does NOT pre-flight read the inbox file (it is 0 bytes by design after delivery); it only checks the scoped HALT (<span class="mono">HALT.proj_a</span> &mdash; absent), and stops cleanly. <strong>No foreign-project content surfaces.</strong></p>
+
+    <div class="callout success">
+      <span class="callout-icon">&#9989;</span>
+      <div><strong>Three log signals = full pass.</strong> Two delivered-marker pairs (Probe 1), one unscoped WARN (Probe 2), one HALT + parallel-scope delivery pair (Probe 3). Probes 4&ndash;5 confirm refusal paths.</div>
+    </div>
+  </div>
+
+  <!-- s10: How it works -->
+  <div class="section" id="s10">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>How it works</h2>
+    </div>
+    <p class="section-intro">The actual flow under the hood &mdash; useful for debugging unfamiliar failure modes.</p>
+
+<pre class="arch"><span class="lbl">AUDIT pane</span>                  <span class="lbl">Watcher</span>                       <span class="lbl">IMPL pane</span>
+ <span class="com">(Claude)</span>               <span class="com">(pane-handoff.sh)</span>                  <span class="com">(Claude)</span>
+    |                          |                              |
+    |  <span class="com">Bash tool:</span>             |                              |
+    |  cat &gt; to-impl.myapp.txt |                              |
+    |  ----------------------<span class="arr">&gt;</span> |                              |
+    |                    <span class="ok">fswatch fires</span>                       |
+    |                    reads file                           |
+    |                    wraps in bracketed-paste             |
+    |                    osascript -&gt; iTerm session id ------<span class="arr">&gt;</span> |
+    |                    <span class="arr">&lt;</span>----- ok                           |
+    |                    truncates file to 0 bytes            |
+    |                    <span class="ok">logs delivered-marker</span>                |
+</pre>
+
+    <h3>Why bracketed paste?</h3>
+    <p>Without it, multi-line content with blank lines or code blocks would submit on the first <span class="mono">\n</span>. Bracketed paste tells the terminal &ldquo;this is paste content&rdquo; &mdash; the receiving Claude sees it as a single fresh user message.</p>
+
+    <h3>Why scope-keyed filenames?</h3>
+    <p>So two projects run side-by-side. <span class="mono">to-impl.proj_a.txt</span> routes to <span class="mono">impl-target.proj_a.id</span>; <span class="mono">to-impl.meta.txt</span> routes to <span class="mono">impl-target.meta.id</span>. No cross-talk possible.</p>
+
+    <h3>Why a Stop hook on IMPL?</h3>
+    <p>Without it, the model can claim <span class="mono">&rarr; handed back</span> in chat without actually writing the file &mdash; leaving AUDIT idle and the loop silently broken. <span class="mono">enforce-handback.py</span> detects this exact failure mode and forces the model to either write the file or remove the marker.</p>
+  </div>
+
+  <!-- s11: Changelog -->
+  <div class="section" id="s11">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>Changelog</h2>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Change</th></tr></thead>
+        <tbody>
+          <tr><td>2026-06-05</td><td>Integrated into the <span class="mono">claude-code-multipane-iterm2</span> repo. Public installer, sanitised paths, AppleScript-injection fix (argv-passed file/session), symlink refusal, scope regex tightened to <span class="mono">^[A-Za-z0-9_-]+$</span>, legacy plist auto-cleanup, Stop hook auto-merged into <span class="mono">~/.claude/settings.json</span>.</td></tr>
+          <tr><td>2026-05-15</td><td>Watcher logs <span class="mono">delivered to {IMPL,AUDIT}/&lt;scope&gt;</span> after each successful bracketed-paste + file-truncation. Closes the false-alarm where receiving panes saw a 0-byte inbox and misdiagnosed it as a write failure.</td></tr>
+          <tr><td>2026-05-15</td><td><span class="mono">/start-audit</span> no longer pre-flight-reads <span class="mono">to-audit.&lt;scope&gt;.txt</span>. The hand-back arrives via bracketed paste in the chat transcript; the file is transport, not state.</td></tr>
+          <tr><td>2026-05-13</td><td>Initial scope-keyed handoff. Per-scope HALT sentinels. Multi-project isolation probes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <div>Last verified: 2026-06-05 &middot; v1.0 &middot; <a href="https://github.com/pravindurgani/claude-code-multipane-iterm2">github.com/pravindurgani/claude-code-multipane-iterm2</a></div>
+  <div>MIT &middot; <a href="README.md">Main guide</a> &middot; <a href="HANDOFF_GUIDE.md">Markdown</a></div>
+</footer>
+
+</body>
+</html>

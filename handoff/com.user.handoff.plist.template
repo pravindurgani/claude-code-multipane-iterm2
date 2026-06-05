@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  launchd config for the handoff watcher.
+
+  Do not copy this file as-is. Use handoff/install.sh which fills in
+  the absolute paths (launchd does NOT expand $HOME or ~ in plists).
+  Manual install: replace {{HOME}} with your home directory (e.g.
+  /Users/yourname) and save to ~/Library/LaunchAgents/com.user.handoff.plist
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.user.handoff</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>{{HOME}}/.claude/hooks/pane-handoff.sh</string>
+    </array>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>HOME</key>
+        <string>{{HOME}}</string>
+    </dict>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+
+    <key>StandardOutPath</key>
+    <string>/tmp/handoff.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/tmp/handoff.log</string>
+
+    <key>WorkingDirectory</key>
+    <string>{{HOME}}</string>
+</dict>
+</plist>
