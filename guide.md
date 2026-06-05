@@ -441,6 +441,8 @@ The AUDIT pane identified: [paste findings here].
 Fix this while preserving existing patterns. Do not touch unrelated files.
 ```
 
+> **Optional:** If you've installed the [pane handoff feature](HANDOFF_GUIDE.md) (`./handoff/install.sh`), the AUDIT pane writes the directive to `~/.claude/handoff/to-impl.<scope>.txt` and the watcher delivers it as a single bracketed paste to the IMPL pane — no manual copy-paste. See `HANDOFF_GUIDE.md` §5.
+
 ### Context hygiene
 
 - **Re-anchor on long sessions:** "Before starting, re-read CLAUDE.md and

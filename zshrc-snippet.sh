@@ -82,3 +82,8 @@ llm-smart() {
   esac
   ollama run "$model" "$prompt"
 }
+
+# ── Optional: Pane handoff functions ─────────────────────────────────────────
+# If you've installed the handoff feature (./handoff/install.sh), append the
+# full function block from handoff/zshrc-handoff.sh to your ~/.zshrc.
+# See HANDOFF_GUIDE.md for setup and usage.
