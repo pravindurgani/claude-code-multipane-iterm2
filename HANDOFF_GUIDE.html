@@ -8,6 +8,8 @@
 <meta property="og:title" content="Pane Handoff — Operator Guide">
 <meta property="og:description" content="Write a directive to a file in one pane, it arrives as a single paste in the other. Scope-keyed so two projects run in parallel without cross-talk.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://pravindurgani.github.io/claude-code-multipane-iterm2/HANDOFF_GUIDE.html">
+<meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
@@ -415,6 +417,7 @@
       <li><a href="#s8"><span class="toc-num">08</span> Reference</a></li>
       <li><a href="#s9"><span class="toc-num">09</span> Multi-project isolation</a></li>
       <li><a href="#s10"><span class="toc-num">10</span> How it works</a></li>
+      <li><a href="#s11"><span class="toc-num">11</span> Changelog</a></li>
     </ul>
   </div>
 
@@ -790,7 +793,7 @@
     <div class="code-label"><span class="pane-tag any">ANY</span> pane in the affected project</div>
     <div class="code-block">
 <div>handoff-halt &lt;&lt;<span class="str">'EOF'</span></div>
-<div>Trigger: gate failure on tests/contracts/test_scraped_job.py</div>
+<div>Trigger: gate failure on tests/contracts/test_user.py</div>
 <div>Human action required: review failure, decide rollback vs fix-forward</div>
 <div><span class="str">EOF</span></div>
     </div>
@@ -879,6 +882,27 @@
     <div class="code-block">
 <div>ls ~/.claude/handoff/active     <span class="comment"># if missing, routing is OFF</span></div>
 <div>handoff-on                      <span class="comment"># re-arm</span></div>
+    </div>
+
+    <h3>Why does <span class="mono">pgrep</span> show 2 <span class="mono">pane-handoff.sh</span> processes?</h3>
+    <p>That&rsquo;s correct. The watcher uses <span class="mono">fswatch | while ...</span>, which forks a subshell. Steady state under launchd is <strong>3 processes total</strong>: 2 &times; <span class="mono">pane-handoff.sh</span> (main + while-subshell) + 1 &times; <span class="mono">fswatch</span>. Anything more or fewer is a problem.</p>
+
+    <h3>Pause routing globally without removing bindings</h3>
+    <p>The clean way to deactivate the entire system while keeping pane bindings + scope + watcher process intact. Use it when you want to stop file&rarr;pane delivery temporarily (e.g. taking a break, swapping projects, debugging).</p>
+    <div class="code-block">
+<div>handoff-off       <span class="comment"># disarmed (writes accumulate in inbox, no delivery)</span></div>
+<div>handoff-on        <span class="comment"># re-armed (queued inbox entries deliver on next tick)</span></div>
+    </div>
+    <p><strong>What <span class="mono">handoff-off</span> does NOT do:</strong></p>
+    <ul>
+      <li>Does not stop the watcher process (it keeps running, just skips delivery)</li>
+      <li>Does not remove pane bindings (your <span class="mono">handoff-claim-*</span> state survives)</li>
+      <li>Does not delete <span class="mono">HANDOFF_SCOPE</span> in any pane</li>
+    </ul>
+    <p>To fully deactivate everything (rare &mdash; usually only for OS troubleshooting):</p>
+    <div class="code-block">
+<div>handoff-off                                                           <span class="comment"># disarm routing</span></div>
+<div>launchctl unload ~/Library/LaunchAgents/com.user.handoff.plist        <span class="comment"># stop watcher daemon</span></div>
     </div>
 
     <h3>Don&rsquo;t put archives inside the watched dir</h3>
@@ -971,7 +995,7 @@
     <p>Pass: shell prints the error; no file written; no log line generated.</p>
 
     <h3>Probe 5 &mdash; /start-audit cold-start sees only its own scope</h3>
-    <p>Restart Claude in the AUDIT pane, run <span class="mono">handoff-use proj_a</span> + <span class="mono">/start-audit</span>. The skill reads only <span class="mono">to-audit.proj_a.txt</span> &mdash; no foreign-project content surfaces.</p>
+    <p>Restart Claude in the AUDIT pane, run <span class="mono">handoff-use proj_a</span> + <span class="mono">/start-audit</span>. The slash command does NOT pre-flight read the inbox file (it is 0 bytes by design after delivery); it only checks the scoped HALT (<span class="mono">HALT.proj_a</span> &mdash; absent), and stops cleanly. <strong>No foreign-project content surfaces.</strong></p>
 
     <div class="callout success">
       <span class="callout-icon">&#9989;</span>
@@ -987,21 +1011,20 @@
     </div>
     <p class="section-intro">The actual flow under the hood &mdash; useful for debugging unfamiliar failure modes.</p>
 
-    <div class="arch">
-<div><span class="lbl">AUDIT pane</span>                              <span class="lbl">Watcher</span>                            <span class="lbl">IMPL pane</span></div>
-<div><span class="com"> (Claude)</span>                          <span class="com">(pane-handoff.sh)</span>                       <span class="com">(Claude)</span></div>
-<div>    │                                     │                                  │</div>
-<div>    │  <span class="com">Bash tool:</span>                         │                                  │</div>
-<div>    │  cat &gt; to-impl.myapp.txt            │                                  │</div>
-<div>    │  ───────────────────────────────<span class="arr">►</span>  │                                  │</div>
-<div>    │                              <span class="ok">fswatch fires</span>                        │</div>
-<div>    │                              reads file                              │</div>
-<div>    │                              wraps in bracketed-paste                │</div>
-<div>    │                              osascript &rarr; iTerm session id ─────<span class="arr">►</span> │</div>
-<div>    │                              <span class="arr">◄</span>───  ok                              │</div>
-<div>    │                              truncates file to 0 bytes               │</div>
-<div>    │                              <span class="ok">logs ✓ delivered-marker</span>               │</div>
-    </div>
+<pre class="arch"><span class="lbl">AUDIT pane</span>                  <span class="lbl">Watcher</span>                       <span class="lbl">IMPL pane</span>
+ <span class="com">(Claude)</span>               <span class="com">(pane-handoff.sh)</span>                  <span class="com">(Claude)</span>
+    |                          |                              |
+    |  <span class="com">Bash tool:</span>             |                              |
+    |  cat &gt; to-impl.myapp.txt |                              |
+    |  ----------------------<span class="arr">&gt;</span> |                              |
+    |                    <span class="ok">fswatch fires</span>                       |
+    |                    reads file                           |
+    |                    wraps in bracketed-paste             |
+    |                    osascript -&gt; iTerm session id ------<span class="arr">&gt;</span> |
+    |                    <span class="arr">&lt;</span>----- ok                           |
+    |                    truncates file to 0 bytes            |
+    |                    <span class="ok">logs delivered-marker</span>                |
+</pre>
 
     <h3>Why bracketed paste?</h3>
     <p>Without it, multi-line content with blank lines or code blocks would submit on the first <span class="mono">\n</span>. Bracketed paste tells the terminal &ldquo;this is paste content&rdquo; &mdash; the receiving Claude sees it as a single fresh user message.</p>
@@ -1011,6 +1034,25 @@
 
     <h3>Why a Stop hook on IMPL?</h3>
     <p>Without it, the model can claim <span class="mono">&rarr; handed back</span> in chat without actually writing the file &mdash; leaving AUDIT idle and the loop silently broken. <span class="mono">enforce-handback.py</span> detects this exact failure mode and forces the model to either write the file or remove the marker.</p>
+  </div>
+
+  <!-- s11: Changelog -->
+  <div class="section" id="s11">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>Changelog</h2>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead><tr><th>Date</th><th>Change</th></tr></thead>
+        <tbody>
+          <tr><td>2026-06-05</td><td>Integrated into the <span class="mono">claude-code-multipane-iterm2</span> repo. Public installer, sanitised paths, AppleScript-injection fix (argv-passed file/session), symlink refusal, scope regex tightened to <span class="mono">^[A-Za-z0-9_-]+$</span>, legacy plist auto-cleanup, Stop hook auto-merged into <span class="mono">~/.claude/settings.json</span>.</td></tr>
+          <tr><td>2026-05-15</td><td>Watcher logs <span class="mono">delivered to {IMPL,AUDIT}/&lt;scope&gt;</span> after each successful bracketed-paste + file-truncation. Closes the false-alarm where receiving panes saw a 0-byte inbox and misdiagnosed it as a write failure.</td></tr>
+          <tr><td>2026-05-15</td><td><span class="mono">/start-audit</span> no longer pre-flight-reads <span class="mono">to-audit.&lt;scope&gt;.txt</span>. The hand-back arrives via bracketed paste in the chat transcript; the file is transport, not state.</td></tr>
+          <tr><td>2026-05-13</td><td>Initial scope-keyed handoff. Per-scope HALT sentinels. Multi-project isolation probes.</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
 </div>

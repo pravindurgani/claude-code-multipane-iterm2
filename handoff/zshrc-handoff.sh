@@ -25,8 +25,8 @@ unalias send-impl send-audit handoff-on handoff-off handoff-status \
 
 __handoff_validate_scope() {
   local s="$1"
-  if [[ -z "$s" || "$s" == *"/"* || "$s" == *".."* ]]; then
-    echo "[handoff] ERROR: invalid scope '$s' (no slashes or dotdot allowed)" >&2
+  if [[ ! "$s" =~ ^[A-Za-z0-9_-]+$ ]]; then
+    echo "[handoff] ERROR: invalid scope '$s' (allowed: A-Z a-z 0-9 _ -)" >&2
     return 1
   fi
   return 0

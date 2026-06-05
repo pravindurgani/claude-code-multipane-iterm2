@@ -25,7 +25,13 @@ handoff-claim-impl              # OR handoff-claim-audit — bind this pane to i
 | **Routing armed** | Global | `handoff-on` / `handoff-off` | `~/.claude/handoff/active` flag file |
 | **Pane bound to scope** | Per pane | `handoff-use` + `handoff-claim-*` | `~/.claude/handoff/*-target.<scope>.id` files |
 
-If a paste doesn't arrive, ask the three questions in order: **(1)** is the watcher running? (`launchctl list \| grep handoff`) **(2)** is routing armed? (`ls ~/.claude/handoff/active`) **(3)** is the target pane still bound? (`handoff-targets`). 90% of failures are #3 — after an iTerm restart, UUIDs change and you must re-claim.
+If a paste doesn't arrive, ask the three questions in order:
+
+1. Is the watcher running? — `launchctl list | grep handoff`
+2. Is routing armed? — `ls ~/.claude/handoff/active`
+3. Is the target pane still bound? — `handoff-targets`
+
+The most common failure is #3 — after an iTerm restart, UUIDs change and you must re-claim.
 
 ---
 
@@ -141,12 +147,23 @@ cd ~/Desktop/myapp
 cc
 ```
 
-Inside Claude, set the scope, then type `/start-audit` to load the audit skill, then claim the pane:
+Inside Claude in that pane, set the scope:
 
 ```bash
 # [AUDIT pane — inside Claude]
 handoff-use myapp
-# then /start-audit, then:
+```
+
+Then type the slash command at the Claude prompt (not in a shell):
+
+```
+/start-audit
+```
+
+Then claim the pane:
+
+```bash
+# [AUDIT pane — inside Claude]
 handoff-claim-audit
 ```
 
@@ -458,7 +475,7 @@ The watcher matches `to-{impl,audit}*.txt` **recursively**, so files under `~/.c
 
 | Command | Run from | What it does |
 |---|---|---|
-| `handoff-use <scope>` | Any pane (once per open) | Set this pane's `HANDOFF_SCOPE`. Required before any other handoff command. |
+| `handoff-use <scope>` | Any pane (once per open) | Set this pane's `HANDOFF_SCOPE`. Required before any *scoped* command (claim, halt, send). The unscoped commands (`handoff-on`, `handoff-off`, `handoff-status`) do not need it. |
 | `handoff-claim-impl` | IMPL pane | Bind this pane as the IMPL target for the current scope |
 | `handoff-claim-audit` | AUDIT pane | Bind this pane as the AUDIT target for the current scope |
 | `handoff-halt` | Any pane in affected scope | Write `HALT.<scope>` (reason from stdin) — pauses only this scope |
@@ -653,7 +670,7 @@ handoff-use proj_a
 /start-audit
 ```
 
-Pass criteria: `/start-audit` reads `~/.claude/handoff/to-audit.proj_a.txt` (empty), checks `~/.claude/handoff/HALT.proj_a` (absent — you cleaned it up in Probe 3), and stops cleanly. **No foreign-project content surfaces.**
+Pass criteria: `/start-audit` does NOT pre-flight read the inbox file (it is 0 bytes by design after watcher delivery), only checks the scoped HALT (`HALT.proj_a` — absent, you cleaned it up in Probe 3), and stops cleanly because there is no fresh hand-back in the chat transcript yet. **No foreign-project content surfaces.**
 
 Then re-claim:
 
@@ -708,7 +725,7 @@ If all three are present and Probes 4–5 stop where expected, isolation is veri
 
 | Date | Change |
 |---|---|
-| 2026-06-05 | Integrated into the `claude-code-multipane-iterm2` repo. Public installer + sanitised file paths. |
+| 2026-06-05 | Integrated into the `claude-code-multipane-iterm2` repo. Public installer + sanitised file paths. Security hardening: AppleScript injection fix (file path + session id passed as `osascript` argv), symlink refusal in watcher, scope regex tightened to `^[A-Za-z0-9_-]+$`. Installer auto-cleans legacy `*handoff*` launchd labels and auto-merges the Stop hook into `~/.claude/settings.json`. |
 | 2026-05-15 | watcher logs `delivered to {IMPL,AUDIT}/<scope>` after each successful bracketed-paste + file-truncation. Closes the false-alarm vector where receiving panes saw a 0-byte inbox and misdiagnosed it as a write failure. |
 | 2026-05-15 | `/start-audit` no longer pre-flight-reads `to-audit.<scope>.txt`. The hand-back arrives via bracketed paste in the chat transcript; the file is transport, not state. |
 | 2026-05-13 | Initial scope-keyed handoff. Per-scope HALT sentinels. Multi-project isolation probes. |

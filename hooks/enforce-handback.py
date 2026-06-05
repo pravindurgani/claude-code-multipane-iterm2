@@ -305,10 +305,22 @@ def main() -> None:
             pass
 
         last_msg = event.get("last_assistant_message")
+        # Some harness builds pass content as list-of-blocks; flatten the
+        # text parts before falling back to the transcript scan.
+        if isinstance(last_msg, list):
+            try:
+                last_msg = "\n".join(
+                    c.get("text", "")
+                    for c in last_msg
+                    if isinstance(c, dict) and c.get("type") == "text"
+                )
+            except Exception:
+                last_msg = ""
         if not isinstance(last_msg, str) or not last_msg:
-            last_msg = _last_assistant_message_from_transcript(
-                event.get("transcript_path", "")
-            )
+            transcript_path = event.get("transcript_path") or ""
+            if not isinstance(transcript_path, str):
+                transcript_path = ""
+            last_msg = _last_assistant_message_from_transcript(transcript_path)
         last_msg = last_msg or ""
 
         cwd = event.get("cwd", "")

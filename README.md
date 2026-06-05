@@ -68,7 +68,7 @@ This workflow depends on iTerm2-specific features:
 3. **Add the shell snippet to `~/.zshrc`** — copy-paste from [`zshrc-snippet.sh`](zshrc-snippet.sh)
 4. **Create a 2x2 pane layout** and save it as the default window arrangement
 5. **Type `cc` in each pane** — Claude Code launches with the correct flags
-6. **Merge hooks config** — copy the five core `.py` files (everything in `hooks/` except `enforce-handback.py`, which the optional handoff installer in Step 8 places for you) to `~/.claude/hooks/`; merge the `"hooks"` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`
+6. **Merge hooks config** — copy these five files from `hooks/` to `~/.claude/hooks/`: `circuit-breaker.py`, `protect-env.py`, `protect-git-push.py`, `session-start-reset.py`, `version-check.py`. Then merge the `"hooks"` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`. (Skip `enforce-handback.py` here — the optional handoff installer in Step 8 places it and registers its Stop hook for you.)
 7. **(Optional) MCP & slash commands** — `brew install github-mcp-server` then `claude mcp add` to register it (see Step 18 in the guide); copy `commands/reflect.md` to `~/.claude/commands/`; copy `skills/` to `~/.claude/skills/`
 8. **(Optional) Pane handoff** — `brew install fswatch` then `./handoff/install.sh` to enable file-based routing between AUDIT and IMPL panes. Read [`HANDOFF_GUIDE.md`](HANDOFF_GUIDE.md) for the operator manual.
 

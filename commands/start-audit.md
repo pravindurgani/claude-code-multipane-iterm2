@@ -39,13 +39,12 @@ If the scoped HALT exists, do NOT proceed with adversarial review. Surface the H
 
 When you produce a directive for IMPL — any block scoped as a Phase, Step, or task ending with `Begin <name>` / `Begin now` / `Awaiting next directive` — you MUST write the full directive text to the scoped inbox `~/.claude/handoff/to-impl.${HANDOFF_SCOPE}.txt` via a Bash tool call BEFORE printing your recap line.
 
-Use a heredoc to preserve multi-line content exactly:
+Invoke the Bash tool with a heredoc to preserve multi-line content exactly:
 
-```
-Bash(cat > ~/.claude/handoff/to-impl.${HANDOFF_SCOPE}.txt << 'HANDOFF'
+```bash
+cat > ~/.claude/handoff/to-impl.${HANDOFF_SCOPE}.txt << 'HANDOFF'
 <full directive text — verbatim, no paraphrase>
 HANDOFF
-)
 ```
 
 Rules:
