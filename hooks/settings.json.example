@@ -48,6 +48,15 @@
           "timeout": 10
         }]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [{
+          "type": "command",
+          "command": "python3 $HOME/.claude/hooks/enforce-handback.py",
+          "timeout": 5
+        }]
+      }
     ]
   }
 }
