@@ -121,7 +121,7 @@ Claude Code merges both automatically. Use `CLAUDE.md.template` and
 ## What this is NOT
 
 - Not an agent orchestrator. No background processes, no task queues, no dashboards.
-- Not autonomous. You run four focused sessions, you drive each one, you decide when work moves between panes.
+- Not a fire-and-forget agent. The base four-pane setup is hands-on. The optional handoff layer (see [HANDOFF_GUIDE.md](HANDOFF_GUIDE.md)) automates the AUDIT↔IMPL relay — but it's bounded: a Stop hook forces a real hand-back, safety hooks block `.env` edits and `git push`, and a per-scope HALT sentinel pauses the loop the moment a human is genuinely needed.
 - Not a replacement for CI/CD. The `gate` alias is a local quality gate — your regular pipeline still runs.
 - Not Windows-native. Requires macOS with iTerm2.
 
