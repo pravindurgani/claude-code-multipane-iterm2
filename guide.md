@@ -30,6 +30,10 @@ What you're building:
 The result: one `cc` command launches the right Claude model in each pane, and
 `llm-fast "..."` or `llm-code "..."` routes a prompt to the right local model.
 
+Two optional add-ons close the remaining gaps: **pane handoff** (Step 19)
+routes work between AUDIT and IMPL automatically, and **Sigil** (Step 20)
+gives every pane shared, persistent memory across sessions and projects.
+
 ---
 
 ## Step 1 — Prerequisites
@@ -441,7 +445,7 @@ The AUDIT pane identified: [paste findings here].
 Fix this while preserving existing patterns. Do not touch unrelated files.
 ```
 
-> **Optional:** If you've installed the [pane handoff feature](HANDOFF_GUIDE.md) (`./handoff/install.sh`), the AUDIT pane writes the directive to `~/.claude/handoff/to-impl.<scope>.txt` and the watcher delivers it as a single bracketed paste to the IMPL pane — no manual copy-paste. See `HANDOFF_GUIDE.md` §5.
+> **Optional:** If you've installed the pane handoff feature (Step 19), the AUDIT pane writes the directive to `~/.claude/handoff/to-impl.<scope>.txt` and the watcher delivers it as a single bracketed paste to the IMPL pane — no manual copy-paste. See Step 19 or `HANDOFF_GUIDE.md` §5.
 
 ### Context hygiene
 
@@ -739,7 +743,334 @@ skill's trigger description — no manual invocation needed.
 
 ---
 
-## Step 19 — Draw Things (Optional — Creative AI)
+## Step 19 — Pane Handoff (AUDIT ↔ IMPL)
+
+The cross-pane workflow (Step 11) has one manual chore left: copying AUDIT's
+findings into the IMPL pane, and IMPL's hand-back into AUDIT. This optional
+add-on removes it — one pane writes a file, a background watcher delivers it
+into the other pane as a single paste.
+
+**The problem it solves.** Every AUDIT → IMPL round-trip means selecting a
+multi-line directive, switching panes, and pasting it — and multi-line pastes
+into a terminal normally submit on the first newline, mangling code blocks and
+blank lines. Do that ten times a day and it's the slowest, most error-prone
+link in the loop.
+
+**How it works.** A tiny file-based message bus. Each pane binds itself to a
+role (IMPL or AUDIT) and a project scope. To send work, Claude writes a file
+into `~/.claude/handoff/`; an `fswatch`-based watcher (a launchd daemon,
+running 24/7) picks it up, wraps the content in bracketed-paste escape codes,
+and types it into the bound iTerm pane — where the receiving Claude sees it as
+one fresh user message, every line preserved. On success the watcher truncates
+the file to 0 bytes as its delivered-marker.
+
+```
+ AUDIT pane                     Watcher                         IMPL pane
+  (Claude)                 (pane-handoff.sh)                     (Claude)
+cat > to-impl.myapp.txt ──>  fswatch fires, reads file
+                             wraps in bracketed paste
+                             osascript → bound pane UUID   ──>  arrives as one
+                             truncates file to 0 bytes          user message
+                             logs to /tmp/handoff.log
+```
+
+**Scoped filenames are the routing table.** Every file is keyed by a
+per-project scope: `to-impl.<scope>.txt` routes to that scope's IMPL pane,
+`to-audit.<scope>.txt` to its AUDIT pane, and `HALT.<scope>` pauses that scope
+only. Two projects run side by side with zero cross-talk. Unscoped writes
+(`to-impl.txt`) are refused on purpose.
+
+> **Optional add-on** — macOS + iTerm2 only, ~3 minute install. Everything in
+> Steps 1–18 works without it; this just removes the copy-paste tax from the
+> AUDIT ↔ IMPL loop.
+
+### 1. Install the watcher
+
+```bash
+brew install fswatch    # required dependency
+./handoff/install.sh    # from the repo root
+```
+
+The installer verifies `fswatch`, `osascript`, and iTerm2 are present; copies
+`pane-handoff.sh` (the watcher) and `enforce-handback.py` (a Stop hook) to
+`~/.claude/hooks/`; copies the `/start-impl` and `/start-audit` commands to
+`~/.claude/commands/`; installs a launchd agent at
+`~/Library/LaunchAgents/com.user.handoff.plist` (auto-starts at login,
+restarts on crash); and arms routing.
+
+```bash
+# Verify:
+launchctl list | grep handoff   # → "<PID>  0  com.user.handoff"
+tail /tmp/handoff.log           # → "[handoff] Watching ~/.claude/handoff"
+```
+
+To uninstall: `./handoff/install.sh --uninstall`
+
+### 2. Add the shell functions
+
+```bash
+cat handoff/zshrc-handoff.sh >> ~/.zshrc
+source ~/.zshrc
+```
+
+This defines the user-facing API, available in every pane:
+
+| Command | What it does |
+|---------|--------------|
+| `handoff-use <scope>` | Set this pane's `HANDOFF_SCOPE` — once per pane open, before any scoped command |
+| `handoff-claim-impl` / `handoff-claim-audit` | Bind this pane as the IMPL or AUDIT target for the current scope |
+| `handoff-on` / `handoff-off` / `handoff-status` | Arm / disarm / check routing (global flag file `~/.claude/handoff/active`) |
+| `handoff-halt` / `handoff-resume` | Pause / resume the loop for this scope only (writes / removes `HALT.<scope>`) |
+| `handoff-targets` | List all current pane bindings |
+| `send-impl` / `send-audit` | Pipe stdin to the scoped inbox (one-liners) |
+| `handoff-scope` | Print this pane's current scope |
+
+### 3. Bind the panes to a project scope
+
+Pick a scope name per project (lowercase, no spaces — e.g. `myapp`). In the
+IMPL pane, inside Claude:
+
+```bash
+handoff-use myapp
+handoff-claim-impl
+# → [handoff] IMPL scope=myapp bound to <UUID>
+```
+
+In the AUDIT pane, inside Claude: `handoff-use myapp`, then the `/start-audit`
+slash command, then `handoff-claim-audit`. Confirm both bindings and
+smoke-test:
+
+```bash
+handoff-targets    # → audit-target.myapp / impl-target.myapp with live UUIDs
+echo "smoke test $(date +%s)" > ~/.claude/handoff/to-impl.myapp.txt
+# within ~1s the IMPL pane shows the text as a single paste
+```
+
+> **Re-claim after every iTerm restart.** iTerm assigns a new session UUID
+> each time a pane opens, so yesterday's bindings point at panes that no
+> longer exist. After a reboot or iTerm restart, re-run `handoff-use` +
+> `handoff-claim-*` in each pane. The watcher itself needs nothing — launchd
+> keeps it alive.
+
+### 4. Send work between panes
+
+**AUDIT → IMPL** — the AUDIT pane writes a directive (via its Bash tool) and
+ends it with the confirmation line `→ handed off`:
+
+```bash
+cat > ~/.claude/handoff/to-impl.myapp.txt << 'HANDOFF'
+Fix HIGH finding 2 — unvalidated path join in api_client.py:88
+
+Acceptance:
+- input validated against allowlist
+- pytest tests/test_api_client.py passes
+→ handed off
+HANDOFF
+```
+
+**IMPL → AUDIT** — after `gate` passes, IMPL hands back, ending with
+`→ handed back`:
+
+```bash
+cat > ~/.claude/handoff/to-audit.myapp.txt << 'HANDOFF'
+=== HAND-BACK ===
+Step: finding 2
+Gate: PASS
+Surface assessment: allowlist added, no new deps
+→ handed back
+HANDOFF
+```
+
+The confirmation lines are load-bearing: the `enforce-handback.py` Stop hook
+blocks IMPL from *claiming* "→ handed back" in chat without actually writing
+the file — the failure mode that otherwise leaves AUDIT waiting forever on a
+loop that silently broke.
+
+> **Three details that trip people up:** (1) Multi-line content survives —
+> bracketed paste preserves code blocks, blank lines, and indentation.
+> (2) Don't add a trailing Enter — the watcher submits the paste itself.
+> (3) A 0-byte inbox file is *success*, not failure — it's the
+> delivered-marker. The file is transport, not state; receiving panes should
+> never pre-flight read it.
+
+### 5. HALT — the human-in-the-loop brake
+
+Either pane can pause its own project's loop by writing the scoped sentinel.
+Contents must name the trigger and the human action required:
+
+```bash
+handoff-halt <<'EOF'
+Trigger: gate failure on tests/test_api_client.py
+Human action required: review failure, decide rollback vs fix-forward
+EOF
+```
+
+This writes `~/.claude/handoff/HALT.myapp`. The watcher logs
+`⛔ HALT scope=myapp`, fires a macOS notification, and both panes in that
+scope stop before doing anything else. Other projects keep flowing — HALT is
+per-scope, there is no global pause. Only a human resumes it:
+
+```bash
+handoff-resume    # or: rm ~/.claude/handoff/HALT.myapp
+```
+
+### 6. Troubleshooting
+
+If a paste doesn't arrive, ask three questions in order — then read
+`/tmp/handoff.log`:
+
+```bash
+launchctl list | grep handoff   # 1. watcher running? PID must be a number, not "-"
+ls ~/.claude/handoff/active     # 2. routing armed? missing = disarmed → handoff-on
+handoff-targets                 # 3. pane still bound? stale UUID → re-claim (step 3)
+```
+
+| Log pattern | Meaning |
+|-------------|---------|
+| `-> IMPL scope=X` then `delivered to IMPL/X — file truncated to 0 bytes` | Success |
+| `-> IMPL scope=X` then `WARN: delivery failed — file NOT truncated` | Stale binding (re-claim), no binding for that scope, or macOS Automation permission denied for iTerm/osascript |
+| No `-> IMPL scope=X` line at all | Watcher not running, routing disarmed, or wrote to the wrong path |
+| `WARN: refusing unscoped to-impl.txt` | You forgot the scope in the filename — use `to-impl.<scope>.txt` |
+
+Edited the watcher script? It does not hot-reload — `pkill -f pane-handoff.sh`
+and launchd respawns it within ~1s.
+
+That's the full daily loop. For multi-project isolation probes, the complete
+command and path reference, and the under-the-hood details, see the
+[Pane Handoff operator guide](HANDOFF_GUIDE.md).
+
+---
+
+## Step 20 — Persistent Memory (Sigil) (Optional)
+
+Every pane in this setup is a separate Claude Code session — and every session
+starts with amnesia. Close a pane and the decisions, preferences, and project
+facts you spent an hour establishing are gone.
+[Sigil](https://github.com/Anmol-Srv/sigil) — an open-source, local-first
+memory system by [Anmol Srivastava](https://github.com/Anmol-Srv) — fixes
+this: one shared, persistent memory that all four panes read from and write to
+automatically, across sessions and across projects.
+
+### Why the 4-pane setup needs it
+
+The SESSION_LOG pattern (Step 16) carries context *forward in time* within one
+project. It does not carry context *sideways* — AUDIT never learns what you
+told IMPL, and nothing crosses project boundaries. In practice that means
+re-explaining "we use pnpm, not npm" or "never run db:reset against staging"
+in every pane, every session.
+
+Sigil closes that gap with hooks that run inside every Claude Code session,
+regardless of pane, model, or permission mode:
+
+| Hook | Fires | What it does |
+|------|-------|--------------|
+| `UserPromptSubmit` | Every prompt you type | Searches memory and injects the top-K relevant facts before Claude sees your prompt |
+| `Stop` | End of each turn | Classifies what you said and auto-captures memorable facts (preferences, decisions, corrections) |
+| `SessionEnd` | Session close | Summarizes the session into durable memory |
+| Hot context | Session start | A snapshot of your most-used facts, loaded via an `@import` in `~/.claude/CLAUDE.md` |
+
+Because memory lives in a local database rather than in any one session, all
+four panes share it — and it is MCP-native, so the same memory is available to
+other MCP clients (Cursor, Codex CLI) if you use them alongside this setup.
+
+### Install from the Sigil repo
+
+Installation is a one-liner, then an interactive wizard. Follow the upstream
+README at [github.com/Anmol-Srv/sigil](https://github.com/Anmol-Srv/sigil) for
+current instructions; as of this writing:
+
+```bash
+# Install (clones to ~/.sigil/app, adds to PATH, starts the daemon)
+curl -fsSL https://raw.githubusercontent.com/Anmol-Srv/sigil/master/install.sh | sh
+
+# Configure — interactive wizard with live connection tests
+sigil init
+```
+
+The `sigil init` wizard walks you through four choices: a **database**
+(Postgres — local or managed), an **LLM provider** for fact classification
+(OpenRouter, OpenAI, Anthropic, Ollama, or your Claude subscription), an
+**embedding provider** (OpenAI, Voyage, or Ollama), and **hook wiring** — it
+auto-detects Claude Code, installs its hooks into `~/.claude/settings.json`,
+and registers MCP servers for other clients. It merges alongside the hooks
+from Step 14 without touching them.
+
+> **⚠️ Pick a fast, local LLM provider — this is the one setting that can ruin
+> the whole experience.** Claude Code runs `UserPromptSubmit` hooks
+> synchronously on *every prompt you type*, with a ~10-second budget. A
+> provider that shells out to `claude -p` takes ~16 seconds per call — every
+> single prompt then shows `UserPromptSubmit hook timed out after 10s` and you
+> get no memory injection at all. Fact classification is a routing job, not a
+> reasoning job: point Sigil's LLM provider at a small local Ollama model (you
+> already have Ollama from Step 3) and keep the hook path well under budget.
+
+Verify the loop end-to-end: open any pane with `cc`, submit a prompt, and
+confirm memory search fires without a timeout warning. Then check
+`claude mcp list` shows Sigil connected.
+
+### The 3 commands you'll use daily
+
+The hooks do the routine work unprompted. Manual interaction comes down to
+three commands, runnable from any pane (or inside Claude Code with `!`
+shell-exec):
+
+| Command | What it does |
+|---------|--------------|
+| `sigil facts` | List everything stored, with IDs. Your spot-check that memory contains what you think it does. |
+| `sigil remember "..."` | Save a fact explicitly. Sigil classifies it, extracts atomic facts, and embeds them — write natural language. |
+| `sigil search "..."` | Semantic search over memory. This is the same path the prompt hook uses — run it to debug what Claude is actually seeing. |
+
+> **Tip — the "teach once, recall everywhere" rule:** If you catch yourself
+> telling Claude the same thing in two different sessions, that's the signal
+> to make it a `sigil remember`. From then on, every pane knows.
+
+### Where it fits in each pane
+
+The hooks fire identically everywhere, but there's a natural division of labor:
+
+| Pane | What shared memory changes |
+|------|----------------------------|
+| `AUDIT` | Recalls past findings and ratified decisions — stops re-flagging issues you already resolved. Best pane for saving durable facts after a review: Opus synthesis is worth keeping. |
+| `IMPL` | Stack choices, conventions, and constraints inject automatically — no more re-explaining the package manager or test layout every session. Add tactical facts as you discover them. |
+| `PLAN` | Prior architectural decisions surface during planning, so new plans build on old ones instead of contradicting them. |
+| `PROMPT` | Natural home for memory housekeeping — reviewing `sigil facts`, pruning stale entries, bulk ingestion. |
+
+### Seeding memory: new vs. existing projects
+
+**New project** — spend two minutes on day 1 telling Sigil what the project
+is. Every later prompt, in every pane, has it on tap:
+
+```bash
+sigil remember "myproject: Next.js + Postgres app for X audience, target launch March"
+sigil remember "myproject: hard constraint — no auth provider lock-in"
+```
+
+**Existing project** — no migration needed; the hooks fire regardless. Teach
+it project specifics as you hit them, and optionally bulk-seed from the docs
+you already maintain:
+
+```bash
+sigil ingest ./ARCHITECTURE.md
+sigil ingest ./SESSION_LOG.md
+sigil ingest "./docs/**/*.md"
+```
+
+Sigil extracts atomic facts and de-duplicates against existing memory. Run
+`sigil facts` afterward to spot-check what landed. Your SESSION_LOG (Step 16)
+and CLAUDE.md files (Step 17) keep working exactly as before — Sigil owns the
+cross-session, cross-project layer; it doesn't replace either.
+
+> **Privacy note:** Sigil is local-first — facts live in your own Postgres,
+> and with Ollama providers nothing leaves the machine. If you handle client
+> work, keep client facts out of the default namespace: store them under a
+> per-client namespace (`sigil remember --namespace=client-a "..."`) so they
+> never auto-inject into unrelated projects — or keep client data out of Sigil
+> entirely and rely on per-project CLAUDE.md files. Never store secrets or
+> credentials: the database is local but not encrypted at rest.
+
+---
+
+## Step 21 — Draw Things (Optional — Creative AI)
 
 <details>
 <summary>Creative AI — skip if not interested</summary>
