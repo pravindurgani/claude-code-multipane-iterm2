@@ -882,7 +882,7 @@ HANDOFF
 ```
 
 The confirmation lines are load-bearing: the `enforce-handback.py` Stop hook
-blocks IMPL from *claiming* "→ handed back" in chat without actually writing
+(a script Claude Code runs at the end of each turn — see Step 14) blocks IMPL from *claiming* "→ handed back" in chat without actually writing
 the file — the failure mode that otherwise leaves AUDIT waiting forever on a
 loop that silently broke.
 
@@ -964,7 +964,7 @@ regardless of pane, model, or permission mode:
 
 | Hook | Fires | What it does |
 |------|-------|--------------|
-| `UserPromptSubmit` | Every prompt you type | Searches memory and injects the top-K relevant facts before Claude sees your prompt |
+| `UserPromptSubmit` | Every prompt you type | Searches memory and injects the most relevant facts before Claude sees your prompt |
 | `Stop` | End of each turn | Classifies what you said and auto-captures memorable facts (preferences, decisions, corrections) |
 | `SessionEnd` | Session close | Summarizes the session into durable memory |
 | Hot context | Session start | A snapshot of your most-used facts, loaded via an `@import` in `~/.claude/CLAUDE.md` |

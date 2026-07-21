@@ -2,6 +2,8 @@
 
 > Stop your AI agent from reviewing its own code — each pane runs a separate Claude Code session with a locked role, model, and permission set.
 
+By [Prav Durgani](https://pravindurgani.com) · Guide: https://pravindurgani.github.io/claude-code-multipane-iterm2/
+
 ![4-pane iTerm2 layout with Claude Code running in each pane](screenshots/05-claude-running.png)
 
 ![Empty 4-pane layout showing colour differentiation](screenshots/04-four-panes.png)

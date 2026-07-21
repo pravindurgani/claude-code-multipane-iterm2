@@ -5,12 +5,83 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>4-Pane Claude Code Setup for iTerm2 — Complete Guide</title>
-<meta name="description" content="Step-by-step guide to set up a 4-pane iTerm2 workflow for Claude Code with role-based models, coloured prompts, and one-command launch.">
+<meta name="description" content="Run 4 role-locked Claude Code sessions in one iTerm2 window — an Opus reviewer that can't write files, automated pane handoffs, and persistent memory via Sigil.">
+<meta name="author" content="Prav Durgani">
+<link rel="canonical" href="https://pravindurgani.github.io/claude-code-multipane-iterm2/">
 <meta property="og:title" content="4-Pane Claude Code Setup for iTerm2">
 <meta property="og:description" content="Stop your AI from grading its own code. Run 4 Claude Code sessions in one iTerm2 window — each with a locked role, model, and permission set.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://pravindurgani.github.io/claude-code-multipane-iterm2/">
-<meta name="twitter:card" content="summary">
+<meta property="og:site_name" content="4-Pane Claude Code Setup for iTerm2">
+<meta property="og:image" content="https://pravindurgani.github.io/claude-code-multipane-iterm2/screenshots/05-claude-running.png">
+<meta property="og:image:alt" content="Four iTerm2 panes each running a role-locked Claude Code session">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pravindurgani.github.io/claude-code-multipane-iterm2/screenshots/05-claude-running.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "4-Pane Claude Code Setup for iTerm2 — Complete Guide",
+  "description": "Run 4 role-locked Claude Code sessions in one iTerm2 window — an Opus reviewer that can't write files, automated pane handoffs, and persistent memory via Sigil.",
+  "author": {
+    "@type": "Person",
+    "name": "Prav Durgani",
+    "url": "https://pravindurgani.com"
+  },
+  "datePublished": "2026-03-01",
+  "dateModified": "2026-07-21",
+  "image": "https://pravindurgani.github.io/claude-code-multipane-iterm2/screenshots/05-claude-running.png",
+  "mainEntityOfPage": "https://pravindurgani.github.io/claude-code-multipane-iterm2/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why run multiple Claude Code sessions in separate panes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each pane runs a dedicated session with a locked role, model, and permission set: PLAN (Opus) for architecture, IMPL (Sonnet) for implementation, AUDIT (Opus, read-only) for review, and PROMPT (Sonnet) for prompt work. Separating the roles means the session that writes code is never the one that reviews it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you stop an AI agent from reviewing its own code?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Run the reviewer as a separate read-only session. The AUDIT pane runs Opus with permissions that block file writes, so it is physically incapable of editing the code it reviews, and it audits code produced by a different model (Sonnet) in the IMPL pane."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a pane handoff between AI coding sessions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is file-based routing between panes: the AUDIT pane writes a directive to a scope-keyed handoff file, and a watcher delivers it into the IMPL pane's transcript as a single bracketed paste. Scope keys let two projects run the loop in parallel without cross-talk."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do Claude Code sessions share memory across projects?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Through Sigil, an open-source, local-first memory system integrated via Claude Code hooks. Relevant stored facts are auto-injected into each session, and new facts are saved after each turn, so decisions and preferences persist across panes, sessions, and projects."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do you need to run the 4-pane Claude Code setup?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "macOS, iTerm2, and the Claude Code CLI. Setup takes about 15 minutes and requires zero additional dependencies."
+      }
+    }
+  ]
+}
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
@@ -561,6 +632,7 @@
     <h1>Stop Your AI From Grading <br>Its Own Code</h1>
     <p>Run 4 Claude Code sessions in one iTerm2 window. Opus reviews. Sonnet builds. Each pane has a locked role, model, and permission set &mdash; the reviewer is physically incapable of writing files. Optional add-ons route work between panes automatically and give every session persistent memory.</p>
     <div class="hero-meta">macOS only &middot; iTerm2 &middot; Claude Code CLI &middot; ~15 min setup &middot; zero dependencies</div>
+    <div class="hero-meta" style="margin-top:8px;">by <a href="https://pravindurgani.com" style="color:#94a3b8;text-decoration:underline;text-underline-offset:3px;">Prav Durgani</a></div>
   </div>
 </div>
 
@@ -1895,7 +1967,7 @@
 <div>→ handed back</div>
 <div><span class="str">HANDOFF</span></div>
           </div>
-          <p>The confirmation lines are load-bearing: the <span class="mono">enforce-handback.py</span> Stop hook blocks IMPL from <em>claiming</em> &ldquo;&rarr; handed back&rdquo; in chat without actually writing the file &mdash; the failure mode that otherwise leaves AUDIT waiting forever on a loop that silently broke.</p>
+          <p>The confirmation lines are load-bearing: the <span class="mono">enforce-handback.py</span> Stop hook (a script Claude Code runs at the end of each turn &mdash; see Step 14) blocks IMPL from <em>claiming</em> &ldquo;&rarr; handed back&rdquo; in chat without actually writing the file &mdash; the failure mode that otherwise leaves AUDIT waiting forever on a loop that silently broke.</p>
           <div class="callout tip">
             <span class="callout-icon">&#128161;</span>
             <div><strong>Three details that trip people up</strong> (1) Multi-line content survives &mdash; bracketed paste preserves code blocks, blank lines, and indentation. (2) Don&rsquo;t add a trailing Enter &mdash; the watcher submits the paste itself. (3) A 0-byte inbox file is <em>success</em>, not failure &mdash; it&rsquo;s the delivered-marker. The file is transport, not state; receiving panes should never pre-flight read it.</div>
@@ -1969,7 +2041,7 @@
           <p>Sigil closes that gap with hooks that run inside every Claude Code session, regardless of pane, model, or permission mode:</p>
           <table class="data-table">
             <tr><th>Hook</th><th>Fires</th><th>What it does</th></tr>
-            <tr><td><span class="mono">UserPromptSubmit</span></td><td>Every prompt you type</td><td>Searches memory and injects the top-K relevant facts before Claude sees your prompt</td></tr>
+            <tr><td><span class="mono">UserPromptSubmit</span></td><td>Every prompt you type</td><td>Searches memory and injects the most relevant facts before Claude sees your prompt</td></tr>
             <tr><td><span class="mono">Stop</span></td><td>End of each turn</td><td>Classifies what you said and auto-captures memorable facts (preferences, decisions, corrections)</td></tr>
             <tr><td><span class="mono">SessionEnd</span></td><td>Session close</td><td>Summarizes the session into durable memory</td></tr>
             <tr><td>Hot context</td><td>Session start</td><td>A snapshot of your most-used facts, loaded via an <span class="mono">@import</span> in <span class="mono">~/.claude/CLAUDE.md</span></td></tr>
@@ -2345,6 +2417,7 @@
 
 <div class="footer">
   <span>iTerm2 + Claude Code &middot; 4-Pane Setup Guide</span>
+  <span>Built by <a href="https://pravindurgani.com">Prav Durgani</a></span>
   <span>Claude Code v2.1.216 &middot; July 2026</span>
 </div>
 
