@@ -13,6 +13,8 @@ Run 4 dedicated Claude Code sessions in a single iTerm2 window — each with its
 **[Read the full guide with screenshots](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**
 
 > **New:** [Handoff](HANDOFF_GUIDE.md) — optional file-based bracketed-paste routing between AUDIT and IMPL panes. Write a directive to a file in one pane, it arrives as a single paste in the other. Scope-keyed so two projects can run in parallel without cross-talk. See [`HANDOFF_GUIDE.md`](HANDOFF_GUIDE.md).
+>
+> **New:** [Sigil](https://github.com/Anmol-Srv/sigil) integration — optional persistent memory for all four panes, by [Anmol Srivastava](https://github.com/Anmol-Srv). Facts, decisions, and preferences carry across sessions, panes, and projects via Claude Code hooks. Local-first, MCP-native. See Step 20 in the guide.
 
 ---
 
@@ -71,6 +73,7 @@ This workflow depends on iTerm2-specific features:
 6. **Merge hooks config** — copy these five files from `hooks/` to `~/.claude/hooks/`: `circuit-breaker.py`, `protect-env.py`, `protect-git-push.py`, `session-start-reset.py`, `version-check.py`. Then merge the `"hooks"` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`. (Skip `enforce-handback.py` here — the optional handoff installer in Step 8 places it and registers its Stop hook for you.)
 7. **(Optional) MCP & slash commands** — `brew install github-mcp-server` then `claude mcp add` to register it (see Step 18 in the guide); copy `commands/reflect.md` to `~/.claude/commands/`; copy `skills/` to `~/.claude/skills/`
 8. **(Optional) Pane handoff** — `brew install fswatch` then `./handoff/install.sh` to enable file-based routing between AUDIT and IMPL panes. Read [`HANDOFF_GUIDE.md`](HANDOFF_GUIDE.md) for the operator manual.
+9. **(Optional) Persistent memory** — install [Sigil](https://github.com/Anmol-Srv/sigil) and run `sigil init` to give every pane shared memory across sessions and projects. See Step 20 in the guide — including the one setting (a fast, local LLM provider) that keeps the prompt hook under Claude Code's 10s budget.
 
 ---
 

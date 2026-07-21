@@ -559,19 +559,19 @@
   <div class="hero-inner">
     <div class="hero-badge">iTerm2 + Claude Code</div>
     <h1>Stop Your AI From Grading <br>Its Own Code</h1>
-    <p>Run 4 Claude Code sessions in one iTerm2 window. Opus reviews. Sonnet builds. Each pane has a locked role, model, and permission set &mdash; the reviewer is physically incapable of writing files.</p>
+    <p>Run 4 Claude Code sessions in one iTerm2 window. Opus reviews. Sonnet builds. Each pane has a locked role, model, and permission set &mdash; the reviewer is physically incapable of writing files. Optional add-ons route work between panes automatically and give every session persistent memory.</p>
     <div class="hero-meta">macOS only &middot; iTerm2 &middot; Claude Code CLI &middot; ~15 min setup &middot; zero dependencies</div>
   </div>
 </div>
 
 <div class="container">
 
-  <!-- HANDOFF CALLOUT -->
+  <!-- HANDOFF + SIGIL CALLOUT -->
   <div class="callout tip" style="margin-top: 32px;">
     <span class="callout-icon">&#128229;</span>
     <div>
-      <strong>New: optional pane handoff</strong>
-      Once the 4-pane setup is running, the <a href="HANDOFF_GUIDE.html" style="color: var(--blue); font-weight: 600;">pane handoff add-on</a> routes directives between AUDIT and IMPL via files &mdash; multi-line content arrives as a single bracketed paste in the receiving pane. Scope-keyed so multiple projects run in parallel. <a href="HANDOFF_GUIDE.html" style="color: var(--blue);">Read the operator guide</a>.
+      <strong>New: pane handoff &amp; persistent memory</strong>
+      Once the 4-pane setup is running, two optional add-ons close the remaining gaps: <a href="#s19" style="color: var(--blue); font-weight: 600;">pane handoff</a> (Step 19) routes directives between AUDIT and IMPL automatically &mdash; no more copy-pasting between panes &mdash; and <a href="#s20" style="color: var(--blue); font-weight: 600;">Sigil</a> (Step 20) gives every pane shared, persistent memory across sessions and projects.
     </div>
   </div>
 
@@ -597,9 +597,11 @@
       <li><a href="#s16"><span class="toc-num">16</span> SESSION_LOG pattern</a></li>
       <li><a href="#s17"><span class="toc-num">17</span> CLAUDE.md split pattern</a></li>
       <li><a href="#s18"><span class="toc-num">18</span> MCP server, slash commands &amp; skills</a></li>
-      <li><a href="#s19"><span class="toc-num">19</span> Draw Things (optional)</a></li>
-      <li><a href="#s20"><span class="toc-num">20</span> Troubleshooting</a></li>
-      <li><a href="#s21"><span class="toc-num">21</span> Quick Reference</a></li>
+      <li><a href="#s19"><span class="toc-num">19</span> Pane handoff (AUDIT &harr; IMPL)</a></li>
+      <li><a href="#s20"><span class="toc-num">20</span> Persistent memory (Sigil)</a></li>
+      <li><a href="#s21"><span class="toc-num">21</span> Draw Things (optional)</a></li>
+      <li><a href="#s22"><span class="toc-num">22</span> Troubleshooting</a></li>
+      <li><a href="#s23"><span class="toc-num">23</span> Quick Reference</a></li>
     </ul>
   </div>
 
@@ -1346,7 +1348,7 @@
           </div>
           <div class="callout tip">
             <span class="callout-icon">&#128229;</span>
-            <div><strong>Optional automation</strong> Install the <a href="HANDOFF_GUIDE.html" style="color: var(--blue); font-weight: 600;">pane handoff add-on</a> and the AUDIT pane writes its directive to a file; the watcher delivers it as a single bracketed paste to IMPL &mdash; no manual copy. Scope-keyed so two projects run in parallel.</div>
+            <div><strong>Optional automation</strong> Install the <a href="#s19" style="color: var(--blue); font-weight: 600;">pane handoff add-on (Step 19)</a> and the AUDIT pane writes its directive to a file; the watcher delivers it as a single bracketed paste to IMPL &mdash; no manual copy. Scope-keyed so two projects run in parallel.</div>
           </div>
         </div>
       </div>
@@ -1767,10 +1769,306 @@
     </div>
   </div>
 
-  <!-- SECTION s19: Draw Things (Optional) -->
+  <!-- SECTION s19: Pane Handoff (AUDIT ↔ IMPL) -->
   <div class="section" id="s19">
     <div class="section-header">
       <span class="section-num">19</span>
+      <h2>Pane Handoff (AUDIT &harr; IMPL)</h2>
+    </div>
+    <p class="section-intro">The cross-pane workflow (Step 11) has one manual chore left: copying AUDIT&rsquo;s findings into the IMPL pane, and IMPL&rsquo;s hand-back into AUDIT. This optional add-on removes it &mdash; one pane writes a file, a background watcher delivers it into the other pane as a single paste.</p>
+
+    <p><strong>The problem it solves.</strong> Every AUDIT &rarr; IMPL round-trip means selecting a multi-line directive, switching panes, and pasting it &mdash; and multi-line pastes into a terminal normally submit on the first newline, mangling code blocks and blank lines. Do that ten times a day and it&rsquo;s the slowest, most error-prone link in the loop.</p>
+
+    <p><strong>How it works.</strong> A tiny file-based message bus. Each pane binds itself to a role (IMPL or AUDIT) and a project scope. To send work, Claude writes a file into <span class="mono">~/.claude/handoff/</span>; an <span class="mono">fswatch</span>-based watcher (a launchd daemon, running 24/7) picks it up, wraps the content in bracketed-paste escape codes, and types it into the bound iTerm pane &mdash; where the receiving Claude sees it as one fresh user message, every line preserved. On success the watcher truncates the file to 0 bytes as its delivered-marker.</p>
+
+    <div class="code-block">
+<div><span class="comment"># AUDIT pane                     Watcher                         IMPL pane</span></div>
+<div><span class="comment">#  (Claude)                 (pane-handoff.sh)                     (Claude)</span></div>
+<div>cat &gt; to-impl.myapp.txt ──&gt;  fswatch fires, reads file</div>
+<div>                             wraps in bracketed paste</div>
+<div>                             osascript → bound pane UUID   ──&gt;  arrives as one</div>
+<div>                             truncates file to 0 bytes          user message</div>
+<div>                             logs to /tmp/handoff.log</div>
+    </div>
+
+    <p><strong>Scoped filenames are the routing table.</strong> Every file is keyed by a per-project scope: <span class="mono">to-impl.&lt;scope&gt;.txt</span> routes to that scope&rsquo;s IMPL pane, <span class="mono">to-audit.&lt;scope&gt;.txt</span> to its AUDIT pane, and <span class="mono">HALT.&lt;scope&gt;</span> pauses that scope only. Two projects run side by side with zero cross-talk. Unscoped writes (<span class="mono">to-impl.txt</span>) are refused on purpose.</p>
+
+    <div class="callout tip">
+      <span class="callout-icon">&#128161;</span>
+      <div><strong>Optional add-on</strong> &mdash; macOS + iTerm2 only, ~3 minute install. Everything in Steps 1&ndash;18 works without it; this just removes the copy-paste tax from the AUDIT &harr; IMPL loop.</div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Install the watcher</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>brew install fswatch    <span class="comment"># required dependency</span></div>
+<div>./handoff/install.sh    <span class="comment"># from the repo root</span></div>
+          </div>
+          <p>The installer verifies <span class="mono">fswatch</span>, <span class="mono">osascript</span>, and iTerm2 are present; copies <span class="mono">pane-handoff.sh</span> (the watcher) and <span class="mono">enforce-handback.py</span> (a Stop hook) to <span class="mono">~/.claude/hooks/</span>; copies the <span class="mono">/start-impl</span> and <span class="mono">/start-audit</span> commands to <span class="mono">~/.claude/commands/</span>; installs a launchd agent at <span class="mono">~/Library/LaunchAgents/com.user.handoff.plist</span> (auto-starts at login, restarts on crash); and arms routing.</p>
+          <div class="code-block">
+<div><span class="comment"># Verify:</span></div>
+<div>launchctl list | grep handoff   <span class="comment"># → "&lt;PID&gt;  0  com.user.handoff"</span></div>
+<div>tail /tmp/handoff.log           <span class="comment"># → "[handoff] Watching ~/.claude/handoff"</span></div>
+          </div>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">To uninstall: <span class="mono">./handoff/install.sh --uninstall</span></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Add the shell functions</span>
+        </div>
+        <div class="step-body">
+          <div class="code-block">
+<div>cat handoff/zshrc-handoff.sh &gt;&gt; ~/.zshrc</div>
+<div>source ~/.zshrc</div>
+          </div>
+          <p>This defines the user-facing API, available in every pane:</p>
+          <table class="data-table">
+            <tr><th>Command</th><th>What it does</th></tr>
+            <tr><td><span class="mono">handoff-use &lt;scope&gt;</span></td><td>Set this pane&rsquo;s <span class="mono">HANDOFF_SCOPE</span> &mdash; once per pane open, before any scoped command</td></tr>
+            <tr><td><span class="mono">handoff-claim-impl</span> / <span class="mono">handoff-claim-audit</span></td><td>Bind this pane as the IMPL or AUDIT target for the current scope</td></tr>
+            <tr><td><span class="mono">handoff-on</span> / <span class="mono">handoff-off</span> / <span class="mono">handoff-status</span></td><td>Arm / disarm / check routing (global flag file <span class="mono">~/.claude/handoff/active</span>)</td></tr>
+            <tr><td><span class="mono">handoff-halt</span> / <span class="mono">handoff-resume</span></td><td>Pause / resume the loop for this scope only (writes / removes <span class="mono">HALT.&lt;scope&gt;</span>)</td></tr>
+            <tr><td><span class="mono">handoff-targets</span></td><td>List all current pane bindings</td></tr>
+            <tr><td><span class="mono">send-impl</span> / <span class="mono">send-audit</span></td><td>Pipe stdin to the scoped inbox (one-liners)</td></tr>
+            <tr><td><span class="mono">handoff-scope</span></td><td>Print this pane&rsquo;s current scope</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <span class="step-title">Bind the panes to a project scope</span>
+        </div>
+        <div class="step-body">
+          <p>Pick a scope name per project (lowercase, no spaces &mdash; e.g. <span class="mono">myapp</span>). In the IMPL pane, inside Claude:</p>
+          <div class="code-block">
+<div>handoff-use myapp</div>
+<div>handoff-claim-impl</div>
+<div><span class="comment"># → [handoff] IMPL scope=myapp bound to &lt;UUID&gt;</span></div>
+          </div>
+          <p>In the AUDIT pane, inside Claude: <span class="mono">handoff-use myapp</span>, then the <span class="mono">/start-audit</span> slash command, then <span class="mono">handoff-claim-audit</span>. Confirm both bindings and smoke-test:</p>
+          <div class="code-block">
+<div>handoff-targets    <span class="comment"># → audit-target.myapp / impl-target.myapp with live UUIDs</span></div>
+<div>echo <span class="str">"smoke test $(date +%s)"</span> &gt; ~/.claude/handoff/to-impl.myapp.txt</div>
+<div><span class="comment"># within ~1s the IMPL pane shows the text as a single paste</span></div>
+          </div>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <div><strong>Re-claim after every iTerm restart</strong> iTerm assigns a new session UUID each time a pane opens, so yesterday&rsquo;s bindings point at panes that no longer exist. After a reboot or iTerm restart, re-run <span class="mono">handoff-use</span> + <span class="mono">handoff-claim-*</span> in each pane. The watcher itself needs nothing &mdash; launchd keeps it alive.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">4</span>
+          <span class="step-title">Send work between panes</span>
+        </div>
+        <div class="step-body">
+          <p><strong>AUDIT &rarr; IMPL</strong> &mdash; the AUDIT pane writes a directive (via its Bash tool) and ends it with the confirmation line <span class="mono">&rarr; handed off</span>:</p>
+          <div class="code-block">
+<div>cat &gt; ~/.claude/handoff/to-impl.myapp.txt &lt;&lt; <span class="str">'HANDOFF'</span></div>
+<div>Fix HIGH finding 2 — unvalidated path join in api_client.py:88</div>
+<div></div>
+<div>Acceptance:</div>
+<div>- input validated against allowlist</div>
+<div>- pytest tests/test_api_client.py passes</div>
+<div>→ handed off</div>
+<div><span class="str">HANDOFF</span></div>
+          </div>
+          <p><strong>IMPL &rarr; AUDIT</strong> &mdash; after <span class="mono">gate</span> passes, IMPL hands back, ending with <span class="mono">&rarr; handed back</span>:</p>
+          <div class="code-block">
+<div>cat &gt; ~/.claude/handoff/to-audit.myapp.txt &lt;&lt; <span class="str">'HANDOFF'</span></div>
+<div>=== HAND-BACK ===</div>
+<div>Step: finding 2</div>
+<div>Gate: PASS</div>
+<div>Surface assessment: allowlist added, no new deps</div>
+<div>→ handed back</div>
+<div><span class="str">HANDOFF</span></div>
+          </div>
+          <p>The confirmation lines are load-bearing: the <span class="mono">enforce-handback.py</span> Stop hook blocks IMPL from <em>claiming</em> &ldquo;&rarr; handed back&rdquo; in chat without actually writing the file &mdash; the failure mode that otherwise leaves AUDIT waiting forever on a loop that silently broke.</p>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Three details that trip people up</strong> (1) Multi-line content survives &mdash; bracketed paste preserves code blocks, blank lines, and indentation. (2) Don&rsquo;t add a trailing Enter &mdash; the watcher submits the paste itself. (3) A 0-byte inbox file is <em>success</em>, not failure &mdash; it&rsquo;s the delivered-marker. The file is transport, not state; receiving panes should never pre-flight read it.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">5</span>
+          <span class="step-title">HALT &mdash; the human-in-the-loop brake</span>
+        </div>
+        <div class="step-body">
+          <p>Either pane can pause its own project&rsquo;s loop by writing the scoped sentinel. Contents must name the trigger and the human action required:</p>
+          <div class="code-block">
+<div>handoff-halt &lt;&lt;<span class="str">'EOF'</span></div>
+<div>Trigger: gate failure on tests/test_api_client.py</div>
+<div>Human action required: review failure, decide rollback vs fix-forward</div>
+<div><span class="str">EOF</span></div>
+          </div>
+          <p>This writes <span class="mono">~/.claude/handoff/HALT.myapp</span>. The watcher logs <span class="mono">&#9940; HALT scope=myapp</span>, fires a macOS notification, and both panes in that scope stop before doing anything else. Other projects keep flowing &mdash; HALT is per-scope, there is no global pause. Only a human resumes it:</p>
+          <div class="code-block">
+<div>handoff-resume    <span class="comment"># or: rm ~/.claude/handoff/HALT.myapp</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">6</span>
+          <span class="step-title">Troubleshooting</span>
+        </div>
+        <div class="step-body">
+          <p>If a paste doesn&rsquo;t arrive, ask three questions in order &mdash; then read <span class="mono">/tmp/handoff.log</span>:</p>
+          <div class="code-block">
+<div>launchctl list | grep handoff   <span class="comment"># 1. watcher running? PID must be a number, not "-"</span></div>
+<div>ls ~/.claude/handoff/active     <span class="comment"># 2. routing armed? missing = disarmed → handoff-on</span></div>
+<div>handoff-targets                 <span class="comment"># 3. pane still bound? stale UUID → re-claim (step 3)</span></div>
+          </div>
+          <table class="data-table">
+            <tr><th>Log pattern</th><th>Meaning</th></tr>
+            <tr><td><span class="mono">-&gt; IMPL scope=X</span> then <span class="mono">delivered to IMPL/X &mdash; file truncated to 0 bytes</span></td><td>Success</td></tr>
+            <tr><td><span class="mono">-&gt; IMPL scope=X</span> then <span class="mono">WARN: delivery failed &mdash; file NOT truncated</span></td><td>Stale binding (re-claim), no binding for that scope, or macOS Automation permission denied for iTerm/osascript</td></tr>
+            <tr><td>No <span class="mono">-&gt; IMPL scope=X</span> line at all</td><td>Watcher not running, routing disarmed, or wrote to the wrong path</td></tr>
+            <tr><td><span class="mono">WARN: refusing unscoped to-impl.txt</span></td><td>You forgot the scope in the filename &mdash; use <span class="mono">to-impl.&lt;scope&gt;.txt</span></td></tr>
+          </table>
+          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">Edited the watcher script? It does not hot-reload &mdash; <span class="mono">pkill -f pane-handoff.sh</span> and launchd respawns it within ~1s.</p>
+        </div>
+      </div>
+    </div>
+
+    <p>That&rsquo;s the full daily loop. For multi-project isolation probes, the complete command and path reference, and the under-the-hood details, see the <a href="HANDOFF_GUIDE.html" style="color: var(--blue); font-weight: 600;">Pane Handoff operator guide</a>.</p>
+  </div>
+
+  <!-- SECTION s20: Persistent Memory (Sigil) -->
+  <div class="section" id="s20">
+    <div class="section-header">
+      <span class="section-num">20</span>
+      <h2>Persistent Memory (Sigil) <span style="font-weight:400;color:var(--text-muted)">(Optional)</span></h2>
+    </div>
+    <p class="section-intro">Every pane in this setup is a separate Claude Code session &mdash; and every session starts with amnesia. Close a pane and the decisions, preferences, and project facts you spent an hour establishing are gone. <a href="https://github.com/Anmol-Srv/sigil" style="color:var(--blue);font-weight:600">Sigil</a> &mdash; an open-source, local-first memory system by <a href="https://github.com/Anmol-Srv" style="color:var(--blue)">Anmol Srivastava</a> &mdash; fixes this: one shared, persistent memory that all four panes read from and write to automatically, across sessions and across projects.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <span class="step-title">Why the 4-pane setup needs it</span>
+        </div>
+        <div class="step-body">
+          <p>The SESSION_LOG pattern (Step 16) carries context <em>forward in time</em> within one project. It does not carry context <em>sideways</em> &mdash; AUDIT never learns what you told IMPL, and nothing crosses project boundaries. In practice that means re-explaining &ldquo;we use pnpm, not npm&rdquo; or &ldquo;never run db:reset against staging&rdquo; in every pane, every session.</p>
+          <p>Sigil closes that gap with hooks that run inside every Claude Code session, regardless of pane, model, or permission mode:</p>
+          <table class="data-table">
+            <tr><th>Hook</th><th>Fires</th><th>What it does</th></tr>
+            <tr><td><span class="mono">UserPromptSubmit</span></td><td>Every prompt you type</td><td>Searches memory and injects the top-K relevant facts before Claude sees your prompt</td></tr>
+            <tr><td><span class="mono">Stop</span></td><td>End of each turn</td><td>Classifies what you said and auto-captures memorable facts (preferences, decisions, corrections)</td></tr>
+            <tr><td><span class="mono">SessionEnd</span></td><td>Session close</td><td>Summarizes the session into durable memory</td></tr>
+            <tr><td>Hot context</td><td>Session start</td><td>A snapshot of your most-used facts, loaded via an <span class="mono">@import</span> in <span class="mono">~/.claude/CLAUDE.md</span></td></tr>
+          </table>
+          <p>Because memory lives in a local database rather than in any one session, all four panes share it &mdash; and it is MCP-native, so the same memory is available to other MCP clients (Cursor, Codex CLI) if you use them alongside this setup.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <span class="step-title">Install from the Sigil repo</span>
+        </div>
+        <div class="step-body">
+          <p>Installation is a one-liner, then an interactive wizard. Follow the upstream README at <a href="https://github.com/Anmol-Srv/sigil" style="color:var(--blue)">github.com/Anmol-Srv/sigil</a> for current instructions; as of this writing:</p>
+          <div class="code-block">
+<div class="comment"># Install (clones to ~/.sigil/app, adds to PATH, starts the daemon)</div>
+<div><span class="cmd">curl</span> <span class="flag">-fsSL</span> <span class="str">https://raw.githubusercontent.com/Anmol-Srv/sigil/master/install.sh</span> | <span class="cmd">sh</span></div>
+<div></div>
+<div class="comment"># Configure &mdash; interactive wizard with live connection tests</div>
+<div><span class="cmd">sigil</span> init</div>
+          </div>
+          <p>The <span class="mono">sigil init</span> wizard walks you through four choices: a <strong>database</strong> (Postgres &mdash; local or managed), an <strong>LLM provider</strong> for fact classification (OpenRouter, OpenAI, Anthropic, Ollama, or your Claude subscription), an <strong>embedding provider</strong> (OpenAI, Voyage, or Ollama), and <strong>hook wiring</strong> &mdash; it auto-detects Claude Code, installs its hooks into <span class="mono">~/.claude/settings.json</span>, and registers MCP servers for other clients. It merges alongside the hooks from Step 14 without touching them.</p>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <div><strong>Pick a fast, local LLM provider &mdash; this is the one setting that can ruin the whole experience.</strong> Claude Code runs <span class="mono">UserPromptSubmit</span> hooks synchronously on <em>every prompt you type</em>, with a ~10-second budget. A provider that shells out to <span class="mono">claude -p</span> takes ~16&nbsp;seconds per call &mdash; every single prompt then shows <span class="mono">UserPromptSubmit hook timed out after 10s</span> and you get no memory injection at all. Fact classification is a routing job, not a reasoning job: point Sigil&rsquo;s LLM provider at a small local Ollama model (you already have Ollama from Step 3) and keep the hook path well under budget.</div>
+          </div>
+          <p>Verify the loop end-to-end: open any pane with <span class="mono">cc</span>, submit a prompt, and confirm memory search fires without a timeout warning. Then check <span class="mono">claude mcp list</span> shows Sigil connected.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <span class="step-title">The 3 commands you&rsquo;ll use daily</span>
+        </div>
+        <div class="step-body">
+          <p>The hooks do the routine work unprompted. Manual interaction comes down to three commands, runnable from any pane (or inside Claude Code with <span class="mono">!</span> shell-exec):</p>
+          <table class="data-table">
+            <tr><th>Command</th><th>What it does</th></tr>
+            <tr><td><span class="mono">sigil facts</span></td><td>List everything stored, with IDs. Your spot-check that memory contains what you think it does.</td></tr>
+            <tr><td><span class="mono">sigil remember "..."</span></td><td>Save a fact explicitly. Sigil classifies it, extracts atomic facts, and embeds them &mdash; write natural language.</td></tr>
+            <tr><td><span class="mono">sigil search "..."</span></td><td>Semantic search over memory. This is the same path the prompt hook uses &mdash; run it to debug what Claude is actually seeing.</td></tr>
+          </table>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>The &ldquo;teach once, recall everywhere&rdquo; rule</strong> If you catch yourself telling Claude the same thing in two different sessions, that&rsquo;s the signal to make it a <span class="mono">sigil remember</span>. From then on, every pane knows.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">4</span>
+          <span class="step-title">Where it fits in each pane</span>
+        </div>
+        <div class="step-body">
+          <p>The hooks fire identically everywhere, but there&rsquo;s a natural division of labor:</p>
+          <table class="data-table">
+            <tr><th>Pane</th><th>What shared memory changes</th></tr>
+            <tr><td><span class="mono">AUDIT</span></td><td>Recalls past findings and ratified decisions &mdash; stops re-flagging issues you already resolved. Best pane for saving durable facts after a review: Opus synthesis is worth keeping.</td></tr>
+            <tr><td><span class="mono">IMPL</span></td><td>Stack choices, conventions, and constraints inject automatically &mdash; no more re-explaining the package manager or test layout every session. Add tactical facts as you discover them.</td></tr>
+            <tr><td><span class="mono">PLAN</span></td><td>Prior architectural decisions surface during planning, so new plans build on old ones instead of contradicting them.</td></tr>
+            <tr><td><span class="mono">PROMPT</span></td><td>Natural home for memory housekeeping &mdash; reviewing <span class="mono">sigil facts</span>, pruning stale entries, bulk ingestion.</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">5</span>
+          <span class="step-title">Seeding memory: new vs. existing projects</span>
+        </div>
+        <div class="step-body">
+          <p><strong>New project</strong> &mdash; spend two minutes on day 1 telling Sigil what the project is. Every later prompt, in every pane, has it on tap:</p>
+          <div class="code-block">
+<div><span class="cmd">sigil</span> remember <span class="str">"myproject: Next.js + Postgres app for X audience, target launch March"</span></div>
+<div><span class="cmd">sigil</span> remember <span class="str">"myproject: hard constraint &mdash; no auth provider lock-in"</span></div>
+          </div>
+          <p><strong>Existing project</strong> &mdash; no migration needed; the hooks fire regardless. Teach it project specifics as you hit them, and optionally bulk-seed from the docs you already maintain:</p>
+          <div class="code-block">
+<div><span class="cmd">sigil</span> ingest ./ARCHITECTURE.md</div>
+<div><span class="cmd">sigil</span> ingest ./SESSION_LOG.md</div>
+<div><span class="cmd">sigil</span> ingest <span class="str">"./docs/**/*.md"</span></div>
+          </div>
+          <p>Sigil extracts atomic facts and de-duplicates against existing memory. Run <span class="mono">sigil facts</span> afterward to spot-check what landed. Your SESSION_LOG (Step 16) and CLAUDE.md files (Step 17) keep working exactly as before &mdash; Sigil owns the cross-session, cross-project layer; it doesn&rsquo;t replace either.</p>
+          <div class="callout tip">
+            <span class="callout-icon">&#128274;</span>
+            <div><strong>Privacy note</strong> Sigil is local-first &mdash; facts live in your own Postgres, and with Ollama providers nothing leaves the machine. If you handle client work, keep client facts out of the default namespace: store them under a per-client namespace (<span class="mono">sigil remember --namespace=client-a "..."</span>) so they never auto-inject into unrelated projects &mdash; or keep client data out of Sigil entirely and rely on per-project CLAUDE.md files. Never store secrets or credentials: the database is local but not encrypted at rest.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION s21: Draw Things (Optional) -->
+  <div class="section" id="s21">
+    <div class="section-header">
+      <span class="section-num">21</span>
       <h2>Draw Things <span style="font-weight:400;color:var(--text-muted)">(Optional &mdash; Creative AI)</span></h2>
     </div>
     <p class="section-intro">Free local image generation on macOS. Runs entirely on-device via Core ML &mdash; no API calls, no sign-up. Completely independent from Claude Code and Ollama.</p>
@@ -1798,10 +2096,10 @@
     </div>
   </div>
 
-  <!-- SECTION s20: Troubleshooting -->
-  <div class="section" id="s20">
+  <!-- SECTION s22: Troubleshooting -->
+  <div class="section" id="s22">
     <div class="section-header">
-      <span class="section-num">20</span>
+      <span class="section-num">22</span>
       <h2>Troubleshooting</h2>
     </div>
     <p class="section-intro">Common failure modes and how to fix them.</p>
@@ -1940,10 +2238,10 @@
     </div>
   </div>
 
-  <!-- SECTION s21: Quick Reference -->
-  <div class="section" id="s21">
+  <!-- SECTION s23: Quick Reference -->
+  <div class="section" id="s23">
     <div class="section-header">
-      <span class="section-num">21</span>
+      <span class="section-num">23</span>
       <h2>Quick Reference — read as needed</h2>
     </div>
     <p class="section-intro">Everything on one screen — copy, paste, go.</p>
@@ -2047,7 +2345,7 @@
 
 <div class="footer">
   <span>iTerm2 + Claude Code &middot; 4-Pane Setup Guide</span>
-  <span>Claude Code v2.1.110 &middot; April 2026</span>
+  <span>Claude Code v2.1.216 &middot; July 2026</span>
 </div>
 
 </body>
