@@ -6,7 +6,7 @@ By [Prav Durgani](https://pravindurgani.com) · **[Read the full guide](https://
 
 ![Four iTerm2 panes, each running a Claude Code session with its own role colour](screenshots/05-claude-running.png)
 
-Each pane is an independent Claude Code session with its own model, effort level and permission mode. One command, `cc`, launches the right configuration for whichever pane you are in. Setup takes about 45 minutes and adds no dependencies beyond iTerm2 and the Claude Code CLI.
+Each pane is an independent Claude Code session with its own model, effort level and permission mode. One command, `cc`, launches the right configuration for whichever pane you are in. Setup takes about 45 minutes. Once installed it runs no daemons and no background services: it is four terminal sessions and a shell alias.
 
 ---
 
@@ -20,7 +20,7 @@ Each pane is an independent Claude Code session with its own model, effort level
 | **PLAN** | Architecture and planning | Sonnet | low | default |
 
 - **No self-grading.** The model that writes the code never reviews it.
-- **Cost control.** Opus is roughly 15× the price of Sonnet per token, so it only runs in the review pane.
+- **Cost control.** Opus is substantially more expensive than Sonnet per token, roughly 15× as of September 2026, so it only runs in the review pane.
 - **Enforced, not requested.** `--permission-mode plan` means the reviewer cannot write files, whatever it is asked to do. Hooks block `.env` edits and `git push` before they happen.
 - **Clean context.** Four independent conversation windows, each focused on one job.
 - **Survives a restart.** Saved iTerm2 arrangements bring the whole layout back.
@@ -51,15 +51,18 @@ Use agent teams when you want several agents attacking one problem for a few min
 
 Full instructions, with screenshots, are in **[the guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**. The short version:
 
-1. **Install the prerequisites** — `brew install node iterm2` and `npm install -g @anthropic-ai/claude-code`, then `claude auth login`.
+1. **Install the prerequisites** — `brew install node`, `brew install --cask iterm2`, then `npm install -g @anthropic-ai/claude-code` and `claude auth login`.
 2. **Create four iTerm2 profiles** — `CC-AUDIT`, `CC-IMPL`, `CC-PROMPT`, `CC-PLAN`, each with its own background and tab colour.
 3. **Set the startup command and initial directory** on each profile, pointing at your project.
 4. **Add the shell snippet** from [`zshrc-snippet.sh`](zshrc-snippet.sh) to your `~/.zshrc`.
 5. **Build a 2×2 layout** and save it as the default window arrangement.
 6. **Type `cc` in each pane.** Claude Code starts with the right model, effort and permission mode.
-7. **Install the safety hooks** — copy `circuit-breaker.py`, `protect-env.py`, `protect-git-push.py`, `session-start-reset.py` and `version-check.py` from [`hooks/`](hooks/) into `~/.claude/hooks/`, then merge the `hooks` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`.
 
-Optional extras, each covered in the guide: an MCP server and slash commands, local models via Ollama, and shared persistent memory via [Sigil](https://github.com/Anmol-Srv/sigil).
+That is the working four-pane setup.
+
+**Recommended next:** install the safety hooks. Copy `circuit-breaker.py`, `protect-env.py`, `protect-git-push.py`, `session-start-reset.py` and `version-check.py` from [`hooks/`](hooks/) into `~/.claude/hooks/`, then merge the `hooks` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`. They block `.env` edits and `git push` at the tool call, not by asking nicely.
+
+Also optional, all covered in the guide: an MCP server and slash commands, local models via Ollama, and shared persistent memory via [Sigil](https://github.com/Anmol-Srv/sigil).
 
 ---
 

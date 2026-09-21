@@ -1,4 +1,4 @@
-# Mac + Claude Code — AI Workstation Setup Guide
+# A Disciplined Claude Code Workstation for iTerm2
 
 > How to run four specialised Claude Code sessions in one iTerm2 window, each
 > locked to its own role, model and permission mode — and how to work in that
@@ -342,10 +342,11 @@ Real example:
 
 **Split global rules from project rules so neither leaks into the other.**
 
-| File | Location | Committed? | Contains |
-|------|----------|------------|---------|
-| Global rules | `~/.claude/CLAUDE.md` | No — personal | Coding conventions, error-handling policy, tool preferences |
-| Project rules | `.claude/CLAUDE.md` (repo) | Yes | Project architecture, active constraints, session continuity |
+| Scope | Put it in | Committed? |
+|-------|-----------|------------|
+| Your personal conventions, every project | `~/.claude/CLAUDE.md` | No — personal |
+| Shared project rules, every agent reads them | `AGENTS.md` (repo root) | Yes |
+| Claude-only additions for this project | `CLAUDE.md` importing `@AGENTS.md` | Yes |
 
 Load order is: managed policy, then user `~/.claude/CLAUDE.md`, then project
 `./CLAUDE.md`, then `./CLAUDE.local.md`. They concatenate — later files add to
@@ -623,7 +624,7 @@ report; it cannot edit.
 
 #### How much does running Opus in one pane cost?
 
-**Roughly 15× Sonnet per token, but only on review passes.** AUDIT is idle while
+**Substantially more than Sonnet, roughly 15× as of September 2026, but only on review passes.** AUDIT is idle while
 you implement, and a review reads far fewer tokens than an implementation
 session writes. The other three panes stay on Sonnet.
 

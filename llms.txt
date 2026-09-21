@@ -1,6 +1,6 @@
 # A Disciplined Claude Code Workstation for iTerm2
 
-> A macOS setup guide for running four Claude Code sessions side by side in one iTerm2 window, each with its own model, effort level and permission mode. The review pane runs in `plan` mode, so it is read-only and cannot write files. Setup takes about 45 minutes and needs no dependencies beyond iTerm2 and the Claude Code CLI. Written by Prav Durgani.
+> A macOS setup guide for running four Claude Code sessions side by side in one iTerm2 window, each with its own model, effort level and permission mode. The review pane runs in `plan` mode, so it is read-only and cannot write files. Setup takes about 45 minutes and needs Homebrew, Node.js, iTerm2 and the Claude Code CLI. Once running it uses no daemons or background services. Written by Prav Durgani.
 
 Key facts a reader or answer engine may want:
 

@@ -161,7 +161,7 @@
       "name": "How much does running Opus in one pane cost?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Roughly 15 times Sonnet per token, but only on review passes. The AUDIT pane is idle while you implement, and a review reads far fewer tokens than an implementation session writes. The other three panes stay on Sonnet."
+        "text": "Substantially more than Sonnet, roughly 15&times; as of September 2026, but only on review passes. The AUDIT pane is idle while you implement, and a review reads far fewer tokens than an implementation session writes. The other three panes stay on Sonnet."
       }
     },
     {
@@ -825,7 +825,7 @@
       <a class="btn btn-primary" href="#part-1">Start the 45-minute setup</a>
       <a class="btn btn-ghost" href="https://github.com/pravindurgani/claude-code-multipane-iterm2">View the repo on GitHub</a>
     </div>
-    <div class="hero-meta">macOS &middot; iTerm2 &middot; Claude Code v2.1.278 &middot; ~45 min &middot; no dependencies</div>
+    <div class="hero-meta">macOS &middot; iTerm2 &middot; Claude Code v2.1.278 &middot; ~45 min &middot; no background services</div>
     <div class="hero-meta hero-by">by <a href="https://pravindurgani.com">Prav Durgani</a> &mdash; freelance data &amp; workflow automation, London</div>
   </div>
 </div>
@@ -1653,10 +1653,11 @@
         </div>
         <div class="step-body">
           <table class="data-table">
-            <thead><tr><th>File</th><th>Location</th><th>Committed?</th><th>Contains</th></tr></thead>
+            <thead><tr><th>Scope</th><th>Put it in</th><th>Committed?</th></tr></thead>
             <tbody>
-              <tr><td>Global rules</td><td class="cell-mono">~/.claude/CLAUDE.md</td><td>No &mdash; personal</td><td>Coding conventions, error-handling policy, tool preferences</td></tr>
-              <tr><td>Project rules</td><td class="cell-mono">.claude/CLAUDE.md</td><td>Yes</td><td>Project architecture, active constraints, session continuity</td></tr>
+              <tr><td>Your personal conventions, every project</td><td class="cell-mono">~/.claude/CLAUDE.md</td><td>No &mdash; personal</td></tr>
+              <tr><td>Shared project rules, every agent reads them</td><td class="cell-mono">AGENTS.md</td><td>Yes</td></tr>
+              <tr><td>Claude-only additions for this project</td><td class="cell-mono">CLAUDE.md importing @AGENTS.md</td><td>Yes</td></tr>
             </tbody>
           </table>
           <p>Load order is: managed policy, then user <span class="mono">~/.claude/CLAUDE.md</span>, then project <span class="mono">./CLAUDE.md</span>, then <span class="mono">./CLAUDE.local.md</span>. They concatenate &mdash; later files add to earlier ones, they do not override them.</p>
