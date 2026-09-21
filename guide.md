@@ -30,9 +30,10 @@ What you're building:
 The result: one `cc` command launches the right Claude model in each pane, and
 `llm-fast "..."` or `llm-code "..."` routes a prompt to the right local model.
 
-Two optional add-ons close the remaining gaps: **pane handoff** (Step 19)
-routes work between AUDIT and IMPL automatically, and **Sigil** (Step 20)
-gives every pane shared, persistent memory across sessions and projects.
+One optional add-on remains live: **Sigil** (Step 20) gives every pane
+shared, persistent memory across sessions and projects. (An earlier **pane
+handoff** add-on — Step 19 — was retired 2026-09-21 and archived under
+`archive/handoff-2026-06/`.)
 
 ---
 
@@ -445,7 +446,7 @@ The AUDIT pane identified: [paste findings here].
 Fix this while preserving existing patterns. Do not touch unrelated files.
 ```
 
-> **Optional:** If you've installed the pane handoff feature (Step 19), the AUDIT pane writes the directive to `~/.claude/handoff/to-impl.<scope>.txt` and the watcher delivers it as a single bracketed paste to the IMPL pane — no manual copy-paste. See Step 19 (retired, archived) or `archive/handoff-2026-06/HANDOFF_GUIDE.md` §5.
+> **Retired:** An automated pane handoff add-on used to remove this manual copy-paste step — the AUDIT pane would write the directive to a file and a watcher would deliver it as a single bracketed paste to IMPL. It was retired 2026-09-21 and archived; see Step 19 (retired, archived) or `archive/handoff-2026-06/HANDOFF_GUIDE.md` §5. Persistent memory (Step 20) plus a shared `AGENTS.md` kernel is the current replacement.
 
 ### Context hygiene
 

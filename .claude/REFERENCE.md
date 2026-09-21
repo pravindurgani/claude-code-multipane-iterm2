@@ -12,8 +12,8 @@ Adversarial review. Never edit files from this pane.
 - Read `.claude/CLAUDE.md` for project invariants — specifically:
   - SessionStart hooks must always exit 0 (unhandled `OSError` = HIGH finding).
   - Hook templates live in `hooks/`, installed copies in `~/.claude/hooks/` — diverged copies = HIGH finding.
-  - Current-version marker: `index.html:1818` footer only — bumps every release. AUDIT drift = HIGH.
-  - Last-verified markers (5 places): `guide.md:4`, `guide.md:249`, `guide.md:692`, `index.html:1074`, `index.html:1803` — bump only on re-verification. AUDIT drift = LOW. See `ARCHITECTURE.md §3`.
+  - Current-version marker: index.html footer only — grep `class="footer"` (version span follows 2 lines after) — bumps every release. AUDIT drift = HIGH.
+  - Last-verified markers (4 places): guide.md flag-compatibility note (grep `Version note:`), guide.md T7 troubleshooting (grep `guide was verified against`), index.html flag-compatibility note (grep `Version note:`), index.html T7 mirror (grep `guide was verified against`) — bump only on re-verification. AUDIT drift = LOW. See `ARCHITECTURE.md §3`.
   - `guide.md` ↔ `index.html` parallel content; section numbering triad in HTML (`id`, `section-num`, TOC href) must stay coupled.
   - `.mcp.json.example` must use placeholders (`YOUR_USERNAME`, `YOUR_READONLY_PAT_HERE`) — real tokens trigger GitHub push protection.
 - Review **only** files changed in the last IMPL session (diff-scope against `git log`).
@@ -50,12 +50,12 @@ Architecture and scope decisions.
 
 ## Current Sprint
 
-**Sprint goal (2026-04-14):** Close Bucket 1 + Bucket 2 of `SETUP_FREEZE_PLAN.md` — resolve H1, bootstrap git + `SESSION_LOG.md`, land `Weight Class`, `ARCHITECTURE.md`, `REFERENCE.md` docs.
+**Sprint goal (2026-04-14):** Close Bucket 1 + Bucket 2 of the freeze plan — resolve H1, bootstrap git + `SESSION_LOG.md`, land `Weight Class`, `ARCHITECTURE.md`, `REFERENCE.md` docs.
 
 **Freeze starts:** 2026-04-14 after Bucket 2 commit.
 **Freeze ends:** 2026-07-14 (90 days). Only genuine blockers justify reopening.
 
-**Real work to ship during freeze:** see `SETUP_FREEZE_PLAN.md` §"What to build instead" (private project/business items redacted from this public repo).
+**Real work to ship during freeze:** the freeze plan now lives in the author's private notes (moved out of this public repo); private project/business items are not tracked here.
 
 ---
 
@@ -75,8 +75,8 @@ All deferred items get one focused session on the weekend after 2026-07-14.
 ## Decisions Log
 
 - **Weight Class = Tool** · 2026-04-14 · Public repo with external readers but no product runtime; hooks/skills are copied-and-used, not imported · Prototype ruled out (public consumption), Product ruled out (no shipped runtime).
-- **Setup freeze 2026-04-14 → 2026-07-14** · 2026-04-14 · Infrastructure already exceeds Reddit patterns (three-man-team, MCP Code Mode); further setup work is sideways motion displacing real product work ([REDACTED-PROJECT], AgentSutra) · Accepting new Reddit-inspired ideas ruled out: add to `backlog/setup-ideas.md` instead.
-- **`SETUP_FREEZE_PLAN.md` checked in, not gitignored** · 2026-04-14 · Freeze rationale is project context future-me needs to read · Keeping it local ruled out: the commitment needs to be visible to AUDIT pane next session.
+- **Setup freeze 2026-04-14 → 2026-07-14** · 2026-04-14 · Infrastructure already exceeds common patterns seen elsewhere; further setup work is sideways motion displacing other active projects · Accepting new setup ideas ruled out during the freeze: add to `backlog/setup-ideas.md` instead.
+- **Freeze plan moved out of the repo** · 2026-09-21 · It carried personal planning notes that don't belong in a public repo · Now lives in the author's private notes, outside this repo; AUDIT should no longer expect it in-repo.
 
 ---
 
@@ -85,4 +85,4 @@ All deferred items get one focused session on the weekend after 2026-07-14.
 - Global Claude Code config: `~/.claude/CLAUDE.md` (Build Process 8-step, Weight Classes, LLM Routing).
 - Plan archive: `~/.claude/plans/` — most recent relevant plan is `adaptive-percolating-sphinx.md`.
 - Anthropic changelog: https://docs.claude.com/en/docs/claude-code/overview — consult when `version-check.py` fires the update reminder.
-- The parallel [REDACTED-PROJECT] / [REDACTED-PROJECT] / AgentSutra repos have their own `SESSION_LOG.md` and `REFERENCE.md`. Do not cross-pollinate work here.
+- Other private project repos have their own `SESSION_LOG.md` and `REFERENCE.md`. Do not cross-pollinate work here.

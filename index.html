@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>4-Pane Claude Code Setup for iTerm2 — Complete Guide</title>
-<meta name="description" content="Run 4 role-locked Claude Code sessions in one iTerm2 window — an Opus reviewer that can't write files, automated pane handoffs, and persistent memory via Sigil.">
+<meta name="description" content="Run 4 role-locked Claude Code sessions in one iTerm2 window — an Opus reviewer that can't write files, and shared persistent memory across panes via Sigil.">
 <meta name="author" content="Prav Durgani">
 <link rel="canonical" href="https://pravindurgani.github.io/claude-code-multipane-iterm2/">
 <meta property="og:title" content="4-Pane Claude Code Setup for iTerm2">
@@ -22,7 +22,7 @@
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "4-Pane Claude Code Setup for iTerm2 — Complete Guide",
-  "description": "Run 4 role-locked Claude Code sessions in one iTerm2 window — an Opus reviewer that can't write files, automated pane handoffs, and persistent memory via Sigil.",
+  "description": "Run 4 role-locked Claude Code sessions in one iTerm2 window — an Opus reviewer that can't write files, and shared persistent memory across panes via Sigil.",
   "author": {
     "@type": "Person",
     "name": "Prav Durgani",
@@ -57,10 +57,10 @@
     },
     {
       "@type": "Question",
-      "name": "What is a pane handoff between AI coding sessions?",
+      "name": "Does this setup include an automated pane handoff feature?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It is file-based routing between panes: the AUDIT pane writes a directive to a scope-keyed handoff file, and a watcher delivers it into the IMPL pane's transcript as a single bracketed paste. Scope keys let two projects run the loop in parallel without cross-talk."
+        "text": "No — an earlier file-based pane handoff add-on, which routed directives between the AUDIT and IMPL panes automatically, was retired on 2026-09-21 and archived. The current setup carries context between panes with Sigil, a shared persistent memory system, plus a shared AGENTS.md kernel."
       }
     },
     {
@@ -642,8 +642,8 @@
   <div class="callout tip" style="margin-top: 32px;">
     <span class="callout-icon">&#128229;</span>
     <div>
-      <strong>New: pane handoff &amp; persistent memory</strong>
-      Once the 4-pane setup is running, two optional add-ons close the remaining gaps: <a href="#s19" style="color: var(--blue); font-weight: 600;">pane handoff</a> (Step 19) routes directives between AUDIT and IMPL automatically &mdash; no more copy-pasting between panes &mdash; and <a href="#s20" style="color: var(--blue); font-weight: 600;">Sigil</a> (Step 20) gives every pane shared, persistent memory across sessions and projects.
+      <strong>New: persistent memory</strong>
+      Once the 4-pane setup is running, <a href="#s20" style="color: var(--blue); font-weight: 600;">Sigil</a> (Step 20) gives every pane shared, persistent memory across sessions and projects. An earlier <a href="#s19" style="color: var(--blue); font-weight: 600;">pane handoff</a> add-on (Step 19) was retired 2026-09-21 and archived.
     </div>
   </div>
 
@@ -669,7 +669,7 @@
       <li><a href="#s16"><span class="toc-num">16</span> SESSION_LOG pattern</a></li>
       <li><a href="#s17"><span class="toc-num">17</span> CLAUDE.md split pattern</a></li>
       <li><a href="#s18"><span class="toc-num">18</span> MCP server, slash commands &amp; skills</a></li>
-      <li><a href="#s19"><span class="toc-num">19</span> Pane handoff (AUDIT &harr; IMPL)</a></li>
+      <li><a href="#s19"><span class="toc-num">19</span> Pane handoff (AUDIT &harr; IMPL) (retired, archived)</a></li>
       <li><a href="#s20"><span class="toc-num">20</span> Persistent memory (Sigil)</a></li>
       <li><a href="#s21"><span class="toc-num">21</span> Draw Things (optional)</a></li>
       <li><a href="#s22"><span class="toc-num">22</span> Troubleshooting</a></li>
@@ -1420,7 +1420,7 @@
           </div>
           <div class="callout tip">
             <span class="callout-icon">&#128229;</span>
-            <div><strong>Optional automation</strong> Install the <a href="#s19" style="color: var(--blue); font-weight: 600;">pane handoff add-on (Step 19)</a> and the AUDIT pane writes its directive to a file; the watcher delivers it as a single bracketed paste to IMPL &mdash; no manual copy. Scope-keyed so two projects run in parallel.</div>
+            <div><strong>Retired</strong> An automated <a href="#s19" style="color: var(--blue); font-weight: 600;">pane handoff add-on (Step 19)</a> used to do this: the AUDIT pane wrote its directive to a file and a watcher delivered it as a single bracketed paste to IMPL. It was retired 2026-09-21 and archived; persistent memory (Step 20) plus a shared <span class="mono">AGENTS.md</span> kernel is the current replacement.</div>
           </div>
         </div>
       </div>
