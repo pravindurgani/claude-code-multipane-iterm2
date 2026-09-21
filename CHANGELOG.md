@@ -1,5 +1,81 @@
 # Changelog
 
+## 2026-09-21 — Restructured into four parts, page rebuilt
+
+The guide was a flat run of 21 numbered steps that mixed a sequential install with
+optional add-ons and working patterns. It is now four parts: **Install it**,
+**Work in it**, **Optional add-ons**, **Reference**, plus an appendix. `guide.md`
+went from 7,012 words to 4,580.
+
+### Corrected
+
+- **`claude login` is not a command.** Step 2 had told every reader to run it since
+  March; the correct form is `claude auth login`. The second instruction in the
+  guide failed.
+- `--effort` was missing `xhigh`; `--permission-mode` listed two of its six modes;
+  the model-ID example named a retired model.
+- Four "verified against v2.1.81 (March 2026)" markers bumped to v2.1.278.
+- The time estimate contradicted itself: `guide.md` claimed 3–4 hours, `index.html`
+  claimed ~15 minutes. Measured, the install is ~45 minutes hands-on; the hours were
+  only ever the optional Ollama downloads.
+- `iterm2` is a cask, not a formula, so the README's `brew install node iterm2`
+  could not work.
+
+### Removed
+
+- The retired pane-handoff step: 1,225 words of live install instructions for a
+  feature archived earlier the same day, replaced by a 34-word pointer.
+- Draw Things, which its own text admitted "does not interact with Claude Code or
+  Ollama".
+- Sigil trimmed from 1,049 words to 244; it is a third-party tool with its own
+  maintained README.
+- Duplicated claims that appeared three to six times each: the read-only reviewer
+  rule, the Opus cost rationale, the iTerm2-versus-Terminal comparison, `/clear`
+  before review.
+
+### Added
+
+- **Agent teams or four panes?** Claude Code now ships an experimental agent-teams
+  feature that puts teammates in iTerm2 split panes. Its teammates inherit the
+  lead's permission mode and cannot be given per-teammate modes at spawn, so it
+  cannot produce a read-only reviewer. The guide says so and cites the docs.
+- An expanded `CLAUDE.md` / `AGENTS.md` section teaching the portable
+  `@AGENTS.md` import pattern.
+- Six common questions with direct answers, as real page content rather than
+  schema describing text that did not exist.
+- `llms.txt` and `sitemap.xml`.
+
+### The page
+
+The hero had no actionable element at all, which is the shape of a 17-second
+average visit; it now carries two buttons, and the page links to its own repo,
+which it never previously did. 59 sub-steps promoted from `span` to `h3` — the
+page had zero `h3` headings. `HowTo` and `SoftwareSourceCode` schema added,
+`FAQPage` regenerated to match the DOM. Dark mode added. The page scrolled
+sideways 41px on a phone because of long commands and wide tables; both are now
+contained, and the first command moved from 2,461px to 1,142px.
+
+---
+
+## 2026-09-21 — Handoff retired, repo tidy
+
+Retired the pane handoff feature (Step 19). The author moved to a shared-memory model instead: persistent memory (Sigil) plus a shared `AGENTS.md` kernel now cover carrying context and directives between panes. The AppleScript bracketed-paste injection path the daemon relied on is an injection-class risk surface not worth carrying once a simpler alternative existed. The daemon has also been removed from the author's machine.
+
+### Moved to `archive/handoff-2026-06/`
+
+- `handoff/` (all 5 files), `HANDOFF_GUIDE.md`, `HANDOFF_GUIDE.html`, `hooks/enforce-handback.py`, `commands/start-audit.md`, `commands/start-impl.md`
+- Added `archive/handoff-2026-06/README.md` explaining the retirement, the injection-risk rationale, and how to restore from commit `a706e6b` if needed
+
+### Modified
+
+- `guide.md` / `index.html` — Step 19 heading now reads "(retired, archived)"; one callout added at the top of the section pointing to the archive and to Step 20 (persistent memory) + `AGENTS.md` as the replacement. Section kept in place, not renumbered.
+- `README.md` — replaced the "New: Handoff" blockquote with a retirement note linking to the archive README; updated the file table and Step 8 install line to point at `archive/handoff-2026-06/…`; added `scripts/pane-logging.sh` to the file table.
+- `index.html` footer — bumped current-version marker to Claude Code v2.1.278 (September 2026).
+- `.claude/CLAUDE.md` — corrected the stale claim that `~/.claude/settings.json` has `#` comments (it doesn't; `hooks/settings.json.example` does); replaced brittle line-number references in "Version String" with grep-able anchors; added a "Retired" section.
+- `.claude/REFERENCE.md` — redacted private project/business details that didn't belong in a public repo.
+- `hooks/settings.json.example` — removed the comment paragraph describing the handoff installer's Stop hook wiring.
+- `scripts/pane-logging.sh` — added to the repo (was untracked): enable/disable iTerm2 automatic session logging for the four profiles.
+
 ## 2026-06-05 — Pane handoff feature
 
 Optional file-based bracketed-paste routing between AUDIT and IMPL panes. Write a directive to a scope-keyed file in one pane, it arrives as a single paste in the other. Built around a launchd-managed `fswatch` daemon that wraps file content in bracketed-paste escapes and injects it into the bound iTerm session via AppleScript.

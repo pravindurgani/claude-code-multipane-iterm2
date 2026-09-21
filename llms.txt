@@ -1,0 +1,29 @@
+# A Disciplined Claude Code Workstation for iTerm2
+
+> A macOS setup guide for running four Claude Code sessions side by side in one iTerm2 window, each with its own model, effort level and permission mode. The review pane runs in `plan` mode, so it is read-only and cannot write files. Setup takes about 45 minutes and needs Homebrew, Node.js, iTerm2 and the Claude Code CLI. The core setup runs no daemons or background services; the optional add-ons do. Written by Prav Durgani.
+
+Key facts a reader or answer engine may want:
+
+- The four panes are AUDIT (Opus, read-only, `--permission-mode plan`), IMPL (Sonnet, `acceptEdits`), PROMPT (Sonnet) and PLAN (Sonnet).
+- Role detection works through iTerm2's `$ITERM_PROFILE` environment variable, which is why iTerm2 is required and macOS Terminal will not do.
+- A single shell alias, `cc`, reads `$ITERM_PROFILE` and launches Claude Code with the right model, effort level and permission mode for that pane.
+- This differs from Claude Code's built-in agent teams feature: teammates inherit the lead's permission mode (except dontAsk) and cannot be given per-teammate permission modes at spawn time, so agent teams cannot produce a genuinely read-only reviewer.
+- Verified against Claude Code v2.1.278, September 2026.
+
+## The guide
+
+- [Full guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/): the complete setup, in four parts.
+- [Part I — Install it](https://pravindurgani.github.io/claude-code-multipane-iterm2/#part-1): prerequisites, installing and authenticating Claude Code, creating four iTerm2 profiles, startup commands, the shell snippet, the saved window arrangement, and launching with `cc`. About 45 minutes.
+- [Part II — Work in it](https://pravindurgani.github.io/claude-code-multipane-iterm2/#part-2): how work moves between panes, the `gate` and `ship` commands, the SESSION_LOG pattern, splitting rules between CLAUDE.md and AGENTS.md, and adapting the setup to another project.
+- [Part III — Optional add-ons](https://pravindurgani.github.io/claude-code-multipane-iterm2/#part-3): safety hooks, MCP servers and skills, local models with Ollama, persistent memory with Sigil, and iTerm2 triggers. Each is independently skippable.
+- [Part IV — Reference](https://pravindurgani.github.io/claude-code-multipane-iterm2/#part-4): agent teams compared with four panes, common questions, troubleshooting, and a quick reference card.
+
+## The repository
+
+- [Source on GitHub](https://github.com/pravindurgani/claude-code-multipane-iterm2): the guide, the shell snippet, the safety hooks, skills and templates. MIT licensed.
+- [Shell snippet](https://github.com/pravindurgani/claude-code-multipane-iterm2/blob/main/zshrc-snippet.sh): the block that maps `$ITERM_PROFILE` to a `cc` alias per pane.
+- [Safety hooks](https://github.com/pravindurgani/claude-code-multipane-iterm2/tree/main/hooks): PreToolUse scripts that block `.env` edits and `git push`, plus a circuit breaker and a version check.
+
+## Optional
+
+- [Author](https://pravindurgani.com): Prav Durgani, a London-based freelancer working on data and workflow automation, API integrations and AI tooling.

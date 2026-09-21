@@ -4,34 +4,135 @@
 <script defer src="https://cloud.umami.is/script.js" data-website-id="35d535e9-a503-430f-b50f-9b7f39957456"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>4-Pane Claude Code Setup for iTerm2 — Complete Guide</title>
-<meta name="description" content="Run 4 role-locked Claude Code sessions in one iTerm2 window — an Opus reviewer that can't write files, automated pane handoffs, and persistent memory via Sigil.">
+<title>Run 4 Claude Code Sessions in iTerm2 — Role-Locked Panes, Read-Only Reviewer</title>
+<meta name="description" content="Run four Claude Code sessions side by side in one iTerm2 window. Opus reviews read-only and cannot write files. Sonnet builds. A 45-minute macOS setup: profiles, hooks and shared rules.">
 <meta name="author" content="Prav Durgani">
 <link rel="canonical" href="https://pravindurgani.github.io/claude-code-multipane-iterm2/">
-<meta property="og:title" content="4-Pane Claude Code Setup for iTerm2">
-<meta property="og:description" content="Stop your AI from grading its own code. Run 4 Claude Code sessions in one iTerm2 window — each with a locked role, model, and permission set.">
-<meta property="og:type" content="website">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+<meta property="og:title" content="A Disciplined Claude Code Workstation for iTerm2">
+<meta property="og:description" content="Run four Claude Code sessions side by side in one iTerm2 window. Opus reviews read-only and cannot write files. Sonnet builds. A 45-minute macOS setup: profiles, hooks and shared rules.">
+<meta property="og:type" content="article">
 <meta property="og:url" content="https://pravindurgani.github.io/claude-code-multipane-iterm2/">
-<meta property="og:site_name" content="4-Pane Claude Code Setup for iTerm2">
+<meta property="og:site_name" content="Prav Durgani">
 <meta property="og:image" content="https://pravindurgani.github.io/claude-code-multipane-iterm2/screenshots/05-claude-running.png">
+<meta property="og:image:width" content="1920">
+<meta property="og:image:height" content="1077">
 <meta property="og:image:alt" content="Four iTerm2 panes each running a role-locked Claude Code session">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A Disciplined Claude Code Workstation for iTerm2">
+<meta name="twitter:description" content="Run four Claude Code sessions side by side in one iTerm2 window. Opus reviews read-only and cannot write files. Sonnet builds. A 45-minute macOS setup: profiles, hooks and shared rules.">
 <meta name="twitter:image" content="https://pravindurgani.github.io/claude-code-multipane-iterm2/screenshots/05-claude-running.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "TechArticle",
-  "headline": "4-Pane Claude Code Setup for iTerm2 — Complete Guide",
-  "description": "Run 4 role-locked Claude Code sessions in one iTerm2 window — an Opus reviewer that can't write files, automated pane handoffs, and persistent memory via Sigil.",
+  "headline": "A Disciplined Claude Code Workstation for iTerm2",
+  "description": "Run four Claude Code sessions side by side in one iTerm2 window. Opus reviews read-only and cannot write files. Sonnet builds. A 45-minute macOS setup: profiles, hooks and shared rules.",
   "author": {
     "@type": "Person",
     "name": "Prav Durgani",
-    "url": "https://pravindurgani.com"
+    "url": "https://pravindurgani.com",
+    "jobTitle": "Freelance data and workflow automation engineer"
   },
   "datePublished": "2026-03-01",
-  "dateModified": "2026-07-21",
+  "dateModified": "2026-09-21",
   "image": "https://pravindurgani.github.io/claude-code-multipane-iterm2/screenshots/05-claude-running.png",
-  "mainEntityOfPage": "https://pravindurgani.github.io/claude-code-multipane-iterm2/"
+  "mainEntityOfPage": "https://pravindurgani.github.io/claude-code-multipane-iterm2/",
+  "inLanguage": "en-GB",
+  "proficiencyLevel": "Beginner",
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "Claude Code"
+    },
+    {
+      "@type": "Thing",
+      "name": "iTerm2"
+    },
+    {
+      "@type": "Thing",
+      "name": "AI pair programming"
+    }
+  ],
+  "isBasedOn": "https://github.com/pravindurgani/claude-code-multipane-iterm2"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "Set up four role-locked Claude Code panes in iTerm2",
+  "description": "Configure four independent Claude Code sessions in one iTerm2 window, each with its own model, effort level and permission mode.",
+  "totalTime": "PT45M",
+  "tool": [
+    {
+      "@type": "HowToTool",
+      "name": "iTerm2"
+    },
+    {
+      "@type": "HowToTool",
+      "name": "Claude Code CLI"
+    },
+    {
+      "@type": "HowToTool",
+      "name": "Homebrew"
+    },
+    {
+      "@type": "HowToTool",
+      "name": "Node.js"
+    }
+  ],
+  "step": [
+    {
+      "@type": "HowToStep",
+      "position": 1,
+      "name": "Prerequisites",
+      "text": "Install Homebrew, Node.js and iTerm2.",
+      "url": "https://pravindurgani.github.io/claude-code-multipane-iterm2/#s1"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 2,
+      "name": "Install and authenticate Claude Code",
+      "text": "Install the CLI with npm, then run claude auth login.",
+      "url": "https://pravindurgani.github.io/claude-code-multipane-iterm2/#s2"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 3,
+      "name": "Create four iTerm2 profiles",
+      "text": "Create CC-AUDIT, CC-IMPL, CC-PROMPT and CC-PLAN, each with its own colours.",
+      "url": "https://pravindurgani.github.io/claude-code-multipane-iterm2/#s3"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 4,
+      "name": "Startup command and initial directory",
+      "text": "Point each profile at your project directory.",
+      "url": "https://pravindurgani.github.io/claude-code-multipane-iterm2/#s4"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 5,
+      "name": "Shell snippet",
+      "text": "Add the block that maps $ITERM_PROFILE to a cc alias per pane.",
+      "url": "https://pravindurgani.github.io/claude-code-multipane-iterm2/#s5"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 6,
+      "name": "Window layout and saved arrangement",
+      "text": "Build a 2x2 split and save it as the default arrangement.",
+      "url": "https://pravindurgani.github.io/claude-code-multipane-iterm2/#s6"
+    },
+    {
+      "@type": "HowToStep",
+      "position": 7,
+      "name": "Launch with cc",
+      "text": "Type cc in each pane to start Claude Code with the right model, effort and permission mode.",
+      "url": "https://pravindurgani.github.io/claude-code-multipane-iterm2/#s7"
+    }
+  ]
 }
 </script>
 <script type="application/ld+json">
@@ -41,45 +142,72 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "Why run multiple Claude Code sessions in separate panes?",
+      "name": "Can I run this with tmux instead of iTerm2?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Each pane runs a dedicated session with a locked role, model, and permission set: PLAN (Opus) for architecture, IMPL (Sonnet) for implementation, AUDIT (Opus, read-only) for review, and PROMPT (Sonnet) for prompt work. Separating the roles means the session that writes code is never the one that reviews it."
+        "text": "Partly. You would have to replace the role-detection mechanism. The shell snippet branches on $ITERM_PROFILE, which iTerm2 sets on every session including arrangement restores. In tmux you would set your own per-pane environment variable, branch on that, and rebuild the layout and colours in tmux config."
       }
     },
     {
       "@type": "Question",
-      "name": "How do you stop an AI agent from reviewing its own code?",
+      "name": "Does the reviewer really not write files?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Run the reviewer as a separate read-only session. The AUDIT pane runs Opus with permissions that block file writes, so it is physically incapable of editing the code it reviews, and it audits code produced by a different model (Sonnet) in the IMPL pane."
+        "text": "Yes. The AUDIT pane launches with --permission-mode plan, which is enforced by Claude Code itself rather than by an instruction in a prompt. It can read, search and report; it cannot edit."
       }
     },
     {
       "@type": "Question",
-      "name": "What is a pane handoff between AI coding sessions?",
+      "name": "How much does running Opus in one pane cost?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "It is file-based routing between panes: the AUDIT pane writes a directive to a scope-keyed handoff file, and a watcher delivers it into the IMPL pane's transcript as a single bracketed paste. Scope keys let two projects run the loop in parallel without cross-talk."
+        "text": "About 2.5x Sonnet per token (Opus 5 $5/$25 per million against Sonnet 5 $2/$10, September 2026), and only on review passes. The AUDIT pane is idle while you implement, and a review reads far fewer tokens than an implementation session writes. The other three panes stay on Sonnet."
       }
     },
     {
       "@type": "Question",
-      "name": "How do Claude Code sessions share memory across projects?",
+      "name": "Can I use fewer than four panes?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Through Sigil, an open-source, local-first memory system integrated via Claude Code hooks. Relevant stored facts are auto-injected into each session, and new facts are saved after each turn, so decisions and preferences persist across panes, sessions, and projects."
+        "text": "Yes. IMPL plus AUDIT is the pair that earns its keep. PLAN and PROMPT are conveniences; drop them and use /clear in IMPL when you switch modes. Keep the separation between the pane that writes and the pane that reviews."
       }
     },
     {
       "@type": "Question",
-      "name": "What do you need to run the 4-pane Claude Code setup?",
+      "name": "Does this work on Linux or Windows?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "macOS, iTerm2, and the Claude Code CLI. Setup takes about 15 minutes and requires zero additional dependencies."
+        "text": "Claude Code does; this layout does not. The profiles, arrangements and $ITERM_PROFILE detection are macOS and iTerm2. The circuit-breaker hook uses fcntl, so the hooks run on macOS and Linux but not Windows."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need Ollama?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Nothing in Parts I or II touches it. It is only a prerequisite if you install Sigil and want its classifier to stay inside the hook time budget."
       }
     }
   ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  "name": "claude-code-multipane-iterm2",
+  "codeRepository": "https://github.com/pravindurgani/claude-code-multipane-iterm2",
+  "programmingLanguage": [
+    "Shell",
+    "Python",
+    "HTML"
+  ],
+  "license": "https://opensource.org/licenses/MIT",
+  "author": {
+    "@type": "Person",
+    "name": "Prav Durgani",
+    "url": "https://pravindurgani.com"
+  }
 }
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -185,14 +313,6 @@
     border-radius: var(--radius);
     padding: 28px 32px;
     margin: 40px 0;
-  }
-  .toc-title {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 16px;
   }
   .toc-list {
     list-style: none;
@@ -535,37 +655,6 @@
     justify-content: space-between;
   }
 
-  /* COMPARE CARDS (mobile-only alternative to the 3-col table) */
-  .iterm-compare-cards { display: none; }
-  .compare-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    margin-bottom: 8px;
-  }
-  .compare-card-title { font-weight: 600; font-size: 14px; margin-bottom: 8px; }
-  .compare-row {
-    font-size: 13px;
-    color: var(--text-secondary);
-    padding: 4px 0;
-    display: flex;
-    gap: 8px;
-    align-items: baseline;
-  }
-  .compare-row.yes { color: var(--green); }
-  .compare-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--text-muted);
-    min-width: 58px;
-    flex-shrink: 0;
-  }
-  .compare-row.yes .compare-label { color: var(--green); }
-
   /* RESPONSIVE */
   @media (max-width: 640px) {
     .hero { padding: 40px 20px 36px; }
@@ -610,10 +699,6 @@
 
     /* Footer */
     .footer { flex-direction: column; gap: 8px; text-align: center; padding: 24px 16px; }
-
-    /* Why iTerm2: swap table for stacked cards */
-    .iterm-compare-table { display: none !important; }
-    .iterm-compare-cards { display: block; }
   }
 
   /* Mid-size tablets */
@@ -621,63 +706,245 @@
     .hero h1 { font-size: 32px; }
     .shortcut-grid { grid-template-columns: 1fr; }
   }
+
+  /* STEP TITLES AS HEADINGS (h3) — must render identically to the old span */
+  h3.step-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0;
+  }
+
+  /* SEMANTIC ANCHOR ALIASES (backwards-compatible deep links) */
+  .anchor-alias { display: block; height: 0; scroll-margin-top: 24px; }
+
+  /* PART DIVIDERS */
+  .part-heading {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    color: var(--text-muted);
+    margin: 72px 0 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+    scroll-margin-top: 24px;
+  }
+  .part-intro {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 14px 0 0;
+    line-height: 1.7;
+  }
+  .part-heading + .section { margin-top: 32px; }
+  .part-intro + .section,
+  .part-intro + .anchor-alias + .section { margin-top: 28px; }
+
+  /* COLLAPSIBLE TOC */
+  .toc-details > summary {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .toc-details > summary::-webkit-details-marker { display: none; }
+  .toc-details > summary::before {
+    content: "\25B8";
+    font-size: 12px;
+    color: var(--blue);
+    transition: transform 0.15s;
+  }
+  .toc-details[open] > summary::before { transform: rotate(90deg); }
+  .toc-details > summary:hover { color: var(--blue); }
+  .toc-part {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.5px;
+    margin: 20px 0 8px;
+  }
+  .toc-details > .toc-part:first-of-type { margin-top: 16px; }
+
+/* ---- hero call to action (added 2026-09-21) ---- */
+.hero-cta{display:flex;flex-wrap:wrap;gap:12px;margin:26px 0 22px}
+.btn{display:inline-block;padding:12px 22px;border-radius:var(--radius);font-size:15px;font-weight:600;
+     text-decoration:none;transition:transform .12s ease,background .15s ease,border-color .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--blue);color:#fff;border:1px solid var(--blue)}
+.btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+.btn-ghost{background:transparent;color:#cbd5e1;border:1px solid rgba(203,213,225,.35)}
+.btn-ghost:hover{border-color:rgba(203,213,225,.7);color:#fff}
+.hero-by a{color:#94a3b8;text-decoration:underline;text-underline-offset:3px}
+.hero-by a:hover{color:#cbd5e1}
+@media (max-width:640px){.hero-cta{flex-direction:column;gap:10px}.btn{text-align:center;width:100%}}
+
+/* ---- dark mode (added 2026-09-21) ---- */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1117; --surface:#161922; --surface2:#1d212c; --border:#2a2f3d; --border-light:#232836;
+    --text:#e6e9ef; --text-secondary:#b3bac7; --text-muted:#8a93a5;
+    --blue:#60a5fa; --blue-light:#132033; --blue-border:#1e3a5f;
+    --amber:#fbbf24; --amber-light:#2a2213; --amber-border:#4a3a15;
+    --green:#34d399; --green-light:#0f2620; --green-border:#17503f;
+    --red:#f87171; --purple:#a78bfa; --purple-light:#1e1b33; --purple-border:#3b3168;
+    --cyan:#22d3ee; --cyan-light:#0e2a31; --cyan-border:#175a68;
+    --code-bg:#0b0e14; --code-text:#d6dce8;
+  }
+  :root:not([data-theme="light"]) body{background:var(--bg);color:var(--text)}
+  :root:not([data-theme="light"]) img{filter:brightness(.92)}
+}
+
+/* ---- mobile overflow fixes (added 2026-09-21) ---- */
+/* Long commands and wide tables were pushing the page 41px wider than a phone
+   viewport, so the whole document scrolled sideways. Contain them instead. */
+.code-block{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.code-block > div{white-space:pre}
+@media (max-width:640px){
+  .data-table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap}
+  .data-table thead,.data-table tbody{width:max-content;min-width:100%}
+  html,body{overflow-x:hidden}
+}
+
+/* ---- accessibility remediation (added 2026-09-21, append-only) ----
+   Measured in Chromium at 1280px and 390px in both colour schemes:
+   19 contrast failures in light, 7 in dark, and no authored focus ring at all. */
+
+/* Light-scheme tokens below WCAG AA. The dark block still wins: its selector
+   :root:not([data-theme="light"]) outranks a bare :root. */
+:root{
+  --amber:#b45309;       /* was #d97706 — 3.02:1 -> 4.77:1 on --surface */
+  --cyan:#0e7490;        /* was #0891b2 — 3.50:1 -> 5.09:1 */
+  --green:#047857;       /* was #059669 — 3.58:1 -> 5.21:1 */
+  --text-muted:#616875;  /* was #6b7280 — 4.31:1 -> 5.00:1 on --surface2 */
+}
+
+/* Hard-coded colours the dark-mode token override could not reach */
+/* The footer bar is dark in BOTH schemes, so var(--blue) is too dark there
+   in light mode (4.06:1). Pin a light blue that passes against it either way. */
+.footer a{color:#93c5fd;text-decoration:underline;text-underline-offset:3px}
+.hero-meta,.hero-meta.hero-by{color:#94a3b8}   /* 3.42:1 -> 6.34:1 */
+.code-block .comment{color:#8b98ad}            /* 3.07:1 -> 5.01:1 light, 6.62:1 dark */
+.btn-ghost{border-color:rgba(203,213,225,.45)} /* 2.54:1 -> 3.32:1 */
+@media (prefers-color-scheme:dark){
+  /* --blue lightens to #60a5fa in dark, so white-on-blue drops to 2.5:1.
+     Pin these two to the light-mode blue, which keeps white legible. */
+  :root:not([data-theme="light"]) .btn-primary{background:#2563eb;border-color:#2563eb;color:#fff}
+  :root:not([data-theme="light"]) .btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+  :root:not([data-theme="light"]) .skip-link{background:#2563eb;color:#fff}
+}
+
+/* No :focus rules existed anywhere; the browser default is not guaranteed in
+   Safari or an in-app WebView, which is where LinkedIn traffic lands. */
+:where(a,button,summary,[tabindex]):focus-visible{
+  outline:3px solid var(--blue);outline-offset:3px;border-radius:4px}
+.btn:focus-visible{outline-color:#fff;outline-offset:3px}
+:where(a,button,summary):focus:not(:focus-visible){outline:none}
+
+.skip-link{position:absolute;left:-9999px;top:0;z-index:100;background:var(--blue);
+  color:#fff;padding:12px 20px;border-radius:0 0 8px 0;font-size:15px;font-weight:600;
+  text-decoration:none}
+.skip-link:focus{left:0}
+
+/* Phone tap targets were 20-32px tall and the collapsed contents did not read
+   as something you could tap. */
+@media (max-width:768px){
+  .toc-details > summary{min-height:44px;display:flex;align-items:center;padding:10px 14px;
+    font-size:13px;letter-spacing:1px;border:1px solid var(--border);
+    border-radius:var(--radius);background:var(--surface2);color:var(--text)}
+  .toc-details > summary::after{content:"Tap to open";margin-left:auto;font-size:11px;
+    font-weight:500;letter-spacing:0;color:var(--text-muted);text-transform:none}
+  .toc-details[open] > summary::after{content:"Tap to close"}
+  .toc-list a{min-height:44px;display:flex;align-items:center}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;
+    animation-iteration-count:1!important;scroll-behavior:auto!important}
+  .btn:hover{transform:none}
+}
 </style>
 </head>
 <body>
 
 <!-- HERO -->
-<div class="hero">
+<a class="skip-link" href="#part-1">Skip to the setup</a>
+<header class="hero">
   <div class="hero-inner">
     <div class="hero-badge">iTerm2 + Claude Code</div>
-    <h1>Stop Your AI From Grading <br>Its Own Code</h1>
-    <p>Run 4 Claude Code sessions in one iTerm2 window. Opus reviews. Sonnet builds. Each pane has a locked role, model, and permission set &mdash; the reviewer is physically incapable of writing files. Optional add-ons route work between panes automatically and give every session persistent memory.</p>
-    <div class="hero-meta">macOS only &middot; iTerm2 &middot; Claude Code CLI &middot; ~15 min setup &middot; zero dependencies</div>
-    <div class="hero-meta" style="margin-top:8px;">by <a href="https://pravindurgani.com" style="color:#94a3b8;text-decoration:underline;text-underline-offset:3px;">Prav Durgani</a></div>
-  </div>
-</div>
-
-<div class="container">
-
-  <!-- HANDOFF + SIGIL CALLOUT -->
-  <div class="callout tip" style="margin-top: 32px;">
-    <span class="callout-icon">&#128229;</span>
-    <div>
-      <strong>New: pane handoff &amp; persistent memory</strong>
-      Once the 4-pane setup is running, two optional add-ons close the remaining gaps: <a href="#s19" style="color: var(--blue); font-weight: 600;">pane handoff</a> (Step 19) routes directives between AUDIT and IMPL automatically &mdash; no more copy-pasting between panes &mdash; and <a href="#s20" style="color: var(--blue); font-weight: 600;">Sigil</a> (Step 20) gives every pane shared, persistent memory across sessions and projects.
+    <h1>A Disciplined Claude Code Workstation for iTerm2</h1>
+    <p>Four sessions, four locked roles, one window. Opus reviews, Sonnet builds, and the reviewer runs read-only &mdash; it cannot write files, whatever you ask it to do.</p>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="#part-1">Start the 45-minute setup</a>
+      <a class="btn btn-ghost" href="https://github.com/pravindurgani/claude-code-multipane-iterm2">View the repo on GitHub</a>
     </div>
+    <div class="hero-meta">macOS &middot; iTerm2 &middot; Claude Code v2.1.278 &middot; ~45 min &middot; no background services</div>
+    <div class="hero-meta hero-by">by <a href="https://pravindurgani.com">Prav Durgani</a> &mdash; freelance data &amp; workflow automation, London</div>
   </div>
+</header>
+
+<main class="container" id="main">
 
   <!-- TOC -->
-  <div class="toc">
-    <div class="toc-title">In this guide</div>
-    <ul class="toc-list">
-      <li><a href="#s1"><span class="toc-num">01</span> Prerequisites</a></li>
-      <li><a href="#s2"><span class="toc-num">02</span> Install Claude Code</a></li>
-      <li><a href="#s3"><span class="toc-num">03</span> Local AI Models (Ollama)</a></li>
-      <li><a href="#s4"><span class="toc-num">04</span> Create 4 iTerm2 profiles</a></li>
-      <li><a href="#s5"><span class="toc-num">05</span> Profile startup commands &amp; directory</a></li>
-      <li><a href="#s6"><span class="toc-num">06</span> Shell snippet</a></li>
-      <li><a href="#s7"><span class="toc-num">07</span> Window layout &amp; arrangement</a></li>
-      <li><a href="#s8"><span class="toc-num">08</span> Launch Claude Code</a></li>
-      <li><a href="#s9"><span class="toc-num">09</span> Keyboard shortcuts</a></li>
-      <li><a href="#s10"><span class="toc-num">10</span> iTerm2 triggers (optional)</a></li>
-      <li><a href="#s11"><span class="toc-num">11</span> Cross-pane workflow</a></li>
-      <li><a href="#s12"><span class="toc-num">12</span> Daily playbook</a></li>
-      <li><a href="#s13"><span class="toc-num">13</span> Adapt for other projects</a></li>
-      <li><a href="#s14"><span class="toc-num">14</span> Two-tier hook architecture</a></li>
-      <li><a href="#s15"><span class="toc-num">15</span> gate Workflow</a></li>
-      <li><a href="#s16"><span class="toc-num">16</span> SESSION_LOG pattern</a></li>
-      <li><a href="#s17"><span class="toc-num">17</span> CLAUDE.md split pattern</a></li>
-      <li><a href="#s18"><span class="toc-num">18</span> MCP server, slash commands &amp; skills</a></li>
-      <li><a href="#s19"><span class="toc-num">19</span> Pane handoff (AUDIT &harr; IMPL)</a></li>
-      <li><a href="#s20"><span class="toc-num">20</span> Persistent memory (Sigil)</a></li>
-      <li><a href="#s21"><span class="toc-num">21</span> Draw Things (optional)</a></li>
-      <li><a href="#s22"><span class="toc-num">22</span> Troubleshooting</a></li>
-      <li><a href="#s23"><span class="toc-num">23</span> Quick Reference</a></li>
-    </ul>
-  </div>
+  <nav class="toc" aria-label="Table of contents">
+    <details class="toc-details" open>
+      <summary>In this guide</summary>
+
+      <div class="toc-part">Part I &mdash; Install it</div>
+      <ul class="toc-list">
+        <li><a href="#s1"><span class="toc-num">01</span> Prerequisites</a></li>
+        <li><a href="#s2"><span class="toc-num">02</span> Install and authenticate Claude Code</a></li>
+        <li><a href="#s3"><span class="toc-num">03</span> Create four iTerm2 profiles</a></li>
+        <li><a href="#s4"><span class="toc-num">04</span> Startup command and initial directory</a></li>
+        <li><a href="#s5"><span class="toc-num">05</span> Shell snippet</a></li>
+        <li><a href="#s6"><span class="toc-num">06</span> Window layout and saved arrangement</a></li>
+        <li><a href="#s7"><span class="toc-num">07</span> Launch with <code>cc</code></a></li>
+      </ul>
+
+      <div class="toc-part">Part II &mdash; Work in it</div>
+      <ul class="toc-list">
+        <li><a href="#s8"><span class="toc-num">08</span> How work moves between panes</a></li>
+        <li><a href="#s9"><span class="toc-num">09</span> The gate and ship commands</a></li>
+        <li><a href="#s10"><span class="toc-num">10</span> The SESSION_LOG pattern</a></li>
+        <li><a href="#s11"><span class="toc-num">11</span> Splitting rules: CLAUDE.md and AGENTS.md</a></li>
+        <li><a href="#s12"><span class="toc-num">12</span> Adapting it to another project</a></li>
+      </ul>
+
+      <div class="toc-part">Part III &mdash; Optional add-ons</div>
+      <ul class="toc-list">
+        <li><a href="#s13"><span class="toc-num">13</span> Safety hooks</a></li>
+        <li><a href="#s14"><span class="toc-num">14</span> MCP server, slash commands and skills</a></li>
+        <li><a href="#s15"><span class="toc-num">15</span> Local models with Ollama</a></li>
+        <li><a href="#s16"><span class="toc-num">16</span> Persistent memory with Sigil</a></li>
+        <li><a href="#s17"><span class="toc-num">17</span> iTerm2 triggers</a></li>
+      </ul>
+
+      <div class="toc-part">Part IV &mdash; Reference</div>
+      <ul class="toc-list">
+        <li><a href="#s18"><span class="toc-num">18</span> Agent teams or four panes?</a></li>
+        <li><a href="#s19"><span class="toc-num">19</span> Common questions</a></li>
+        <li><a href="#s20"><span class="toc-num">20</span> Troubleshooting</a></li>
+        <li><a href="#s21"><span class="toc-num">21</span> Quick reference</a></li>
+      </ul>
+
+      <div class="toc-part">Appendix</div>
+      <ul class="toc-list">
+        <li><a href="#s22"><span class="toc-num">22</span> Retired: pane handoff</a></li>
+      </ul>
+    </details>
+  </nav>
+
+  <h2 class="part-heading" id="part-1">Part I &mdash; Install it</h2>
+  <p class="part-intro">Seven steps, strictly sequential. Do them in order.</p>
 
   <!-- SECTION s1: Prerequisites -->
+  <span id="prerequisites" class="anchor-alias"></span>
   <div class="section" id="s1">
     <div class="section-header">
       <span class="section-num">01</span>
@@ -689,17 +956,18 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">1.1</span>
-          <span class="step-title">Homebrew</span>
+          <h3 class="step-title">Homebrew</h3>
         </div>
         <div class="step-body">
           <div class="code-label">Terminal</div>
           <div class="code-block">
-<div><span class="comment"># Check then install (skip if already present):</span></div>
-<div>command -v brew &gt;/dev/null &amp;&amp; echo <span class="str">"already installed — skip"</span> || \</div>
+<div><span class="comment"># Check if Homebrew is already installed:</span></div>
+<div>command -v brew &gt;/dev/null &amp;&amp; echo <span class="str">"Homebrew already installed — skip"</span> || \</div>
 <div>  /bin/bash -c <span class="str">"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</span></div>
 <div></div>
-<div><span class="comment"># Apple Silicon only — add to PATH if not already in ~/.zshrc:</span></div>
-<div>echo <span class="str">'eval "$(/opt/homebrew/bin/brew shellenv)"'</span> &gt;&gt; ~/.zshrc &amp;&amp; source ~/.zshrc</div>
+<div><span class="comment"># Add Homebrew to your PATH (Apple Silicon only — skip if already in ~/.zshrc):</span></div>
+<div>echo <span class="str">'eval "$(/opt/homebrew/bin/brew shellenv)"'</span> &gt;&gt; ~/.zshrc</div>
+<div>source ~/.zshrc</div>
           </div>
         </div>
       </div>
@@ -707,7 +975,7 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">1.2</span>
-          <span class="step-title">Node.js (required for Claude Code)</span>
+          <h3 class="step-title">Node.js (required for Claude Code)</h3>
         </div>
         <div class="step-body">
           <div class="code-block">
@@ -719,23 +987,30 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">1.3</span>
-          <span class="step-title">iTerm2</span>
+          <h3 class="step-title">iTerm2</h3>
         </div>
         <div class="step-body">
           <div class="code-block">
 <div>brew install --cask iterm2</div>
           </div>
-          <p>Open iTerm2 once to complete initial setup, then continue in it for the rest of this guide.</p>
+          <p>Open iTerm2 once to complete its initial setup, then continue inside it. iTerm2 is required because <span class="mono">$ITERM_PROFILE</span> is what makes per-pane role detection work.</p>
+        <h3 class="step-title">This repo</h3>
+        <p>Later steps copy files out of it &mdash; the shell snippet, the hooks, the skills and the slash command. Clone it now and stay in that directory for the rest of Part I:</p>
+        <div class="code-block">
+<div>git clone https://github.com/pravindurgani/claude-code-multipane-iterm2.git</div>
+<div>cd claude-code-multipane-iterm2</div>
+        </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION s2: Install Claude Code -->
+  <!-- SECTION s2: Install and authenticate Claude Code -->
+  <span id="install-claude-code" class="anchor-alias"></span>
   <div class="section" id="s2">
     <div class="section-header">
       <span class="section-num">02</span>
-      <h2>Install Claude Code</h2>
+      <h2>Install and authenticate Claude Code</h2>
     </div>
     <p class="section-intro">Claude Code is Anthropic&rsquo;s official CLI. Install it globally via npm, then authenticate. Browser OAuth is the recommended path &mdash; no API key required.</p>
 
@@ -743,18 +1018,21 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">2.1</span>
-          <span class="step-title">Install and authenticate</span>
+          <h3 class="step-title">Install and authenticate</h3>
         </div>
         <div class="step-body">
           <div class="code-block">
 <div>npm install -g @anthropic-ai/claude-code</div>
-<div>claude login   <span class="comment"># opens a browser window — sign in with your Anthropic account</span></div>
           </div>
-          <p>Pro or Max subscription required for browser OAuth. No API key needed with this method.</p>
+          <p>Authenticate with browser OAuth (recommended):</p>
+          <div class="code-block">
+<div>claude auth login   <span class="comment"># opens a browser window — sign in with your Anthropic account</span></div>
+          </div>
+          <p>Sign in with your Anthropic account (Pro or Max plan). No API key needed with this method.</p>
 
           <div class="callout tip">
             <span class="callout-icon">&#128273;</span>
-            <div><strong>API key alternative</strong> If you don&rsquo;t have a subscription, add <span class="mono">export ANTHROPIC_API_KEY="sk-ant-..."</span> to your <span class="mono">~/.zshrc</span>. Get a key at console.anthropic.com &rarr; API Keys.</div>
+            <div><strong>API key alternative (if you don&rsquo;t have a Pro/Max subscription)</strong> Add <span class="mono">export ANTHROPIC_API_KEY="sk-ant-your-key-here"</span> to your <span class="mono">~/.zshrc</span> so it persists across sessions. Get a key at console.anthropic.com &rarr; API Keys.</div>
           </div>
         </div>
       </div>
@@ -762,7 +1040,7 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">2.2</span>
-          <span class="step-title">Verify</span>
+          <h3 class="step-title">Verify</h3>
         </div>
         <div class="step-body">
           <div class="code-block">
@@ -773,141 +1051,14 @@
     </div>
   </div>
 
-  <!-- SECTION s3: Local AI Models -->
+  <!-- SECTION s3: Create four iTerm2 profiles -->
+  <span id="iterm2-profiles" class="anchor-alias"></span>
   <div class="section" id="s3">
     <div class="section-header">
       <span class="section-num">03</span>
-      <h2>Local AI Models (Ollama)</h2>
+      <h2>Create four iTerm2 profiles</h2>
     </div>
-    <p class="section-intro">Run AI models privately on your Mac &mdash; no API calls, no data leaving your machine. Install Ollama, pull the models for your RAM tier, then add the shell aliases.</p>
-
-    <div class="callout tip">
-      <span class="callout-icon">&#129514;</span>
-      <div><strong>RAM tiers</strong> &mdash; pick the block that matches your machine: <strong>&#127802; 16 GB+</strong> (base), <strong>&#128309; 32 GB+</strong> (mid), <strong>&#128308; 64 GB+</strong> (full). Higher tiers are additive.</div>
-    </div>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">3.1</span>
-          <span class="step-title">Install Ollama and start the server</span>
-        </div>
-        <div class="step-body">
-          <div class="code-block">
-<div>brew install ollama</div>
-<div>ollama serve &amp;</div>
-          </div>
-          <div class="callout tip">
-            <span class="callout-icon">&#128161;</span>
-            <div><strong>Make it persistent</strong> &mdash; <span class="mono">ollama serve &amp;</span> only runs until you close the terminal. For Ollama to stay running across reboots (so <span class="mono">cc</span> and <span class="mono">llm-*</span> aliases work without manual server starts), run this once now:
-              <div class="code-block" style="margin-top:8px;">
-<div>brew services start ollama</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">3.2</span>
-          <span class="step-title">Pull models &mdash; choose your tier</span>
-        </div>
-        <div class="step-body">
-          <table class="data-table">
-            <thead><tr><th>Tier</th><th>Models to pull</th><th>Disk / Time</th></tr></thead>
-            <tbody>
-              <tr><td>&#127802; 16 GB+</td><td class="cell-mono">qwen3:8b &nbsp; qwen3-coder:7b &nbsp; nomic-embed-text</td><td>~10 GB / 15 min</td></tr>
-              <tr><td>&#128309; 32 GB+</td><td class="cell-mono">qwen3:14b &nbsp; qwen3-coder:14b &nbsp; nomic-embed-text &nbsp; deepseek-r1:8b</td><td>~23 GB / 40 min</td></tr>
-              <tr><td>&#128308; 64 GB+</td><td class="cell-mono">qwen3:14b &nbsp; qwen3-coder:32b &nbsp; nomic-embed-text &nbsp; deepseek-r1:8b &nbsp; gemma3:27b</td><td>~55 GB / 90 min</td></tr>
-            </tbody>
-          </table>
-          <p>Example (16 GB tier):</p>
-          <div class="code-block">
-<div>ollama pull qwen3:8b</div>
-<div>ollama pull qwen3-coder:7b</div>
-<div>ollama pull nomic-embed-text</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">3.3</span>
-          <span class="step-title">Shell aliases</span>
-        </div>
-        <div class="step-body">
-          <p>The Ollama block in <span class="mono">zshrc-snippet.sh</span> adds these aliases. Append the relevant tier block to your <span class="mono">~/.zshrc</span> (see Step 6 for full snippet instructions).</p>
-          <table class="data-table">
-            <thead><tr><th>Alias</th><th>Model</th><th>Use for</th></tr></thead>
-            <tbody>
-              <tr><td class="cell-mono">llm-fast</td><td class="cell-mono">qwen3:8b / :14b</td><td>General queries, summaries</td></tr>
-              <tr><td class="cell-mono">llm-code</td><td class="cell-mono">qwen3-coder:7b / :14b / :32b</td><td>Code generation &amp; review</td></tr>
-              <tr><td class="cell-mono">llm-reason</td><td class="cell-mono">deepseek-r1:8b</td><td>&#128309; Structured reasoning (32 GB+)</td></tr>
-              <tr><td class="cell-mono">llm-embed</td><td class="cell-mono">nomic-embed-text</td><td>Embeddings / RAG</td></tr>
-              <tr><td class="cell-mono">llm-smart</td><td><em>router</em></td><td>Auto-picks by task type</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- WHY ITERM2 -->
-  <div class="callout tip" style="margin: 0 0 48px; max-width: 800px;">
-    <span class="callout-icon">&#128161;</span>
-    <div>
-      <strong>Why iTerm2 over macOS Terminal?</strong>
-      <p style="margin-top:8px;">This workflow relies on features the default Terminal doesn't have:</p>
-      <table class="data-table iterm-compare-table" style="margin-top:12px; font-size:14px;">
-        <thead><tr><th style="width:35%">Feature</th><th>macOS Terminal</th><th>iTerm2</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Split panes</strong></td><td>Tabs/windows only &mdash; no side-by-side splits</td><td>Unlimited independent panes in a single tab</td></tr>
-          <tr><td><strong>Named profiles</strong></td><td>Basic profiles, no <span class="mono">$ITERM_PROFILE</span> env var</td><td>Auto-sets <span class="mono">$ITERM_PROFILE</span> per pane &mdash; the key to role detection</td></tr>
-          <tr><td><strong>Visual identity</strong></td><td>Basic themes and transparency</td><td>Per-profile backgrounds, tab colours, badges, and 24-bit colour</td></tr>
-          <tr><td><strong>Window arrangements</strong></td><td>No saved layouts</td><td>Save &amp; auto-restore multi-pane layouts on launch</td></tr>
-          <tr><td><strong>Productivity</strong></td><td>Standard find and copy</td><td>Paste history, Instant Replay, triggers, shell integration</td></tr>
-        </tbody>
-      </table>
-      <!-- Mobile-only stacked version of the same comparison -->
-      <div class="iterm-compare-cards" style="margin-top:12px;">
-        <div class="compare-card">
-          <div class="compare-card-title">Split panes</div>
-          <div class="compare-row"><span class="compare-label">Terminal</span> Tabs/windows only</div>
-          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Unlimited independent panes in one tab</div>
-        </div>
-        <div class="compare-card">
-          <div class="compare-card-title">Named profiles</div>
-          <div class="compare-row"><span class="compare-label">Terminal</span> No <span class="mono">$ITERM_PROFILE</span> env var</div>
-          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Auto-sets <span class="mono">$ITERM_PROFILE</span> per pane</div>
-        </div>
-        <div class="compare-card">
-          <div class="compare-card-title">Visual identity</div>
-          <div class="compare-row"><span class="compare-label">Terminal</span> Basic themes only</div>
-          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Per-profile backgrounds, tab colours, badges</div>
-        </div>
-        <div class="compare-card">
-          <div class="compare-card-title">Saved layouts</div>
-          <div class="compare-row"><span class="compare-label">Terminal</span> Not supported</div>
-          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Save &amp; auto-restore on launch</div>
-        </div>
-        <div class="compare-card">
-          <div class="compare-card-title">Productivity</div>
-          <div class="compare-row"><span class="compare-label">Terminal</span> Standard find and copy</div>
-          <div class="compare-row yes"><span class="compare-label">iTerm2</span> Paste history, Instant Replay, triggers</div>
-        </div>
-      </div>
-      <p style="margin-top:8px; color: var(--text-muted); font-size: 14px;">The <span class="mono">$ITERM_PROFILE</span> environment variable is especially critical &mdash; it's what lets the <span class="mono">cc</span> alias automatically launch the right model and permissions per pane, and it survives window arrangement restores.</p>
-    </div>
-  </div>
-
-  <!-- SECTION s4: Create iTerm2 Profiles -->
-  <div class="section" id="s4">
-    <div class="section-header">
-      <span class="section-num">04</span>
-      <h2>Create 4 iTerm2 Profiles</h2>
-    </div>
-    <p class="section-intro">Create 4 named profiles, each with a distinct background tint, tab colour, and badge so you can instantly tell which pane you're in.</p>
+    <p class="section-intro">Create four named profiles, each with a distinct background tint, tab colour, and badge so you can instantly tell which pane you&rsquo;re in.</p>
 
     <p>Each pane runs a separate Claude Code session with a dedicated role. The AUDIT pane uses Opus for deep review. Everything else uses Sonnet to keep costs down. A <span class="mono">cc</span> alias launches the right configuration automatically.</p>
 
@@ -969,12 +1120,7 @@
       </div>
     </div>
 
-    <div class="callout warn">
-      <span class="callout-icon">&#9888;&#65039;</span>
-      <div><strong>Cost awareness</strong> Opus is ~15x more expensive than Sonnet per token. Only use the AUDIT pane for reviewing completed, tested work &mdash; never for code generation.</div>
-    </div>
-
-    <div class="callout tip" style="margin-top:16px">
+    <div class="callout tip">
       <span class="callout-icon">&#128221;</span>
       <div><strong>What this is NOT</strong> This is not an agent orchestrator. There are no background processes, no task queues, no dashboards. You run four focused sessions, you drive each one, you decide when work moves between panes. If you want 50 agents running unattended, other tools exist for that. This setup is for developers who want control, not automation.</div>
     </div>
@@ -992,23 +1138,23 @@
     <div class="steps">
       <div class="step">
         <div class="step-header">
-          <span class="step-n">2.1</span>
-          <span class="step-title">Create and name 4 profiles</span>
+          <span class="step-n">3.1</span>
+          <h3 class="step-title">Create and name four profiles</h3>
         </div>
         <div class="step-body">
           <p>Open <strong>iTerm2 &rarr; Settings &rarr; Profiles</strong> (<span class="mono">&#8984;,</span>). Click the <strong>+</strong> button four times. Double-click each "New Profile" name to rename it:</p>
           <table class="data-table">
-            <thead><tr><th>Profile Name</th><th>Background</th><th>Tab Colour</th><th>Role</th></tr></thead>
+            <thead><tr><th scope="col">Profile Name</th><th scope="col">Background Hex</th><th scope="col">Tab Colour Hex</th><th scope="col">Role</th></tr></thead>
             <tbody>
-              <tr><td class="cell-mono">CC-AUDIT</td><td class="cell-mono">#0d0b18</td><td class="cell-mono" style="color:var(--purple)">#a855f7</td><td>Code review</td></tr>
+              <tr><td class="cell-mono">CC-AUDIT</td><td class="cell-mono">#0d0b18</td><td class="cell-mono" style="color:var(--purple)">#a855f7</td><td>Evaluation / Auditing</td></tr>
               <tr><td class="cell-mono">CC-IMPL</td><td class="cell-mono">#080f0b</td><td class="cell-mono" style="color:var(--green)">#22c55e</td><td>Implementation</td></tr>
               <tr><td class="cell-mono">CC-PROMPT</td><td class="cell-mono">#080e10</td><td class="cell-mono" style="color:var(--cyan)">#06b6d4</td><td>Prompt engineering</td></tr>
-              <tr><td class="cell-mono">CC-PLAN</td><td class="cell-mono">#0d0b00</td><td class="cell-mono" style="color:var(--amber)">#f59e0b</td><td>Architecture &amp; planning</td></tr>
+              <tr><td class="cell-mono">CC-PLAN</td><td class="cell-mono">#0d0b00</td><td class="cell-mono" style="color:var(--amber)">#f59e0b</td><td>Planning / Architecture</td></tr>
             </tbody>
           </table>
 
           <div class="screenshot">
-            <img src="screenshots/01-create-profiles.png" alt="iTerm2 Settings showing 4 named profiles in the sidebar">
+            <img src="screenshots/01-create-profiles.png" alt="iTerm2 Settings showing 4 named profiles in the sidebar" width="1048" height="744" loading="lazy" decoding="async">
             <div class="screenshot-caption">All 4 profiles created and named in the sidebar</div>
           </div>
         </div>
@@ -1016,18 +1162,18 @@
 
       <div class="step">
         <div class="step-header">
-          <span class="step-n">2.2</span>
-          <span class="step-title">Set background &amp; tab colour</span>
+          <span class="step-n">3.2</span>
+          <h3 class="step-title">Colors tab &mdash; background &amp; tab colour</h3>
         </div>
         <div class="step-body">
           <p>For each profile, click the <strong>Colors</strong> sub-tab:</p>
           <ul>
             <li>Click the <strong>Background</strong> swatch in the "Defaults" row. In the macOS colour picker, switch to <strong>Hex mode</strong> (sliders icon &rarr; dropdown at bottom) and enter the hex value from the table above.</li>
-            <li>Scroll down to <strong>"Tab:"</strong>, tick <strong>"Use custom tab color"</strong>, and set the accent colour.</li>
+            <li>Scroll down to <strong>"Tab:"</strong>, tick <strong>"Use custom tab color"</strong>, and set the accent colour. Keep everything else from your base theme.</li>
           </ul>
 
           <div class="screenshot">
-            <img src="screenshots/02-colors-tab.png" alt="iTerm2 Colors tab showing tab color checkbox and badge color">
+            <img src="screenshots/02-colors-tab.png" alt="iTerm2 Colors tab showing tab color checkbox and badge color" width="1004" height="700" loading="lazy" decoding="async">
             <div class="screenshot-caption">Scrolled down in Colors tab &mdash; Tab colour and Badge colour visible at the bottom</div>
           </div>
         </div>
@@ -1035,19 +1181,25 @@
 
       <div class="step">
         <div class="step-header">
-          <span class="step-n">2.3</span>
-          <span class="step-title">Set title, badge, and font</span>
+          <span class="step-n">3.3</span>
+          <h3 class="step-title">General and Text tabs &mdash; title, badge, and font</h3>
         </div>
         <div class="step-body">
           <p>Click the <strong>General</strong> sub-tab for each profile:</p>
           <ul>
-            <li><strong>Title:</strong> Click the dropdown. Under "Foreground Job", <strong>uncheck "Job Name"</strong> (leave only "Session Name" checked under "Name"). This prevents the tab title from showing <span class="mono">-zsh</span> or <span class="mono">(claude)</span> after the role name.</li>
-            <li><strong>Badge:</strong> Type the role name (<span class="mono">AUDIT</span>, <span class="mono">IMPL</span>, <span class="mono">PROMPT</span>, or <span class="mono">PLAN</span>). This overlays a faint watermark on the pane background.</li>
+            <li><strong>Title:</strong> Click the dropdown. Under "Foreground Job", <strong>uncheck "Job Name"</strong> so only "Session Name" stays ticked. This stops <span class="mono">-zsh</span> appearing after the role name.</li>
+            <li><strong>Badge:</strong> Type the short role name. This overlays a faint watermark on the pane background.</li>
           </ul>
-          <p>Then click the <strong>Text</strong> sub-tab and set font to <strong>JetBrains Mono 13pt</strong> (or Menlo 13pt).</p>
+          <div class="code-block">
+<div>CC-AUDIT  &rarr; AUDIT</div>
+<div>CC-IMPL   &rarr; IMPL</div>
+<div>CC-PROMPT &rarr; PROMPT</div>
+<div>CC-PLAN   &rarr; PLAN</div>
+          </div>
+          <p>Then click the <strong>Text</strong> sub-tab and set the font to <strong>JetBrains Mono 13pt</strong> (or Menlo 13pt).</p>
 
           <div class="screenshot">
-            <img src="screenshots/03-general-tab.png" alt="iTerm2 General tab showing title, badge, and command settings">
+            <img src="screenshots/03-general-tab.png" alt="iTerm2 General tab showing title, badge, and command settings" width="1174" height="744" loading="lazy" decoding="async">
             <div class="screenshot-caption">General tab &mdash; badge set to "AUDIT", command and initial directory configured</div>
           </div>
         </div>
@@ -1055,31 +1207,30 @@
     </div>
   </div>
 
-  <!-- SECTION s5: Startup Commands & Initial Directory -->
-  <div class="section" id="s5">
+  <!-- SECTION s4: Startup command and initial directory -->
+  <span id="startup-command" class="anchor-alias"></span>
+  <div class="section" id="s4">
     <div class="section-header">
-      <span class="section-num">05</span>
-      <h2>Profile Startup Commands &amp; Initial Directory</h2>
+      <span class="section-num">04</span>
+      <h2>Startup command and initial directory</h2>
     </div>
     <p class="section-intro">Each profile needs a startup command (to cd into the project directory and open an interactive shell) and an initial directory setting (as a fallback for window arrangement restores).</p>
 
     <div class="steps">
       <div class="step">
         <div class="step-header">
-          <span class="step-n">3.1</span>
-          <span class="step-title">Set the startup command</span>
+          <span class="step-n">4.1</span>
+          <h3 class="step-title">Set the startup command</h3>
         </div>
         <div class="step-body">
-          <p>In each profile &rarr; <strong>General</strong> sub-tab &rarr; change the <strong>Command</strong> dropdown from "Login Shell" to <strong>"Custom Shell"</strong> and paste the corresponding command:</p>
+          <p>In each profile &rarr; <strong>General</strong> sub-tab &rarr; change the <strong>Command</strong> dropdown from "Login Shell" to <strong>"Custom Shell"</strong> and enter:</p>
           <div class="code-block">
-<div class="comment"># CC-AUDIT</div>
-<div><span class="cmd">/bin/zsh</span> <span class="flag">-c</span> <span class="str">'cd ~/Desktop/your-project; exec zsh'</span></div>
-<div></div>
 <div class="comment"># Same command for all 4 profiles &mdash; only the directory changes per project.</div>
 <div class="comment"># Role detection uses $ITERM_PROFILE (set automatically by iTerm2),</div>
 <div class="comment"># so the startup command doesn't need to set PANE_ROLE.</div>
+<div><span class="cmd">/bin/zsh</span> <span class="flag">-c</span> <span class="str">'cd ~/Desktop/your-project; exec zsh'</span></div>
           </div>
-          <p>Replace <span class="mono">your-project</span> with your actual project directory name.</p>
+          <p>Replace <span class="mono">your-project</span> with your project directory name.</p>
           <div class="callout tip">
             <span class="callout-icon">&#128161;</span>
             <div><strong>Why <code>exec zsh</code> at the end?</strong> It replaces the subshell with an interactive zsh session. Without it, the pane would close the moment you exit Claude Code or any other command.</div>
@@ -1089,8 +1240,8 @@
 
       <div class="step">
         <div class="step-header">
-          <span class="step-n">3.2</span>
-          <span class="step-title">Set the initial directory</span>
+          <span class="step-n">4.2</span>
+          <h3 class="step-title">Set the initial directory</h3>
         </div>
         <div class="step-body">
           <p>Still in the <strong>General</strong> sub-tab, find <strong>Initial directory</strong> below the Command field. Change from "Home directory" to <strong>"Directory:"</strong> and enter the full path:</p>
@@ -1099,29 +1250,51 @@
           </div>
           <div class="callout warn">
             <span class="callout-icon">&#9888;&#65039;</span>
-            <div><strong>Why set both Command and Initial Directory?</strong> iTerm2 window arrangement restore doesn't always re-run the startup command, but it always respects the Initial Directory. Setting both ensures you always land in the right folder regardless of how the pane was opened.</div>
+            <div><strong>Why set both Command and Initial Directory?</strong> Arrangement restore re-runs the Initial directory but not always the startup command. Setting both ensures you always land in the right folder regardless of how the pane was opened.</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION s6: Shell Snippet -->
-  <div class="section" id="s6">
+  <!-- SECTION s5: Shell snippet -->
+  <span id="shell-snippet" class="anchor-alias"></span>
+  <div class="section" id="s5">
     <div class="section-header">
-      <span class="section-num">06</span>
-      <h2>Shell Snippet</h2>
+      <span class="section-num">05</span>
+      <h2>Shell snippet</h2>
     </div>
-    <p class="section-intro">Add a block to your <span class="mono">~/.zshrc</span> that auto-detects which profile you're in and configures coloured prompts, locked tab titles, and a <span class="mono">cc</span> alias to launch Claude Code with the right flags.</p>
+    <p class="section-intro">Append <span class="mono">zshrc-snippet.sh</span> (from this repo) to your <span class="mono">~/.zshrc</span>. It auto-detects which profile you&rsquo;re in and configures coloured prompts, locked tab titles, and a <span class="mono">cc</span> alias to launch Claude Code with the right flags.</p>
 
     <div class="steps">
       <div class="step">
         <div class="step-header">
-          <span class="step-n">4.1</span>
-          <span class="step-title">Append to ~/.zshrc</span>
+          <span class="step-n">5.1</span>
+          <h3 class="step-title">Append to ~/.zshrc</h3>
         </div>
         <div class="step-body">
-          <p>Open your shell config file and paste this block at the very bottom:</p>
+          <div class="code-block">
+<div>cat zshrc-snippet.sh &gt;&gt; ~/.zshrc</div>
+<div>source ~/.zshrc</div>
+          </div>
+          <p>The snippet provides:</p>
+          <ul>
+            <li><span class="mono">$PANE_ROLE</span> and a coloured prompt per profile</li>
+            <li>a title-lock so the pane title stays fixed (won&rsquo;t flip to <span class="mono">-zsh</span>)</li>
+            <li>the <span class="mono">cc</span> alias &mdash; launches Claude with the correct model, effort and permissions for the pane you are in</li>
+            <li><span class="mono">gate</span> and <span class="mono">ship</span> aliases (IMPL pane only)</li>
+            <li>Ollama env vars and <span class="mono">llm-*</span> aliases (uncomment your tier&rsquo;s block &mdash; Part III)</li>
+          </ul>
+          <p>It keys off <span class="mono">$ITERM_PROFILE</span> and appends to <span class="mono">precmd_functions</span> so it won&rsquo;t clobber pyenv, fnm or conda.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">5.2</span>
+          <h3 class="step-title">What the snippet contains</h3>
+        </div>
+        <div class="step-body">
           <div class="code-label">~/.zshrc &mdash; append at bottom</div>
           <div class="code-block">
 <div class="comment"># ── Multi-pane Claude Code workflow ──</div>
@@ -1160,8 +1333,6 @@
 <div><span class="kw">esac</span></div>
           </div>
 
-          <p>Then run <span class="mono">source ~/.zshrc</span> in each pane to apply.</p>
-
           <div class="callout success">
             <span class="callout-icon">&#10003;</span>
             <div>
@@ -1175,14 +1346,30 @@
           </div>
         </div>
       </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">5.3</span>
+          <h3 class="step-title">Verify</h3>
+        </div>
+        <div class="step-body">
+          <p>Open a new pane using the <strong>CC-IMPL</strong> profile, then:</p>
+          <div class="code-block">
+<div>echo $PANE_ROLE        <span class="comment"># should print: IMPL</span></div>
+<div>echo $ITERM_PROFILE    <span class="comment"># should print: CC-IMPL</span></div>
+          </div>
+          <p>If <span class="mono">$PANE_ROLE</span> is empty, the pane was not opened with a CC-* profile &mdash; open it via <strong>Profiles &rarr; CC-IMPL</strong> in the menu bar.</p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- SECTION s7: Window Layout & Arrangement -->
-  <div class="section" id="s7">
+  <!-- SECTION s6: Window layout and saved arrangement -->
+  <span id="window-arrangement" class="anchor-alias"></span>
+  <div class="section" id="s6">
     <div class="section-header">
-      <span class="section-num">07</span>
-      <h2>Window Layout &amp; Arrangement</h2>
+      <span class="section-num">06</span>
+      <h2>Window layout and saved arrangement</h2>
     </div>
     <p class="section-intro">Create a 2&times;2 pane layout, save it, and configure iTerm2 to restore it automatically on launch.</p>
 
@@ -1213,19 +1400,19 @@
     <div class="steps">
       <div class="step">
         <div class="step-header">
-          <span class="step-n">5.1</span>
-          <span class="step-title">Create the 2&times;2 split</span>
+          <span class="step-n">6.1</span>
+          <h3 class="step-title">Create the 2&times;2 split</h3>
         </div>
         <div class="step-body">
           <ol style="margin-left:20px">
             <li>Open a new window with the <strong>CC-AUDIT</strong> profile.</li>
             <li><span class="mono">&#8984;D</span> &mdash; split right. Right-click the new pane &rarr; <strong>Edit Session</strong> &rarr; change profile to <strong>CC-PROMPT</strong>.</li>
-            <li>Click back on the left pane (AUDIT). <span class="mono">&#8984;&#8679;D</span> &mdash; split down. Change the new pane to <strong>CC-IMPL</strong>.</li>
-            <li>Click on the top-right pane (PROMPT). <span class="mono">&#8984;&#8679;D</span> &mdash; split down. Change the new pane to <strong>CC-PLAN</strong>.</li>
+            <li>Click back on the left pane (AUDIT). <span class="mono">&#8984;&#8679;D</span> &mdash; split down. Change the new bottom-left pane to <strong>CC-IMPL</strong>.</li>
+            <li>Click on the right pane (PROMPT). <span class="mono">&#8984;&#8679;D</span> &mdash; split down. Change the new bottom-right pane to <strong>CC-PLAN</strong>.</li>
           </ol>
 
           <div class="screenshot">
-            <img src="screenshots/04-four-panes.png" alt="4-pane iTerm2 layout with coloured prompts and badges">
+            <img src="screenshots/04-four-panes.png" alt="4-pane iTerm2 layout with coloured prompts and badges" width="2032" height="1162" loading="lazy" decoding="async">
             <div class="screenshot-caption">Final result &mdash; 4 panes with coloured prompts, badges, and distinct background tints</div>
           </div>
         </div>
@@ -1233,45 +1420,51 @@
 
       <div class="step">
         <div class="step-header">
-          <span class="step-n">5.2</span>
-          <span class="step-title">Save as default arrangement</span>
+          <span class="step-n">6.2</span>
+          <h3 class="step-title">Save as default arrangement</h3>
         </div>
         <div class="step-body">
           <ol style="margin-left:20px">
-            <li><strong>Window &rarr; Arrangements &rarr; Save Window Arrangement</strong> &mdash; give it a name (e.g. your project name).</li>
-            <li>Go to <strong>iTerm2 &rarr; Settings &rarr; General &rarr; Startup</strong> and set <strong>"Window restoration policy"</strong> to <strong>"Open Default Window Arrangement"</strong>.</li>
-            <li>Back in the menu: <strong>Window &rarr; Arrangements &rarr; Save Window Arrangement</strong> once more &mdash; this saves it as the <em>default</em> arrangement that the startup policy will use.</li>
+            <li><strong>Window &rarr; Save Window Arrangement</strong> &mdash; give it a name (e.g. your project name).</li>
+            <li>Go to <strong>iTerm2 &rarr; Settings &rarr; General &rarr; Startup</strong> and set the window restoration policy to <strong>"Open Default Window Arrangement"</strong>.</li>
+            <li>Back in the menu: <strong>Window &rarr; Save Window Arrangement</strong> once more, selecting the same name &mdash; this saves it as the <em>default</em> arrangement the startup policy will use.</li>
           </ol>
 
           <div class="screenshot">
-            <img src="screenshots/06-save-arrangement.png" alt="Window menu showing Save Window Arrangement option">
+            <img src="screenshots/06-save-arrangement.png" alt="Window menu showing Save Window Arrangement option" width="695" height="752" loading="lazy" decoding="async">
             <div class="screenshot-caption">Window &rarr; Arrangements &rarr; Save Window Arrangement</div>
           </div>
 
           <div class="screenshot">
-            <img src="screenshots/07-startup-setting.png" alt="iTerm2 General Startup settings showing Open Default Window Arrangement">
+            <img src="screenshots/07-startup-setting.png" alt="iTerm2 General Startup settings showing Open Default Window Arrangement" width="897" height="385" loading="lazy" decoding="async">
             <div class="screenshot-caption">Settings &rarr; General &rarr; Startup &rarr; "Open Default Window Arrangement"</div>
           </div>
 
           <div class="callout success">
             <span class="callout-icon">&#10003;</span>
-            <div><strong>Result:</strong> Every time you open iTerm2, your 4-pane layout restores automatically with the correct profiles, directories, coloured prompts, and badges. No manual setup needed.</div>
+            <div><strong>Result:</strong> iTerm2 now opens the four-pane layout automatically on launch, with the correct profiles, directories, coloured prompts, and badges.</div>
+          </div>
+
+          <div class="callout tip">
+            <span class="callout-icon">&#128421;</span>
+            <div><strong>Dual monitor variant</strong> AUDIT + PLAN on monitor 1, IMPL + PROMPT on monitor 2. Switch between macOS Spaces with <span class="mono">ctrl+1/2/3/4</span>.</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION s8: Launch Claude Code -->
-  <div class="section" id="s8">
+  <!-- SECTION s7: Launch with cc -->
+  <span id="launch-cc" class="anchor-alias"></span>
+  <div class="section" id="s7">
     <div class="section-header">
-      <span class="section-num">08</span>
-      <h2>Launch Claude Code</h2>
+      <span class="section-num">07</span>
+      <h2>Launch with <code>cc</code></h2>
     </div>
-    <p class="section-intro">Type <span class="mono">cc</span> in any pane. The alias you set up in Step 4 launches Claude Code with the correct model, effort level, and permissions for that pane.</p>
+    <p class="section-intro">Type <span class="mono">cc</span> in each pane. That&rsquo;s it. The alias expands per pane.</p>
 
     <table class="data-table">
-      <thead><tr><th>Pane</th><th><code>cc</code> expands to</th><th>What you see</th></tr></thead>
+      <thead><tr><th scope="col">Pane</th><th scope="col"><code>cc</code> expands to</th><th scope="col">What you see</th></tr></thead>
       <tbody>
         <tr>
           <td style="color:var(--purple);font-weight:600">AUDIT</td>
@@ -1297,8 +1490,13 @@
     </table>
 
     <div class="screenshot">
-      <img src="screenshots/05-claude-running.png" alt="All 4 panes with Claude Code running showing different models and effort levels">
+      <img src="screenshots/05-claude-running.png" alt="All 4 panes with Claude Code running showing different models and effort levels" width="1920" height="1077" loading="lazy" decoding="async">
       <div class="screenshot-caption">All 4 panes with Claude Code running &mdash; Opus in AUDIT (plan mode), Sonnet in the rest</div>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div><strong>Why Opus only in AUDIT</strong> Opus costs about 2.5&times; what Sonnet costs per token. Reserve it for the review pass, where a second opinion from a stronger model earns the money, and leave the other three panes on Sonnet.</div>
     </div>
 
     <div class="callout tip">
@@ -1310,98 +1508,56 @@
     <div class="step" style="margin-top:20px">
       <div class="step-header">
         <span class="step-n">Ref</span>
-        <span class="step-title">CLI flags reference</span>
+        <h3 class="step-title">Verified CLI flags</h3>
       </div>
       <div class="step-body">
         <table class="data-table">
-          <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+          <thead><tr><th scope="col">Flag</th><th scope="col">Purpose</th></tr></thead>
           <tbody>
-            <tr><td class="cell-mono">--model opus|sonnet|haiku</td><td>Model selection (or full IDs like <span class="mono">claude-opus-4-6</span>)</td></tr>
-            <tr><td class="cell-mono">--effort low|medium|high|max</td><td>Thinking budget: <span class="mono">low</span> = fast, minimal reasoning; <span class="mono">medium</span> = balanced; <span class="mono">high</span> = extended reasoning chains, more tokens; <span class="mono">max</span> = maximum depth (slowest, most expensive). PLAN uses <span class="mono">low</span> — architectural discussion doesn't need deep reasoning chains.</td></tr>
-            <tr><td class="cell-mono">--permission-mode plan</td><td>Read-only &mdash; Claude cannot write files</td></tr>
-            <tr><td class="cell-mono">--permission-mode acceptEdits</td><td>Auto-accept file edits without prompting</td></tr>
+            <tr><td class="cell-mono">--model opus</td><td>Use Opus (aliases: <span class="mono">opus</span>, <span class="mono">sonnet</span>, <span class="mono">haiku</span>, or a full ID like <span class="mono">claude-fable-5</span>)</td></tr>
+            <tr><td class="cell-mono">--effort high</td><td>Thinking budget: <span class="mono">low</span> &middot; <span class="mono">medium</span> &middot; <span class="mono">high</span> &middot; <span class="mono">xhigh</span> &middot; <span class="mono">max</span>. PLAN uses <span class="mono">low</span> &mdash; architectural discussion doesn&rsquo;t need deep reasoning chains.</td></tr>
+            <tr><td class="cell-mono">--permission-mode plan</td><td>Read-only &mdash; Claude can&rsquo;t write files. Full set: <span class="mono">plan</span>, <span class="mono">acceptEdits</span>, <span class="mono">auto</span>, <span class="mono">manual</span>, <span class="mono">dontAsk</span>, <span class="mono">bypassPermissions</span></td></tr>
+            <tr><td class="cell-mono">--permission-mode acceptEdits</td><td>Auto-accept file edits without asking</td></tr>
             <tr><td class="cell-mono">--append-system-prompt "..."</td><td>Add custom instructions on top of defaults</td></tr>
-            <tr><td class="cell-mono">--continue</td><td>Resume most recent conversation in this directory</td></tr>
+            <tr><td class="cell-mono">--continue</td><td>Resume most recent conversation</td></tr>
             <tr><td class="cell-mono">--resume</td><td>Resume a specific session by ID</td></tr>
           </tbody>
         </table>
         <div class="callout warn" style="margin-top:12px">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <div><strong>Version note:</strong> Flags verified against Claude Code v2.1.81 (March 2026). CLI tools update frequently &mdash; run <span class="mono">claude --help</span> if a flag isn't recognised.</div>
+          <div><strong>On <code>--dangerously-skip-permissions</code>:</strong> <span class="mono">--permission-mode acceptEdits</span> is more targeted &mdash; it auto-accepts file edits while still asking before shell commands. Only use <span class="mono">--dangerously-skip-permissions</span> in fully sandboxed environments.</div>
+        </div>
+        <div class="callout warn" style="margin-top:12px">
+          <span class="callout-icon">&#9888;&#65039;</span>
+          <div><strong>Version note:</strong> Flags verified against Claude Code v2.1.278 (September 2026). CLI tools update frequently &mdash; run <span class="mono">claude --help</span> if a flag isn&rsquo;t recognised.</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION s9: Keyboard Shortcuts -->
-  <div class="section" id="s9">
+  <h2 class="part-heading" id="part-2">Part II &mdash; Work in it</h2>
+
+  <!-- SECTION s8: How work moves between panes -->
+  <span id="cross-pane-workflow" class="anchor-alias"></span>
+  <div class="section" id="s8">
     <div class="section-header">
-      <span class="section-num">09</span>
-      <h2>Keyboard Shortcuts</h2>
+      <span class="section-num">08</span>
+      <h2>How work moves between panes</h2>
     </div>
-
-    <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">iTerm2 navigation</p>
-    <div class="shortcut-grid">
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8997;</span><span class="key">&larr;/&rarr;</span></div><div class="shortcut-desc">Switch panes (left/right)</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8997;</span><span class="key">&uarr;/&darr;</span></div><div class="shortcut-desc">Switch panes (up/down)</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">D</span></div><div class="shortcut-desc">Split right</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8679;</span><span class="key">D</span></div><div class="shortcut-desc">Split down</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8679;</span><span class="key">&#9166;</span></div><div class="shortcut-desc">Zoom current pane (toggle)</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">M</span></div><div class="shortcut-desc">Set mark (bookmark position)</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8679;</span><span class="key">&uarr;</span></div><div class="shortcut-desc">Jump to previous mark</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">K</span></div><div class="shortcut-desc">Clear terminal buffer</div></div>
-    </div>
-
-    <p style="font-size:13px;color:var(--text-muted);margin:24px 0 12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Claude Code (inside a session)</p>
-    <div class="shortcut-grid">
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">Esc</span></div><div class="shortcut-desc">Interrupt generation</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">Ctrl</span><span class="key">C</span></div><div class="shortcut-desc">Cancel, return to prompt</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/clear</span></div><div class="shortcut-desc">Reset conversation context</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/compact</span></div><div class="shortcut-desc">Compress context (keeps summary)</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/model</span></div><div class="shortcut-desc">Switch model mid-session</div></div>
-      <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/effort</span></div><div class="shortcut-desc">Switch effort mid-session</div></div>
-    </div>
-
-  </div>
-
-  <!-- SECTION s10: iTerm2 Triggers (Optional) -->
-  <div class="section" id="s10">
-    <div class="section-header">
-      <span class="section-num">10</span>
-      <h2>iTerm2 Triggers (Optional)</h2>
-    </div>
-    <p class="section-intro">Auto-highlight keywords in terminal output.</p>
-    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;">Set up in <strong>Profile &rarr; Advanced &rarr; Triggers &rarr; +</strong></p>
-    <table class="data-table">
-      <thead><tr><th>Regex</th><th>Action</th><th>Colour</th></tr></thead>
-      <tbody>
-        <tr><td><span class="mono">\b(CRITICAL|ERROR|FAIL(ED)?)\b</span></td><td>Highlight Text</td><td>Red background</td></tr>
-        <tr><td><span class="mono">\b(PASS(ED)?|SUCCESS)\b</span></td><td>Highlight Text</td><td>Green background</td></tr>
-        <tr><td><span class="mono">\b(WARNING|WARN|TODO)\b</span></td><td>Highlight Text</td><td>Yellow background</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- SECTION s11: Cross-Pane Workflow -->
-  <div class="section" id="s11">
-    <div class="section-header">
-      <span class="section-num">11</span>
-      <h2>Cross-Pane Workflow</h2>
-    </div>
+    <p class="section-intro"><strong>Work goes round a fixed loop, and you carry it across pane boundaries by hand.</strong></p>
 
     <div class="steps">
       <div class="step">
         <div class="step-header">
           <span class="step-n">&#8634;</span>
-          <span class="step-title">The change cycle</span>
+          <h3 class="step-title">The change cycle</h3>
         </div>
         <div class="step-body">
-          <p>Every code change follows this pattern across panes:</p>
           <div class="code-block">
-<div><span style="color:#fcd34d">PLAN</span>   &rarr; Discuss approach. No file writes. Get design sign-off.</div>
-<div><span style="color:#6ee7b7">IMPL</span>   &rarr; Implement. Run tests (must pass before proceeding).</div>
-<div><span style="color:#c4b5fd">AUDIT</span>  &rarr; Review changed files (read-only). Feed findings to IMPL.</div>
-<div><span style="color:#67e8f9">PROMPT</span> &rarr; Prompt/content changes (always separate from code).</div>
+<div><span style="color:#fcd34d">PLAN</span>   &rarr; Discuss approach. No file writes. Get architecture sign-off.</div>
+<div><span style="color:#6ee7b7">IMPL</span>   &rarr; Implement. Run tests immediately after (must pass).</div>
+<div><span style="color:#c4b5fd">AUDIT</span>  &rarr; Review the changed files (read-only). Feed findings back to IMPL.</div>
+<div><span style="color:#67e8f9">PROMPT</span> &rarr; (When prompt/content files change) Separate from code changes.</div>
           </div>
         </div>
       </div>
@@ -1409,18 +1565,14 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">&#9889;</span>
-          <span class="step-title">Cross-pane handoff</span>
+          <h3 class="step-title">Carrying findings across</h3>
         </div>
         <div class="step-body">
-          <p>When AUDIT finds an issue, copy its output and paste into IMPL:</p>
+          <p>When AUDIT identifies an issue, copy its output and paste it into IMPL with:</p>
           <div class="code-block">
-<div><span class="str">"The AUDIT pane identified: [paste findings].</span></div>
+<div><span class="str">The AUDIT pane identified: [paste findings here].</span></div>
 <div><span class="str">Fix this while preserving existing patterns.</span></div>
-<div><span class="str">Do not touch unrelated files."</span></div>
-          </div>
-          <div class="callout tip">
-            <span class="callout-icon">&#128229;</span>
-            <div><strong>Optional automation</strong> Install the <a href="#s19" style="color: var(--blue); font-weight: 600;">pane handoff add-on (Step 19)</a> and the AUDIT pane writes its directive to a file; the watcher delivers it as a single bracketed paste to IMPL &mdash; no manual copy. Scope-keyed so two projects run in parallel.</div>
+<div><span class="str">Do not touch unrelated files.</span></div>
           </div>
         </div>
       </div>
@@ -1428,15 +1580,14 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">&#128161;</span>
-          <span class="step-title">Keep context clean</span>
+          <h3 class="step-title">Context hygiene</h3>
         </div>
         <div class="step-body">
           <ul>
-            <li><strong>Re-anchor on long sessions:</strong> "Re-read CLAUDE.md and confirm the project rules. Then..."</li>
-            <li><strong>Scope AUDIT reviews:</strong> "Focus ONLY on src/auth.py. Do not read any other files."</li>
-            <li><strong>Clear stale context:</strong> <span class="mono">/clear</span> resets the conversation entirely.</li>
-            <li><strong>Compress instead:</strong> <span class="mono">/compact</span> summarises and frees context without losing history.</li>
-            <li><strong>State sync before review:</strong> Run <span class="mono">/clear</span> in the AUDIT pane before starting a review pass on code that IMPL just wrote. This ensures AUDIT reads current file contents, not stale versions cached in its context.</li>
+            <li><strong>Run <span class="mono">/clear</span> in the AUDIT pane before every review pass.</strong> Otherwise AUDIT reviews the versions cached in its context, not what IMPL just wrote.</li>
+            <li><strong>Re-anchor on long sessions:</strong> "Before starting, re-read CLAUDE.md and confirm the project invariants. Then&hellip;"</li>
+            <li><strong>Scope AUDIT explicitly:</strong> "Focus ONLY on src/auth.py and src/middleware.py. Do not read any other files unless I explicitly ask."</li>
+            <li><strong><span class="mono">/compact</span></strong> frees context without losing all history &mdash; use it instead of <span class="mono">/clear</span> when the history still matters.</li>
           </ul>
         </div>
       </div>
@@ -1448,67 +1599,185 @@
     </div>
   </div>
 
-  <!-- SECTION s12: Daily Playbook -->
-  <div class="section" id="s12">
+  <!-- SECTION s9: The gate and ship commands -->
+  <span id="gate-and-ship" class="anchor-alias"></span>
+  <div class="section" id="s9">
     <div class="section-header">
-      <span class="section-num">12</span>
-      <h2>Daily Playbook</h2>
+      <span class="section-num">09</span>
+      <h2>The gate and ship commands</h2>
     </div>
+    <p class="section-intro"><strong>Nothing reaches AUDIT until the tests pass.</strong></p>
+
+    <table class="data-table">
+      <thead><tr><th scope="col">Alias</th><th scope="col">What it runs</th><th scope="col">When to use</th></tr></thead>
+      <tbody>
+        <tr><td class="cell-mono">gate</td><td>pytest suite (<span class="mono">tests/</span>); exits non-zero on failure</td><td>Before handing off to AUDIT</td></tr>
+        <tr><td class="cell-mono">ship</td><td><span class="mono">gate</span> + interactive <span class="mono">git add -p</span> + <span class="mono">git commit</span></td><td>When tests pass and work is commit-ready</td></tr>
+      </tbody>
+    </table>
 
     <div class="steps">
       <div class="step">
         <div class="step-header">
-          <span class="step-n">AM</span>
-          <span class="step-title">Start of session</span>
+          <span class="step-n">1</span>
+          <h3 class="step-title">Using them</h3>
         </div>
         <div class="step-body">
           <div class="code-block">
-<div class="comment"># 1. Open iTerm2 (arrangement auto-restores)</div>
+<div><span class="comment"># After making changes:</span></div>
+<div>gate</div>
+<div><span class="comment"># → ... pytest output ...</span></div>
+<div><span class="comment"># → ✅ GATE PASSED</span></div>
 <div></div>
-<div class="comment"># 2. Type "cc" in each pane</div>
-<div></div>
-<div class="comment"># 2.5 AUDIT &mdash; /clear (fresh context for first review)</div>
-<div><span class="mono">/clear</span></div>
-<div></div>
-<div class="comment"># 3. PLAN &mdash; review where you left off</div>
-<div><span class="cmd">git</span> log <span class="flag">--oneline</span> <span class="flag">-10</span></div>
-<div></div>
-<div class="comment"># 4. IMPL &mdash; quick smoke test</div>
-<div><span class="cmd">pytest</span> tests/ <span class="flag">-x</span> <span class="flag">--tb=short</span></div>
+<div><span class="comment"># When ready to commit:</span></div>
+<div>ship</div>
+<div><span class="comment"># → runs gate, then prompts for staged hunks + commit message</span></div>
           </div>
+          <p><span class="mono">gate</span> and <span class="mono">ship</span> are defined only when <span class="mono">$ITERM_PROFILE == CC-IMPL</span>. Running them in other panes is a harmless no-op.</p>
         </div>
       </div>
 
       <div class="step">
         <div class="step-header">
-          <span class="step-n">PM</span>
-          <span class="step-title">End of session</span>
+          <span class="step-n">2</span>
+          <h3 class="step-title">The loop</h3>
         </div>
         <div class="step-body">
           <div class="code-block">
-<div class="comment"># 1. IMPL &mdash; run full test suite</div>
-<div><span class="cmd">pytest</span> tests/ <span class="flag">-v</span> <span class="flag">--tb=short</span></div>
-<div></div>
-<div class="comment"># 2. IMPL &mdash; stage and commit</div>
-<div><span class="cmd">git</span> add <span class="flag">-p</span></div>
-<div><span class="cmd">git</span> commit <span class="flag">-m</span> <span class="str">"feat: ..."</span></div>
-<div></div>
-<div class="comment"># 3. Compress long contexts instead of clearing</div>
-<div class="comment"># Type /compact inside Claude Code</div>
-<div></div>
-<div class="comment"># 4. Save arrangement if layout changed</div>
-<div class="comment"># Window &rarr; Arrangements &rarr; Save Window Arrangement</div>
+<div>IMPL → implement → gate (must pass) → AUDIT → findings → IMPL → fix → gate → AUDIT</div>
+          </div>
+          <p>Start pytest-only; add lint, type checking and a docker build to <span class="mono">gate</span> once you know they are load-bearing.</p>
+          <div class="callout success">
+            <span class="callout-icon">&#10003;</span>
+            <div><strong>Why this matters</strong> Sending failing code to AUDIT wastes Opus tokens on defects the test suite already catches. The <span class="mono">gate</span> alias makes this impossible to forget.</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION s13: Adapt for Other Projects -->
-  <div class="section" id="s13">
+  <!-- SECTION s10: The SESSION_LOG pattern -->
+  <span id="session-log" class="anchor-alias"></span>
+  <div class="section" id="s10">
     <div class="section-header">
-      <span class="section-num">13</span>
-      <h2>Adapt for Other Projects</h2>
+      <span class="section-num">10</span>
+      <h2>The SESSION_LOG pattern</h2>
+    </div>
+    <p class="section-intro"><strong>A SESSION_LOG gives the next session somewhere to resume from.</strong></p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <h3 class="step-title">Keep SESSION_LOG.md in the project root</h3>
+        </div>
+        <div class="step-body">
+          <p>Append a new entry at the end of every session; never overwrite old entries. Minimum viable format:</p>
+          <div class="code-block">
+<div>### YYYY-MM-DD — one-line task summary</div>
+<div>- **Done**: what was completed this session</div>
+<div>- **Decisions**: any architectural choices made</div>
+<div>- **Next**: open items or follow-ups for the next session</div>
+          </div>
+          <p style="font-size:14px;color:var(--text-secondary);margin-top:12px;margin-bottom:4px;">Real example:</p>
+          <div class="code-block">
+<div>### 2026-03-22 — Add rate-limit retry to API client</div>
+<div>- **Done**: Implemented exponential backoff in api_client.py. All 24 tests pass.</div>
+<div>- **Decisions**: Max 3 retries, 2s base delay. Errors logged with context, not raised.</div>
+<div>- **Next**: AUDIT review of api_client.py. Then wire retry into pipeline scheduler.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <h3 class="step-title">Instruct Claude to read it on session start</h3>
+        </div>
+        <div class="step-body">
+          <p>In your <span class="mono">CLAUDE.md</span> (see section 11), add a Session Continuity instruction: <em>"At the start of every session, read the last 60 lines of SESSION_LOG.md and surface the most recent 'Next:' items before doing anything else."</em></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION s11: Splitting rules: CLAUDE.md and AGENTS.md -->
+  <span id="agents-md" class="anchor-alias"></span>
+  <div class="section" id="s11">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <h2>Splitting rules: CLAUDE.md and AGENTS.md</h2>
+    </div>
+    <p class="section-intro"><strong>Split global rules from project rules so neither leaks into the other.</strong></p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">1</span>
+          <h3 class="step-title">Two files, two scopes</h3>
+        </div>
+        <div class="step-body">
+          <table class="data-table">
+            <thead><tr><th scope="col">Scope</th><th scope="col">Put it in</th><th scope="col">Committed?</th></tr></thead>
+            <tbody>
+              <tr><td>Your personal conventions, every project</td><td class="cell-mono">~/.claude/CLAUDE.md</td><td>No &mdash; personal</td></tr>
+              <tr><td>Shared project rules, every agent reads them</td><td class="cell-mono">AGENTS.md</td><td>Yes</td></tr>
+              <tr><td>Claude-only additions for this project</td><td class="cell-mono">CLAUDE.md importing @AGENTS.md</td><td>Yes</td></tr>
+            </tbody>
+          </table>
+          <p>Load order is: managed policy, then user <span class="mono">~/.claude/CLAUDE.md</span>, then project <span class="mono">./CLAUDE.md</span>, then <span class="mono">./CLAUDE.local.md</span>. They concatenate &mdash; later files add to earlier ones, they do not override them.</p>
+          <p><span class="mono">@path</span> imports pull one rules file into another. Absolute, <span class="mono">~</span> and relative paths all work, and imports nest up to four levels deep.</p>
+          <div class="callout tip">
+            <span class="callout-icon">&#128161;</span>
+            <div><strong>Keep global rules lean</strong> Your <span class="mono">~/.claude/CLAUDE.md</span> is loaded into every session across every project. Move project-specific detail into the repo&rsquo;s <span class="mono">.claude/CLAUDE.md</span>.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">2</span>
+          <h3 class="step-title">Sharing one rule set with other agents</h3>
+        </div>
+        <div class="step-body">
+          <p><span class="mono">AGENTS.md</span> is an open standard (<a href="https://agents.md/" style="color:var(--blue)">agents.md</a>) used by over 60,000 open-source projects and supported by a couple of dozen agents, among them Codex, Cursor, Copilot, Gemini CLI, Zed and Aider. From v2.1.277 Claude Code reads it too.</p>
+          <p>Claude Code reads <span class="mono">AGENTS.md</span> only when it finds no <span class="mono">CLAUDE.md</span>, <span class="mono">.claude/CLAUDE.md</span> or <span class="mono">CLAUDE.local.md</span> in that directory or any directory above it. Your personal <span class="mono">~/.claude/CLAUDE.md</span> does not count &mdash; it keeps loading alongside.</p>
+          <p>So the portable pattern is: put the shared rules in <span class="mono">AGENTS.md</span>, and make <span class="mono">CLAUDE.md</span> a one-line import.</p>
+          <div class="code-block">
+<div>echo <span class="str">'@AGENTS.md'</span> &gt; CLAUDE.md</div>
+          </div>
+          <p>Every agent then reads the same rules, and you can still append Claude-only rules underneath the import line.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">3</span>
+          <h3 class="step-title">Use the included templates</h3>
+        </div>
+        <div class="step-body">
+          <p>Two starter templates ship with this repo: <strong><span class="mono">CLAUDE.md.template</span></strong> (copy to <span class="mono">~/.claude/CLAUDE.md</span>, do not commit) and <strong><span class="mono">REFERENCE.md.template</span></strong> (copy to <span class="mono">.claude/REFERENCE.md</span> and commit &mdash; the AUDIT pane uses it for sprint context and known issues).</p>
+          <div class="code-block">
+<div class="comment"># Global rules — do NOT commit</div>
+<div>cp CLAUDE.md.template ~/.claude/CLAUDE.md</div>
+<div class="comment"># Project reference — commit this</div>
+<div>cp REFERENCE.md.template .claude/REFERENCE.md</div>
+          </div>
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <div><strong>The common mistake</strong> Rules files past roughly 200 lines dilute adherence &mdash; the model reads everything and weights nothing. Prose is a suggestion. Anything that must be <em>enforced</em> belongs in a hook (Part III), not in a rules file.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION s12: Adapting it to another project -->
+  <span id="adapting" class="anchor-alias"></span>
+  <div class="section" id="s12">
+    <div class="section-header">
+      <span class="section-num">12</span>
+      <h2>Adapting it to another project</h2>
     </div>
     <p class="section-intro">This setup is project-agnostic. To use it with a different codebase:</p>
 
@@ -1516,30 +1785,30 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">1</span>
-          <span class="step-title">Create new profiles (or duplicate existing ones)</span>
+          <h3 class="step-title">Rename profiles</h3>
         </div>
         <div class="step-body">
-          <p>Use a project-specific prefix: <span class="mono">MYPROJECT-AUDIT</span>, <span class="mono">MYPROJECT-IMPL</span>, etc. Or keep <span class="mono">DEV-*</span> and just change the directory.</p>
+          <p><span class="mono">CC-AUDIT</span> &rarr; <span class="mono">MYPROJECT-AUDIT</span>, and so on for IMPL, PROMPT and PLAN.</p>
         </div>
       </div>
 
       <div class="step">
         <div class="step-header">
           <span class="step-n">2</span>
-          <span class="step-title">Update Initial Directory in each profile</span>
+          <h3 class="step-title">Update Initial directory in each profile</h3>
         </div>
         <div class="step-body">
-          <p>Point to the new project path in each profile's General tab.</p>
+          <p>Point each profile&rsquo;s General tab at the new project path.</p>
         </div>
       </div>
 
       <div class="step">
         <div class="step-header">
           <span class="step-n">3</span>
-          <span class="step-title">Add case entries to ~/.zshrc (if using new profile names)</span>
+          <h3 class="step-title">Update ~/.zshrc</h3>
         </div>
         <div class="step-body">
-          <p>Add matching entries in both <span class="mono">case</span> blocks for the new names:</p>
+          <p>Add new <span class="mono">case</span> entries matching the new profile names, in both case blocks:</p>
           <div class="code-block">
 <div class="comment"># Example with a project-specific prefix</div>
 <div><span class="str">MYPROJECT-AUDIT</span>)</div>
@@ -1553,28 +1822,51 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">4</span>
-          <span class="step-title">Save a new window arrangement per project</span>
+          <h3 class="step-title">Add project-specific slash commands</h3>
         </div>
         <div class="step-body">
-          <p>Name it after the project (<strong>Window &rarr; Arrangements &rarr; Save Window Arrangement</strong>). To switch between projects later, use <strong>Window &rarr; Arrangements &rarr; [arrangement name]</strong> &mdash; iTerm2 opens the saved 4-pane layout for that project in a new window.</p>
+          <p>Drop them in <span class="mono">.claude/commands/</span> so they travel with the repo.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">5</span>
+          <h3 class="step-title">Save a project-specific arrangement</h3>
+        </div>
+        <div class="step-body">
+          <p>Name it after the project (<strong>Window &rarr; Save Window Arrangement</strong>). To switch between projects later, use <strong>Window &rarr; Arrangements &rarr; [arrangement name]</strong> &mdash; iTerm2 opens that project&rsquo;s saved 4-pane layout in a new window.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION s14: Two-Tier Hook Architecture -->
-  <div class="section" id="s14">
+  <h2 class="part-heading" id="part-3">Part III &mdash; Optional add-ons</h2>
+  <p class="part-intro">Each of these is independent. Skip any of them and Parts I and II still work.</p>
+
+  <!-- SECTION s13: Safety hooks -->
+  <span id="safety-hooks" class="anchor-alias"></span>
+  <div class="section" id="s13">
     <div class="section-header">
-      <span class="section-num">14</span>
-      <h2>Two-Tier Hook Architecture</h2>
+      <span class="section-num">13</span>
+      <h2>Safety hooks</h2>
     </div>
-    <p class="section-intro">Hook scripts enforce safety invariants that prompt instructions alone cannot guarantee — blocking dangerous tool calls before they execute and tripping a circuit-breaker on repeated failures.</p>
+    <p class="section-intro"><strong>Hooks enforce what prompt instructions only request.</strong> Claude Code runs them before and after tool use, and at session start.</p>
+
+    <table class="data-table">
+      <thead><tr><th scope="col">Tier</th><th scope="col">Event</th><th scope="col">Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><strong>PreToolUse</strong></td><td>Before the tool executes</td><td>Block dangerous actions before they happen</td></tr>
+        <tr><td><strong>PostToolUse</strong></td><td>After the tool returns</td><td>Observe outcomes; trip circuit-breaker on repeat failures</td></tr>
+        <tr><td><strong>SessionStart</strong></td><td>When a new session opens</td><td>Reset counters; validate session state</td></tr>
+      </tbody>
+    </table>
 
     <div class="steps">
       <div class="step">
         <div class="step-header">
           <span class="step-n">1</span>
-          <span class="step-title">Copy hook scripts to ~/.claude/hooks/</span>
+          <h3 class="step-title">Copy the hook scripts to ~/.claude/hooks/</h3>
         </div>
         <div class="step-body">
           <div class="code-block">
@@ -1591,587 +1883,339 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">2</span>
-          <span class="step-title">Merge hooks/settings.json.example into ~/.claude/settings.json</span>
+          <h3 class="step-title">Merge hooks/settings.json.example into ~/.claude/settings.json</h3>
         </div>
         <div class="step-body">
-          <p>Open (or create) <span class="mono">~/.claude/settings.json</span>. Copy the <span class="mono">"hooks"</span> block from <span class="mono">hooks/settings.json.example</span> into the top level of the JSON object. All <span class="mono">"command"</span> values use <span class="mono">$HOME</span> — Claude Code does not expand <span class="mono">~</span>.</p>
+          <p>Merge the <span class="mono">"hooks"</span> block from <span class="mono">hooks/settings.json.example</span> into the top level of <span class="mono">~/.claude/settings.json</span>. All <span class="mono">"command"</span> values use <span class="mono">$HOME</span> &mdash; Claude Code does not expand <span class="mono">~</span>.</p>
           <div class="callout tip">
             <span class="callout-icon">&#128161;</span>
-            <div><strong>Why <code>$HOME</code> instead of <code>~</code>?</strong> Claude Code does not expand <span class="mono">~</span> in hook command strings. Use <span class="mono">$HOME</span> which the shell expands at execution time, or replace with your full absolute path.</div>
+            <div><strong>Why <code>$HOME</code> instead of <code>~</code>?</strong> Claude Code does not expand <span class="mono">~</span> in hook command strings. Use <span class="mono">$HOME</span>, which the shell expands at execution time, or replace it with your full absolute path.</div>
           </div>
-          <p>The example also includes <span class="mono">"env": &#123;"CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "50"&#125;</span>. This tells Claude Code to auto-compact the conversation context when it reaches 50% of the context window. Without this, Claude waits until near the limit before compacting, which can cause abrupt context loss mid-session. Set to <span class="mono">"0"</span> to disable, or remove the <span class="mono">"env"</span> block entirely to use the default threshold.</p>
+          <p>The example also sets <span class="mono">CLAUDE_AUTOCOMPACT_PCT_OVERRIDE</span> to <span class="mono">"50"</span>, auto-compacting the conversation at 50% of the context window; <span class="mono">"0"</span> disables it.</p>
         </div>
       </div>
 
       <div class="step">
         <div class="step-header">
           <span class="step-n">3</span>
-          <span class="step-title">What each hook does</span>
+          <h3 class="step-title">What each hook does</h3>
         </div>
         <div class="step-body">
           <table class="data-table">
-            <tr><th>Hook</th><th>Tier</th><th>Blocks when</th></tr>
-            <tr><td><span class="mono">protect-env.py</span></td><td>PreToolUse</td><td>Edit/Write/MultiEdit targets any <span class="mono">.env</span> file</td></tr>
-            <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td>Bash command matches <span class="mono">git … push</span></td></tr>
-            <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
-            <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter — never blocks)</td></tr>
-            <tr><td><span class="mono">version-check.py</span></td><td>SessionStart</td><td>(never blocks &mdash; prints update checklist when Claude Code version changes)</td></tr>
+            <thead><tr><th scope="col">Hook</th><th scope="col">Tier</th><th scope="col">Blocks when</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-mono">protect-env.py</td><td>PreToolUse</td><td>Edit/Write/MultiEdit targets any <span class="mono">.env</span> file</td></tr>
+              <tr><td class="cell-mono">protect-git-push.py</td><td>PreToolUse</td><td>Bash command matches <span class="mono">git &hellip; push</span> (any flag order)</td></tr>
+              <tr><td class="cell-mono">circuit-breaker.py</td><td>PostToolUse</td><td>3 consecutive tool failures in a session</td></tr>
+              <tr><td class="cell-mono">session-start-reset.py</td><td>SessionStart</td><td>(resets failure counter &mdash; never blocks)</td></tr>
+              <tr><td class="cell-mono">version-check.py</td><td>SessionStart</td><td>(never blocks &mdash; prints update checklist when Claude Code version changes)</td></tr>
+            </tbody>
           </table>
           <div class="callout warn">
             <span class="callout-icon">&#9888;&#65039;</span>
-            <div><strong>macOS and Linux only</strong> The hook scripts use <span class="mono">fcntl</span> for file locking, which is not available on Windows. This matches the iTerm2 requirement (macOS only).</div>
+            <div><strong>Platform note:</strong> the circuit-breaker hook uses <span class="mono">fcntl</span>, so the hooks run on macOS and Linux only.</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION s15: gate Workflow -->
-  <div class="section" id="s15">
+  <!-- SECTION s14: MCP server, slash commands and skills -->
+  <span id="mcp-and-skills" class="anchor-alias"></span>
+  <div class="section" id="s14">
     <div class="section-header">
-      <span class="section-num">15</span>
-      <h2>gate Workflow</h2>
+      <span class="section-num">14</span>
+      <h2>MCP server, slash commands and skills</h2>
     </div>
-    <p class="section-intro">Two aliases in the IMPL pane create a hard gate between implementation and review.</p>
+    <p class="section-intro">A GitHub MCP integration, the <span class="mono">/reflect</span> command, and three contextual skills.</p>
 
     <div class="steps">
       <div class="step">
         <div class="step-header">
           <span class="step-n">1</span>
-          <span class="step-title">The aliases (defined in zshrc-snippet.sh)</span>
+          <h3 class="step-title">GitHub MCP server</h3>
         </div>
         <div class="step-body">
+          <p>Claude Code registers user- and local-scoped MCP servers via <span class="mono">claude mcp add</span>, and reads project-scoped servers from a committed <span class="mono">.mcp.json</span> at the repo root. The included <span class="mono">.mcp.json.example</span> is reference JSON if you need <span class="mono">claude mcp add-json</span> instead.</p>
           <div class="code-block">
-<div class="comment"># gate: run full test suite; exit code 5 = no tests collected → helpful hint</div>
-<div>alias gate='python3 -m pytest tests/ -x --tb=short &amp;&amp; echo "✅ GATE PASSED" || { _rc=$?; [ $_rc -eq 5 ] &amp;&amp; echo "No tests found — add tests/test_placeholder.py to get started" || false; }'</div>
-<div class="comment"># ship: gate + interactive stage + commit</div>
-<div>alias ship='gate &amp;&amp; git add -p &amp;&amp; git commit'</div>
-          </div>
-          <p>Both aliases are only defined when <span class="mono">$ITERM_PROFILE == CC-IMPL</span>. They are no-ops in other panes.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">2</span>
-          <span class="step-title">The handoff rule</span>
-        </div>
-        <div class="step-body">
-          <div class="code-block">
-<div>IMPL → implement → gate (must pass) → AUDIT → findings → IMPL → fix → gate → AUDIT</div>
-          </div>
-          <p>Never send work to AUDIT until <span class="mono">gate</span> passes.</p>
-          <div class="callout success">
-            <span class="callout-icon">&#10003;</span>
-            <div><strong>Why this matters</strong> Sending failing code to AUDIT wastes Opus tokens on defects the test suite already catches. The <span class="mono">gate</span> alias makes this impossible to forget.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION s16: SESSION_LOG Pattern -->
-  <div class="section" id="s16">
-    <div class="section-header">
-      <span class="section-num">16</span>
-      <h2>SESSION_LOG Pattern</h2>
-    </div>
-    <p class="section-intro">Without a session log, each IMPL session starts cold — Claude asks for a project overview instead of resuming from where work stopped.</p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">1</span>
-          <span class="step-title">Keep SESSION_LOG.md in the project root</span>
-        </div>
-        <div class="step-body">
-          <p>Append a new entry at the end of every session. Never overwrite old entries. Minimum viable format:</p>
-          <div class="code-block">
-<div>### YYYY-MM-DD — one-line task summary</div>
-<div>- **Done**: what was completed this session</div>
-<div>- **Decisions**: any architectural choices made</div>
-<div>- **Next**: open items for the next session</div>
-          </div>
-          <p style="font-size:14px;color:var(--text-secondary);margin-top:12px;margin-bottom:4px;">Real example:</p>
-          <div class="code-block">
-<div>### 2026-03-22 — Add rate-limit retry to API client</div>
-<div>- **Done**: Implemented exponential backoff in api_client.py. All 24 tests pass.</div>
-<div>- **Decisions**: Max 3 retries, 2s base delay. Errors logged with context, not raised.</div>
-<div>- **Next**: AUDIT review of api_client.py. Then wire retry into pipeline scheduler.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">2</span>
-          <span class="step-title">Instruct Claude to read it on session start</span>
-        </div>
-        <div class="step-body">
-          <p>In your <span class="mono">~/.claude/CLAUDE.md</span> (see Step 14), add a Session Continuity instruction: <em>"At the start of every session, read the last 60 lines of SESSION_LOG.md and surface the most recent 'Next:' items before doing anything else."</em></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION s17: CLAUDE.md Split Pattern -->
-  <div class="section" id="s17">
-    <div class="section-header">
-      <span class="section-num">17</span>
-      <h2>CLAUDE.md Split Pattern</h2>
-    </div>
-    <p class="section-intro">Separating global rules from project-specific rules reduces noise and prevents cross-project contamination in every Claude session.</p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">1</span>
-          <span class="step-title">Two files, two scopes</span>
-        </div>
-        <div class="step-body">
-          <table class="data-table">
-            <tr><th>File</th><th>Location</th><th>Committed?</th><th>Contains</th></tr>
-            <tr><td><span class="mono">CLAUDE.md</span></td><td><span class="mono">~/.claude/</span></td><td>No — personal</td><td>Coding conventions, error-handling policy, tool preferences</td></tr>
-            <tr><td><span class="mono">CLAUDE.md</span></td><td><span class="mono">.claude/</span> (repo)</td><td>Yes</td><td>Project architecture, active constraints, session continuity</td></tr>
-          </table>
-          <p>Claude Code merges both automatically — global first, project-specific second.</p>
-          <div class="callout tip">
-            <span class="callout-icon">&#128161;</span>
-            <div><strong>Keep global rules lean</strong> Your <span class="mono">~/.claude/CLAUDE.md</span> is loaded into every session across every project. Aim for under 80 lines — move project-specific detail into the repo's <span class="mono">.claude/CLAUDE.md</span>.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">2</span>
-          <span class="step-title">Use the included templates</span>
-        </div>
-        <div class="step-body">
-          <div class="code-block">
-<div class="comment"># Global rules — do NOT commit</div>
-<div>cp CLAUDE.md.template ~/.claude/CLAUDE.md</div>
-<div class="comment"># Project reference — commit this</div>
-<div>cp REFERENCE.md.template .claude/REFERENCE.md</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- SECTION s18: MCP Server, Commands & Skills -->
-  <div class="section" id="s18">
-    <div class="section-header">
-      <span class="section-num">18</span>
-      <h2>MCP Server, Slash Commands &amp; Skills</h2>
-    </div>
-    <p class="section-intro">Phase 6 additions — GitHub MCP integration, the <span class="mono">/reflect</span> command, and contextual skills.</p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">1</span>
-          <span class="step-title">GitHub MCP Server</span>
-        </div>
-        <div class="step-body">
-          <p>Claude Code registers MCP servers via <span class="mono">claude mcp add</span>, not by reading a config file from disk. The included <span class="mono">.mcp.json.example</span> is reference JSON if you need <span class="mono">claude mcp add-json</span> instead.</p>
-          <ol style="margin-left:20px">
-            <li>Install the binary:
-              <div class="code-block" style="margin-top:8px">
 <div>brew install github-mcp-server</div>
-              </div>
-              Or see <a href="https://github.com/github/github-mcp-server" style="color:var(--blue)">github.com/github/github-mcp-server</a> for other install methods.
-            </li>
-            <li>Register with Claude Code (user-scope — available in every project):
-              <div class="code-block" style="margin-top:8px">
+          </div>
+          <div class="code-block">
 <div>claude mcp add github -s user \</div>
 <div>  -e GITHUB_PERSONAL_ACCESS_TOKEN=ghp_your_readonly_token \</div>
 <div>  -- $(which github-mcp-server) stdio</div>
-              </div>
-              Generate a read-only PAT at <a href="https://github.com/settings/tokens" style="color:var(--blue)">github.com/settings/tokens</a> with scope <span class="mono">public_repo</span> (or <span class="mono">repo</span> for private-repo access). Recommended expiry: 90 days.
-            </li>
-            <li>Verify: <span class="mono">claude mcp list | grep github</span></li>
-          </ol>
-          <div class="callout tip">
-            <span class="callout-icon">&#128161;</span>
-            <div><strong>Scope:</strong> <span class="mono">-s user</span> registers the server globally (all projects). Omit <span class="mono">-s user</span> to restrict to the current project.</div>
           </div>
+          <p>Generate a read-only PAT at <a href="https://github.com/settings/tokens" style="color:var(--blue)">github.com/settings/tokens</a> with scope <span class="mono">public_repo</span> (or <span class="mono">repo</span> for private-repo access); recommended expiry 90 days. Verify with <span class="mono">claude mcp list | grep github</span>. <span class="mono">-s user</span> registers the server for all projects &mdash; omit it to restrict to the current one.</p>
         </div>
       </div>
 
       <div class="step">
         <div class="step-header">
           <span class="step-n">2</span>
-          <span class="step-title">/reflect slash command</span>
+          <h3 class="step-title">/reflect slash command</h3>
         </div>
         <div class="step-body">
-          <p>Run <span class="mono">/reflect</span> at the end of any IMPL or AUDIT session. Claude reads the recent git log and diff, then outputs a formatted table of suggested CLAUDE.md additions — ready to copy and paste.</p>
+          <p><span class="mono">commands/reflect.md</span> defines a command you run at the end of an IMPL or AUDIT session: it reads the recent git log and diff, then outputs a table of suggested CLAUDE.md additions. It never edits the file &mdash; you decide what to incorporate.</p>
           <div class="code-block">
-<div class="comment"># Install once:</div>
 <div>mkdir -p ~/.claude/commands</div>
 <div>cp commands/reflect.md ~/.claude/commands/reflect.md</div>
           </div>
-          <div class="callout warn">
-            <span class="callout-icon">&#9888;&#65039;</span>
-            <div><span class="mono">/reflect</span> never edits CLAUDE.md directly. It outputs suggestions — you decide what to incorporate.</div>
-          </div>
         </div>
       </div>
 
       <div class="step">
         <div class="step-header">
           <span class="step-n">3</span>
-          <span class="step-title">Contextual skills</span>
+          <h3 class="step-title">Contextual skills</h3>
         </div>
         <div class="step-body">
-          <p>Three skills that load relevant instructions automatically when Claude is doing review or test work:</p>
+          <p>The <span class="mono">skills/</span> directory holds three skills that load automatically when the task matches their trigger description.</p>
           <table class="data-table">
-            <tr><th>Skill</th><th>Pane</th><th>Adds</th></tr>
-            <tr><td><span class="mono">code-review</span></td><td>AUDIT</td><td>Project-specific review conventions</td></tr>
-            <tr><td><span class="mono">security-audit</span></td><td>AUDIT</td><td>Security checklist and vulnerability patterns</td></tr>
-            <tr><td><span class="mono">testing</span></td><td>IMPL</td><td>pytest conventions matching the project</td></tr>
+            <thead><tr><th scope="col">Skill</th><th scope="col">When it activates</th><th scope="col">What it adds</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-mono">code-review</td><td>Code review tasks (AUDIT pane)</td><td>Project-specific review conventions</td></tr>
+              <tr><td class="cell-mono">security-audit</td><td>Security review tasks (AUDIT pane)</td><td>Security checklist and vulnerability patterns</td></tr>
+              <tr><td class="cell-mono">testing</td><td>Writing/reviewing tests (IMPL pane)</td><td>pytest conventions matching the project</td></tr>
+            </tbody>
           </table>
           <div class="code-block" style="margin-top:12px">
-<div class="comment"># Install once:</div>
 <div>cp -r skills/ ~/.claude/skills/</div>
           </div>
-          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">Skills activate automatically — no manual invocation needed.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION s19: Pane Handoff (AUDIT ↔ IMPL) -->
-  <div class="section" id="s19">
+  <!-- SECTION s15: Local models with Ollama -->
+  <span id="ollama" class="anchor-alias"></span>
+  <div class="section" id="s15">
     <div class="section-header">
-      <span class="section-num">19</span>
-      <h2>Pane Handoff (AUDIT &harr; IMPL)</h2>
+      <span class="section-num">15</span>
+      <h2>Local models with Ollama</h2>
     </div>
-    <p class="section-intro">The cross-pane workflow (Step 11) has one manual chore left: copying AUDIT&rsquo;s findings into the IMPL pane, and IMPL&rsquo;s hand-back into AUDIT. This optional add-on removes it &mdash; one pane writes a file, a background watcher delivers it into the other pane as a single paste.</p>
+    <p class="section-intro"><strong>Private inference on your own machine, with no API calls.</strong> Nothing else in this guide requires Ollama &mdash; only Sigil (section 16) does, for its fact classifier.</p>
 
-    <p><strong>The problem it solves.</strong> Every AUDIT &rarr; IMPL round-trip means selecting a multi-line directive, switching panes, and pasting it &mdash; and multi-line pastes into a terminal normally submit on the first newline, mangling code blocks and blank lines. Do that ten times a day and it&rsquo;s the slowest, most error-prone link in the loop.</p>
-
-    <p><strong>How it works.</strong> A tiny file-based message bus. Each pane binds itself to a role (IMPL or AUDIT) and a project scope. To send work, Claude writes a file into <span class="mono">~/.claude/handoff/</span>; an <span class="mono">fswatch</span>-based watcher (a launchd daemon, running 24/7) picks it up, wraps the content in bracketed-paste escape codes, and types it into the bound iTerm pane &mdash; where the receiving Claude sees it as one fresh user message, every line preserved. On success the watcher truncates the file to 0 bytes as its delivered-marker.</p>
+    <table class="data-table">
+      <thead><tr><th scope="col">Tier</th><th scope="col">RAM</th><th scope="col">What you get</th></tr></thead>
+      <tbody>
+        <tr><td>&#127802; <strong>Base</strong></td><td>16 GB+</td><td>Claude Code + small local models (fast/code/embed)</td></tr>
+        <tr><td>&#128309; <strong>Mid</strong></td><td>32 GB+</td><td>Above + reasoning model + larger fast/code models</td></tr>
+        <tr><td>&#128308; <strong>Full</strong></td><td>64 GB+</td><td>Above + vision model + 32B code model (~20 GB)</td></tr>
+      </tbody>
+    </table>
 
     <div class="code-block">
-<div><span class="comment"># AUDIT pane                     Watcher                         IMPL pane</span></div>
-<div><span class="comment">#  (Claude)                 (pane-handoff.sh)                     (Claude)</span></div>
-<div>cat &gt; to-impl.myapp.txt ──&gt;  fswatch fires, reads file</div>
-<div>                             wraps in bracketed paste</div>
-<div>                             osascript → bound pane UUID   ──&gt;  arrives as one</div>
-<div>                             truncates file to 0 bytes          user message</div>
-<div>                             logs to /tmp/handoff.log</div>
+<div>brew install ollama</div>
+<div>brew services start ollama</div>
     </div>
 
-    <p><strong>Scoped filenames are the routing table.</strong> Every file is keyed by a per-project scope: <span class="mono">to-impl.&lt;scope&gt;.txt</span> routes to that scope&rsquo;s IMPL pane, <span class="mono">to-audit.&lt;scope&gt;.txt</span> to its AUDIT pane, and <span class="mono">HALT.&lt;scope&gt;</span> pauses that scope only. Two projects run side by side with zero cross-talk. Unscoped writes (<span class="mono">to-impl.txt</span>) are refused on purpose.</p>
-
-    <div class="callout tip">
-      <span class="callout-icon">&#128161;</span>
-      <div><strong>Optional add-on</strong> &mdash; macOS + iTerm2 only, ~3 minute install. Everything in Steps 1&ndash;18 works without it; this just removes the copy-paste tax from the AUDIT &harr; IMPL loop.</div>
-    </div>
+    <p>Pull the block matching your RAM. Times assume a 100 Mbps connection.</p>
 
     <div class="steps">
       <div class="step">
         <div class="step-header">
-          <span class="step-n">1</span>
-          <span class="step-title">Install the watcher</span>
+          <span class="step-n">&#127802;</span>
+          <h3 class="step-title">16 GB+ (~15 min, ~10 GB)</h3>
         </div>
         <div class="step-body">
           <div class="code-block">
-<div>brew install fswatch    <span class="comment"># required dependency</span></div>
-<div>./handoff/install.sh    <span class="comment"># from the repo root</span></div>
-          </div>
-          <p>The installer verifies <span class="mono">fswatch</span>, <span class="mono">osascript</span>, and iTerm2 are present; copies <span class="mono">pane-handoff.sh</span> (the watcher) and <span class="mono">enforce-handback.py</span> (a Stop hook) to <span class="mono">~/.claude/hooks/</span>; copies the <span class="mono">/start-impl</span> and <span class="mono">/start-audit</span> commands to <span class="mono">~/.claude/commands/</span>; installs a launchd agent at <span class="mono">~/Library/LaunchAgents/com.user.handoff.plist</span> (auto-starts at login, restarts on crash); and arms routing.</p>
-          <div class="code-block">
-<div><span class="comment"># Verify:</span></div>
-<div>launchctl list | grep handoff   <span class="comment"># → "&lt;PID&gt;  0  com.user.handoff"</span></div>
-<div>tail /tmp/handoff.log           <span class="comment"># → "[handoff] Watching ~/.claude/handoff"</span></div>
-          </div>
-          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">To uninstall: <span class="mono">./handoff/install.sh --uninstall</span></p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">2</span>
-          <span class="step-title">Add the shell functions</span>
-        </div>
-        <div class="step-body">
-          <div class="code-block">
-<div>cat handoff/zshrc-handoff.sh &gt;&gt; ~/.zshrc</div>
-<div>source ~/.zshrc</div>
-          </div>
-          <p>This defines the user-facing API, available in every pane:</p>
-          <table class="data-table">
-            <tr><th>Command</th><th>What it does</th></tr>
-            <tr><td><span class="mono">handoff-use &lt;scope&gt;</span></td><td>Set this pane&rsquo;s <span class="mono">HANDOFF_SCOPE</span> &mdash; once per pane open, before any scoped command</td></tr>
-            <tr><td><span class="mono">handoff-claim-impl</span> / <span class="mono">handoff-claim-audit</span></td><td>Bind this pane as the IMPL or AUDIT target for the current scope</td></tr>
-            <tr><td><span class="mono">handoff-on</span> / <span class="mono">handoff-off</span> / <span class="mono">handoff-status</span></td><td>Arm / disarm / check routing (global flag file <span class="mono">~/.claude/handoff/active</span>)</td></tr>
-            <tr><td><span class="mono">handoff-halt</span> / <span class="mono">handoff-resume</span></td><td>Pause / resume the loop for this scope only (writes / removes <span class="mono">HALT.&lt;scope&gt;</span>)</td></tr>
-            <tr><td><span class="mono">handoff-targets</span></td><td>List all current pane bindings</td></tr>
-            <tr><td><span class="mono">send-impl</span> / <span class="mono">send-audit</span></td><td>Pipe stdin to the scoped inbox (one-liners)</td></tr>
-            <tr><td><span class="mono">handoff-scope</span></td><td>Print this pane&rsquo;s current scope</td></tr>
-          </table>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">3</span>
-          <span class="step-title">Bind the panes to a project scope</span>
-        </div>
-        <div class="step-body">
-          <p>Pick a scope name per project (lowercase, no spaces &mdash; e.g. <span class="mono">myapp</span>). In the IMPL pane, inside Claude:</p>
-          <div class="code-block">
-<div>handoff-use myapp</div>
-<div>handoff-claim-impl</div>
-<div><span class="comment"># → [handoff] IMPL scope=myapp bound to &lt;UUID&gt;</span></div>
-          </div>
-          <p>In the AUDIT pane, inside Claude: <span class="mono">handoff-use myapp</span>, then the <span class="mono">/start-audit</span> slash command, then <span class="mono">handoff-claim-audit</span>. Confirm both bindings and smoke-test:</p>
-          <div class="code-block">
-<div>handoff-targets    <span class="comment"># → audit-target.myapp / impl-target.myapp with live UUIDs</span></div>
-<div>echo <span class="str">"smoke test $(date +%s)"</span> &gt; ~/.claude/handoff/to-impl.myapp.txt</div>
-<div><span class="comment"># within ~1s the IMPL pane shows the text as a single paste</span></div>
-          </div>
-          <div class="callout warn">
-            <span class="callout-icon">&#9888;&#65039;</span>
-            <div><strong>Re-claim after every iTerm restart</strong> iTerm assigns a new session UUID each time a pane opens, so yesterday&rsquo;s bindings point at panes that no longer exist. After a reboot or iTerm restart, re-run <span class="mono">handoff-use</span> + <span class="mono">handoff-claim-*</span> in each pane. The watcher itself needs nothing &mdash; launchd keeps it alive.</div>
+<div>ollama pull qwen3:8b              <span class="comment"># ~5 GB — fast daily driver</span></div>
+<div>ollama pull qwen2.5-coder:7b      <span class="comment"># ~4.7 GB — code specialist</span></div>
+<div>ollama pull nomic-embed-text      <span class="comment"># ~274 MB — embeddings</span></div>
           </div>
         </div>
       </div>
 
       <div class="step">
         <div class="step-header">
-          <span class="step-n">4</span>
-          <span class="step-title">Send work between panes</span>
+          <span class="step-n">&#128309;</span>
+          <h3 class="step-title">32 GB+ (~40 min, ~23 GB total) &mdash; pull these instead of the 8b/7b versions</h3>
         </div>
         <div class="step-body">
-          <p><strong>AUDIT &rarr; IMPL</strong> &mdash; the AUDIT pane writes a directive (via its Bash tool) and ends it with the confirmation line <span class="mono">&rarr; handed off</span>:</p>
           <div class="code-block">
-<div>cat &gt; ~/.claude/handoff/to-impl.myapp.txt &lt;&lt; <span class="str">'HANDOFF'</span></div>
-<div>Fix HIGH finding 2 — unvalidated path join in api_client.py:88</div>
-<div></div>
-<div>Acceptance:</div>
-<div>- input validated against allowlist</div>
-<div>- pytest tests/test_api_client.py passes</div>
-<div>→ handed off</div>
-<div><span class="str">HANDOFF</span></div>
-          </div>
-          <p><strong>IMPL &rarr; AUDIT</strong> &mdash; after <span class="mono">gate</span> passes, IMPL hands back, ending with <span class="mono">&rarr; handed back</span>:</p>
-          <div class="code-block">
-<div>cat &gt; ~/.claude/handoff/to-audit.myapp.txt &lt;&lt; <span class="str">'HANDOFF'</span></div>
-<div>=== HAND-BACK ===</div>
-<div>Step: finding 2</div>
-<div>Gate: PASS</div>
-<div>Surface assessment: allowlist added, no new deps</div>
-<div>→ handed back</div>
-<div><span class="str">HANDOFF</span></div>
-          </div>
-          <p>The confirmation lines are load-bearing: the <span class="mono">enforce-handback.py</span> Stop hook (a script Claude Code runs at the end of each turn &mdash; see Step 14) blocks IMPL from <em>claiming</em> &ldquo;&rarr; handed back&rdquo; in chat without actually writing the file &mdash; the failure mode that otherwise leaves AUDIT waiting forever on a loop that silently broke.</p>
-          <div class="callout tip">
-            <span class="callout-icon">&#128161;</span>
-            <div><strong>Three details that trip people up</strong> (1) Multi-line content survives &mdash; bracketed paste preserves code blocks, blank lines, and indentation. (2) Don&rsquo;t add a trailing Enter &mdash; the watcher submits the paste itself. (3) A 0-byte inbox file is <em>success</em>, not failure &mdash; it&rsquo;s the delivered-marker. The file is transport, not state; receiving panes should never pre-flight read it.</div>
+<div>ollama pull qwen3:14b             <span class="comment"># ~9 GB — replaces qwen3:8b</span></div>
+<div>ollama pull qwen2.5-coder:14b     <span class="comment"># ~9 GB — replaces qwen2.5-coder:7b</span></div>
+<div>ollama pull nomic-embed-text      <span class="comment"># ~274 MB</span></div>
+<div>ollama pull deepseek-r1:8b        <span class="comment"># ~5 GB — structured reasoning</span></div>
           </div>
         </div>
       </div>
 
       <div class="step">
         <div class="step-header">
-          <span class="step-n">5</span>
-          <span class="step-title">HALT &mdash; the human-in-the-loop brake</span>
+          <span class="step-n">&#128308;</span>
+          <h3 class="step-title">64 GB+ (~90 min, ~55 GB total) &mdash; use these instead of the 14b versions</h3>
         </div>
         <div class="step-body">
-          <p>Either pane can pause its own project&rsquo;s loop by writing the scoped sentinel. Contents must name the trigger and the human action required:</p>
           <div class="code-block">
-<div>handoff-halt &lt;&lt;<span class="str">'EOF'</span></div>
-<div>Trigger: gate failure on tests/test_api_client.py</div>
-<div>Human action required: review failure, decide rollback vs fix-forward</div>
-<div><span class="str">EOF</span></div>
+<div>ollama pull qwen3:14b             <span class="comment"># ~9 GB</span></div>
+<div>ollama pull qwen2.5-coder:32b     <span class="comment"># ~20 GB — replaces qwen2.5-coder:14b</span></div>
+<div>ollama pull nomic-embed-text      <span class="comment"># ~274 MB</span></div>
+<div>ollama pull deepseek-r1:8b        <span class="comment"># ~5 GB</span></div>
+<div>ollama pull gemma3:27b            <span class="comment"># ~16 GB — vision + heavy reasoning</span></div>
           </div>
-          <p>This writes <span class="mono">~/.claude/handoff/HALT.myapp</span>. The watcher logs <span class="mono">&#9940; HALT scope=myapp</span>, fires a macOS notification, and both panes in that scope stop before doing anything else. Other projects keep flowing &mdash; HALT is per-scope, there is no global pause. Only a human resumes it:</p>
-          <div class="code-block">
-<div>handoff-resume    <span class="comment"># or: rm ~/.claude/handoff/HALT.myapp</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">6</span>
-          <span class="step-title">Troubleshooting</span>
-        </div>
-        <div class="step-body">
-          <p>If a paste doesn&rsquo;t arrive, ask three questions in order &mdash; then read <span class="mono">/tmp/handoff.log</span>:</p>
-          <div class="code-block">
-<div>launchctl list | grep handoff   <span class="comment"># 1. watcher running? PID must be a number, not "-"</span></div>
-<div>ls ~/.claude/handoff/active     <span class="comment"># 2. routing armed? missing = disarmed → handoff-on</span></div>
-<div>handoff-targets                 <span class="comment"># 3. pane still bound? stale UUID → re-claim (step 3)</span></div>
-          </div>
-          <table class="data-table">
-            <tr><th>Log pattern</th><th>Meaning</th></tr>
-            <tr><td><span class="mono">-&gt; IMPL scope=X</span> then <span class="mono">delivered to IMPL/X &mdash; file truncated to 0 bytes</span></td><td>Success</td></tr>
-            <tr><td><span class="mono">-&gt; IMPL scope=X</span> then <span class="mono">WARN: delivery failed &mdash; file NOT truncated</span></td><td>Stale binding (re-claim), no binding for that scope, or macOS Automation permission denied for iTerm/osascript</td></tr>
-            <tr><td>No <span class="mono">-&gt; IMPL scope=X</span> line at all</td><td>Watcher not running, routing disarmed, or wrote to the wrong path</td></tr>
-            <tr><td><span class="mono">WARN: refusing unscoped to-impl.txt</span></td><td>You forgot the scope in the filename &mdash; use <span class="mono">to-impl.&lt;scope&gt;.txt</span></td></tr>
-          </table>
-          <p style="font-size:13px;color:var(--text-secondary);margin-top:8px;">Edited the watcher script? It does not hot-reload &mdash; <span class="mono">pkill -f pane-handoff.sh</span> and launchd respawns it within ~1s.</p>
         </div>
       </div>
     </div>
 
-    <p>That&rsquo;s the full daily loop. For multi-project isolation probes, the complete command and path reference, and the under-the-hood details, see the <a href="HANDOFF_GUIDE.html" style="color: var(--blue); font-weight: 600;">Pane Handoff operator guide</a>.</p>
+    <div class="callout warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div><strong>RAM note on 16 GB:</strong> The reasoning model (deepseek-r1) competes with Claude Code&rsquo;s working set. Omitted intentionally &mdash; upgrade tier to enable.</div>
+    </div>
+
+    <p>Uncomment your tier&rsquo;s block in the Ollama section at the bottom of <span class="mono">zshrc-snippet.sh</span> to get <span class="mono">llm-fast</span>, <span class="mono">llm-code</span>, <span class="mono">llm-reason</span> (&#128309; 32 GB+), <span class="mono">llm-embed</span> and the <span class="mono">llm-smart</span> router.</p>
   </div>
 
-  <!-- SECTION s20: Persistent Memory (Sigil) -->
-  <div class="section" id="s20">
+  <!-- SECTION s16: Persistent memory with Sigil -->
+  <span id="sigil" class="anchor-alias"></span>
+  <div class="section" id="s16">
     <div class="section-header">
-      <span class="section-num">20</span>
-      <h2>Persistent Memory (Sigil) <span style="font-weight:400;color:var(--text-muted)">(Optional)</span></h2>
+      <span class="section-num">16</span>
+      <h2>Persistent memory with Sigil</h2>
     </div>
-    <p class="section-intro">Every pane in this setup is a separate Claude Code session &mdash; and every session starts with amnesia. Close a pane and the decisions, preferences, and project facts you spent an hour establishing are gone. <a href="https://github.com/Anmol-Srv/sigil" style="color:var(--blue);font-weight:600">Sigil</a> &mdash; an open-source, local-first memory system by <a href="https://github.com/Anmol-Srv" style="color:var(--blue)">Anmol Srivastava</a> &mdash; fixes this: one shared, persistent memory that all four panes read from and write to automatically, across sessions and across projects.</p>
+    <p class="section-intro"><strong>Every pane is a separate session, and every session starts with amnesia.</strong></p>
 
-    <div class="steps">
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">1</span>
-          <span class="step-title">Why the 4-pane setup needs it</span>
-        </div>
-        <div class="step-body">
-          <p>The SESSION_LOG pattern (Step 16) carries context <em>forward in time</em> within one project. It does not carry context <em>sideways</em> &mdash; AUDIT never learns what you told IMPL, and nothing crosses project boundaries. In practice that means re-explaining &ldquo;we use pnpm, not npm&rdquo; or &ldquo;never run db:reset against staging&rdquo; in every pane, every session.</p>
-          <p>Sigil closes that gap with hooks that run inside every Claude Code session, regardless of pane, model, or permission mode:</p>
-          <table class="data-table">
-            <tr><th>Hook</th><th>Fires</th><th>What it does</th></tr>
-            <tr><td><span class="mono">UserPromptSubmit</span></td><td>Every prompt you type</td><td>Searches memory and injects the most relevant facts before Claude sees your prompt</td></tr>
-            <tr><td><span class="mono">Stop</span></td><td>End of each turn</td><td>Classifies what you said and auto-captures memorable facts (preferences, decisions, corrections)</td></tr>
-            <tr><td><span class="mono">SessionEnd</span></td><td>Session close</td><td>Summarizes the session into durable memory</td></tr>
-            <tr><td>Hot context</td><td>Session start</td><td>A snapshot of your most-used facts, loaded via an <span class="mono">@import</span> in <span class="mono">~/.claude/CLAUDE.md</span></td></tr>
-          </table>
-          <p>Because memory lives in a local database rather than in any one session, all four panes share it &mdash; and it is MCP-native, so the same memory is available to other MCP clients (Cursor, Codex CLI) if you use them alongside this setup.</p>
-        </div>
-      </div>
+    <p><a href="https://github.com/Anmol-Srv/sigil" style="color:var(--blue);font-weight:600">Sigil</a> is an open-source, local-first memory system by <a href="https://github.com/Anmol-Srv" style="color:var(--blue)">Anmol Srivastava</a>. It runs hooks inside every Claude Code session that inject relevant stored facts before Claude sees your prompt, and capture memorable ones afterwards.</p>
 
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">2</span>
-          <span class="step-title">Install from the Sigil repo</span>
-        </div>
-        <div class="step-body">
-          <p>Installation is a one-liner, then an interactive wizard. Follow the upstream README at <a href="https://github.com/Anmol-Srv/sigil" style="color:var(--blue)">github.com/Anmol-Srv/sigil</a> for current instructions; as of this writing:</p>
-          <div class="code-block">
+    <p>Why this setup in particular benefits: the SESSION_LOG pattern carries context <em>forward in time</em> within one project. Sigil carries it <em>sideways</em> &mdash; across all four panes and across project boundaries, so you stop re-explaining "we use pnpm, not npm" in every pane, every session.</p>
+
+    <div class="code-block">
 <div class="comment"># Install (clones to ~/.sigil/app, adds to PATH, starts the daemon)</div>
 <div><span class="cmd">curl</span> <span class="flag">-fsSL</span> <span class="str">https://raw.githubusercontent.com/Anmol-Srv/sigil/master/install.sh</span> | <span class="cmd">sh</span></div>
 <div></div>
-<div class="comment"># Configure &mdash; interactive wizard with live connection tests</div>
+<div class="comment"># Configure — interactive wizard with live connection tests</div>
 <div><span class="cmd">sigil</span> init</div>
-          </div>
-          <p>The <span class="mono">sigil init</span> wizard walks you through four choices: a <strong>database</strong> (Postgres &mdash; local or managed), an <strong>LLM provider</strong> for fact classification (OpenRouter, OpenAI, Anthropic, Ollama, or your Claude subscription), an <strong>embedding provider</strong> (OpenAI, Voyage, or Ollama), and <strong>hook wiring</strong> &mdash; it auto-detects Claude Code, installs its hooks into <span class="mono">~/.claude/settings.json</span>, and registers MCP servers for other clients. It merges alongside the hooks from Step 14 without touching them.</p>
-          <div class="callout warn">
-            <span class="callout-icon">&#9888;&#65039;</span>
-            <div><strong>Pick a fast, local LLM provider &mdash; this is the one setting that can ruin the whole experience.</strong> Claude Code runs <span class="mono">UserPromptSubmit</span> hooks synchronously on <em>every prompt you type</em>, with a ~10-second budget. A provider that shells out to <span class="mono">claude -p</span> takes ~16&nbsp;seconds per call &mdash; every single prompt then shows <span class="mono">UserPromptSubmit hook timed out after 10s</span> and you get no memory injection at all. Fact classification is a routing job, not a reasoning job: point Sigil&rsquo;s LLM provider at a small local Ollama model (you already have Ollama from Step 3) and keep the hook path well under budget.</div>
-          </div>
-          <p>Verify the loop end-to-end: open any pane with <span class="mono">cc</span>, submit a prompt, and confirm memory search fires without a timeout warning. Then check <span class="mono">claude mcp list</span> shows Sigil connected.</p>
-        </div>
-      </div>
+    </div>
 
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">3</span>
-          <span class="step-title">The 3 commands you&rsquo;ll use daily</span>
-        </div>
-        <div class="step-body">
-          <p>The hooks do the routine work unprompted. Manual interaction comes down to three commands, runnable from any pane (or inside Claude Code with <span class="mono">!</span> shell-exec):</p>
-          <table class="data-table">
-            <tr><th>Command</th><th>What it does</th></tr>
-            <tr><td><span class="mono">sigil facts</span></td><td>List everything stored, with IDs. Your spot-check that memory contains what you think it does.</td></tr>
-            <tr><td><span class="mono">sigil remember "..."</span></td><td>Save a fact explicitly. Sigil classifies it, extracts atomic facts, and embeds them &mdash; write natural language.</td></tr>
-            <tr><td><span class="mono">sigil search "..."</span></td><td>Semantic search over memory. This is the same path the prompt hook uses &mdash; run it to debug what Claude is actually seeing.</td></tr>
-          </table>
-          <div class="callout tip">
-            <span class="callout-icon">&#128161;</span>
-            <div><strong>The &ldquo;teach once, recall everywhere&rdquo; rule</strong> If you catch yourself telling Claude the same thing in two different sessions, that&rsquo;s the signal to make it a <span class="mono">sigil remember</span>. From then on, every pane knows.</div>
-          </div>
-        </div>
-      </div>
+    <div class="callout warn">
+      <span class="callout-icon">&#9888;&#65039;</span>
+      <div><strong>The one setting that matters: point the LLM provider at a local Ollama model.</strong> Claude Code runs <span class="mono">UserPromptSubmit</span> hooks synchronously on <em>every prompt you type</em>, with a roughly 10-second budget. A provider that shells out to <span class="mono">claude -p</span> takes about 16&nbsp;seconds per call &mdash; every prompt then shows <span class="mono">UserPromptSubmit hook timed out after 10s</span> and you get no memory injection at all. Fact classification is a routing job, not a reasoning job.</div>
+    </div>
 
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">4</span>
-          <span class="step-title">Where it fits in each pane</span>
-        </div>
-        <div class="step-body">
-          <p>The hooks fire identically everywhere, but there&rsquo;s a natural division of labor:</p>
-          <table class="data-table">
-            <tr><th>Pane</th><th>What shared memory changes</th></tr>
-            <tr><td><span class="mono">AUDIT</span></td><td>Recalls past findings and ratified decisions &mdash; stops re-flagging issues you already resolved. Best pane for saving durable facts after a review: Opus synthesis is worth keeping.</td></tr>
-            <tr><td><span class="mono">IMPL</span></td><td>Stack choices, conventions, and constraints inject automatically &mdash; no more re-explaining the package manager or test layout every session. Add tactical facts as you discover them.</td></tr>
-            <tr><td><span class="mono">PLAN</span></td><td>Prior architectural decisions surface during planning, so new plans build on old ones instead of contradicting them.</td></tr>
-            <tr><td><span class="mono">PROMPT</span></td><td>Natural home for memory housekeeping &mdash; reviewing <span class="mono">sigil facts</span>, pruning stale entries, bulk ingestion.</td></tr>
-          </table>
-        </div>
-      </div>
+    <p>Everything else &mdash; database choice, embedding provider, namespaces, the <span class="mono">sigil facts</span> / <span class="mono">remember</span> / <span class="mono">search</span> / <span class="mono">ingest</span> commands, MCP wiring for other clients &mdash; is covered in the upstream README at <a href="https://github.com/Anmol-Srv/sigil" style="color:var(--blue)">github.com/Anmol-Srv/sigil</a>. Never store secrets in it: the database is local but not encrypted at rest.</p>
+  </div>
 
-      <div class="step">
-        <div class="step-header">
-          <span class="step-n">5</span>
-          <span class="step-title">Seeding memory: new vs. existing projects</span>
-        </div>
-        <div class="step-body">
-          <p><strong>New project</strong> &mdash; spend two minutes on day 1 telling Sigil what the project is. Every later prompt, in every pane, has it on tap:</p>
-          <div class="code-block">
-<div><span class="cmd">sigil</span> remember <span class="str">"myproject: Next.js + Postgres app for X audience, target launch March"</span></div>
-<div><span class="cmd">sigil</span> remember <span class="str">"myproject: hard constraint &mdash; no auth provider lock-in"</span></div>
-          </div>
-          <p><strong>Existing project</strong> &mdash; no migration needed; the hooks fire regardless. Teach it project specifics as you hit them, and optionally bulk-seed from the docs you already maintain:</p>
-          <div class="code-block">
-<div><span class="cmd">sigil</span> ingest ./ARCHITECTURE.md</div>
-<div><span class="cmd">sigil</span> ingest ./SESSION_LOG.md</div>
-<div><span class="cmd">sigil</span> ingest <span class="str">"./docs/**/*.md"</span></div>
-          </div>
-          <p>Sigil extracts atomic facts and de-duplicates against existing memory. Run <span class="mono">sigil facts</span> afterward to spot-check what landed. Your SESSION_LOG (Step 16) and CLAUDE.md files (Step 17) keep working exactly as before &mdash; Sigil owns the cross-session, cross-project layer; it doesn&rsquo;t replace either.</p>
-          <div class="callout tip">
-            <span class="callout-icon">&#128274;</span>
-            <div><strong>Privacy note</strong> Sigil is local-first &mdash; facts live in your own Postgres, and with Ollama providers nothing leaves the machine. If you handle client work, keep client facts out of the default namespace: store them under a per-client namespace (<span class="mono">sigil remember --namespace=client-a "..."</span>) so they never auto-inject into unrelated projects &mdash; or keep client data out of Sigil entirely and rely on per-project CLAUDE.md files. Never store secrets or credentials: the database is local but not encrypted at rest.</div>
-          </div>
-        </div>
-      </div>
+  <!-- SECTION s17: iTerm2 triggers -->
+  <span id="iterm2-triggers" class="anchor-alias"></span>
+  <div class="section" id="s17">
+    <div class="section-header">
+      <span class="section-num">17</span>
+      <h2>iTerm2 triggers</h2>
+    </div>
+    <p class="section-intro"><strong>Auto-highlight keywords in terminal output.</strong></p>
+    <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;"><strong>Profile &rarr; Advanced &rarr; Triggers &rarr; +</strong></p>
+    <table class="data-table">
+      <thead><tr><th scope="col">Regex</th><th scope="col">Action</th><th scope="col">Colour</th></tr></thead>
+      <tbody>
+        <tr><td class="cell-mono">\b(CRITICAL|ERROR|FAIL(ED)?)\b</td><td>Highlight Text</td><td>Red background</td></tr>
+        <tr><td class="cell-mono">\b(PASS(ED)?|SUCCESS)\b</td><td>Highlight Text</td><td>Green background</td></tr>
+        <tr><td class="cell-mono">\b(WARNING|WARN|TODO)\b</td><td>Highlight Text</td><td>Yellow background</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="part-heading" id="part-4">Part IV &mdash; Reference</h2>
+
+  <!-- SECTION s18: Agent teams or four panes? -->
+  <span id="agent-teams" class="anchor-alias"></span>
+  <div class="section" id="s18">
+    <div class="section-header">
+      <span class="section-num">18</span>
+      <h2>Agent teams or four panes?</h2>
+    </div>
+    <p class="section-intro"><strong>Claude Code can already spawn teammates into split panes &mdash; it solves a different problem.</strong></p>
+
+    <p><a href="https://code.claude.com/docs/en/agent-teams" style="color:var(--blue)">Agent Teams</a> is a built-in, experimental feature, off by default. Enable it with <span class="mono">CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</span>. iTerm2 split panes additionally need the <span class="mono">it2</span> CLI and the iTerm2 Python API enabled.</p>
+
+    <p>Teammates run inside one lead session, and that is where the difference bites:</p>
+    <ul style="margin: 8px 0 16px 20px;">
+      <li><strong>Permissions are inherited.</strong> "Teammates start with the lead&rsquo;s permission mode," and "you can&rsquo;t set per-teammate permission modes at spawn time." There is no way to spawn a teammate that is read-only while the lead writes files &mdash; which is the whole basis of the AUDIT pane.</li>
+      <li><strong>Tokens.</strong> Teammates use significantly more tokens &mdash; one context window each.</li>
+      <li><strong>Durability.</strong> <span class="mono">/resume</span> and <span class="mono">/rewind</span> do not restore in-process teammates.</li>
+    </ul>
+
+    <div class="callout tip">
+      <span class="callout-icon">&#127919;</span>
+      <div><strong>The verdict</strong> Use agent teams for short bursts of parallel exploration inside a single task &mdash; several teammates reading different subsystems at once. Use this four-pane setup when you want durable, separately-permissioned sessions that outlive a task, and a reviewer that genuinely cannot write files. They are complementary, not competing; nothing stops you spawning a team inside the IMPL pane. If Anthropic later adds per-teammate permission modes, agent teams will cover much of what this setup exists for.</div>
     </div>
   </div>
 
-  <!-- SECTION s21: Draw Things (Optional) -->
-  <div class="section" id="s21">
+  <!-- SECTION s19: Common questions -->
+  <span id="faq" class="anchor-alias"></span>
+  <div class="section" id="s19">
     <div class="section-header">
-      <span class="section-num">21</span>
-      <h2>Draw Things <span style="font-weight:400;color:var(--text-muted)">(Optional &mdash; Creative AI)</span></h2>
-    </div>
-    <p class="section-intro">Free local image generation on macOS. Runs entirely on-device via Core ML &mdash; no API calls, no sign-up. Completely independent from Claude Code and Ollama.</p>
-
-    <div class="callout tip">
-      <span class="callout-icon">&#128161;</span>
-      <div><strong>Truly optional</strong> &mdash; this section has no bearing on any other step. Skip if you&rsquo;re not interested in image generation.</div>
+      <span class="section-num">19</span>
+      <h2>Common questions</h2>
     </div>
 
     <div class="steps">
       <div class="step">
         <div class="step-header">
-          <span class="step-n">&#9654;</span>
-          <span class="step-title">Install and set up</span>
+          <span class="step-n">Q1</span>
+          <h3 class="step-title">Can I run this with tmux instead of iTerm2?</h3>
         </div>
         <div class="step-body">
-          <ol>
-            <li>Download from the Mac App Store: search <strong>&ldquo;Draw Things AI Image Generator&rdquo;</strong>.</li>
-            <li>Open the app and let it download a base model (~2&ndash;4 GB).</li>
-            <li>Prompt directly in the app&rsquo;s text field. Drag and drop an image as reference.</li>
-          </ol>
-          <p><strong>Recommended starting model:</strong> SDXL Turbo (fast) or Flux Schnell (higher quality). Models are downloaded in-app &mdash; no terminal commands needed.</p>
+          <p><strong>Partly &mdash; you would have to replace the role-detection mechanism.</strong> The snippet branches on <span class="mono">$ITERM_PROFILE</span>, which iTerm2 sets for you on every session, including arrangement restores. In tmux you would set your own per-pane environment variable and branch on that, and rebuild the layout and colours in tmux config.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">Q2</span>
+          <h3 class="step-title">Does the reviewer really not write files?</h3>
+        </div>
+        <div class="step-body">
+          <p><strong>Yes.</strong> The AUDIT pane launches with <span class="mono">--permission-mode plan</span>, which is enforced by Claude Code itself, not by an instruction in a prompt. It can read, search and report; it cannot edit.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">Q3</span>
+          <h3 class="step-title">How much does running Opus in one pane cost?</h3>
+        </div>
+        <div class="step-body">
+          <p><strong>About 2.5&times; Sonnet per token &mdash; Opus 5 is $5/$25 per million against Sonnet 5's $2/$10, checked September 2026 &mdash; and only on review passes.</strong> AUDIT is idle while you implement, and a review reads far fewer tokens than an implementation session writes. The other three panes stay on Sonnet.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">Q4</span>
+          <h3 class="step-title">Can I use fewer than four panes?</h3>
+        </div>
+        <div class="step-body">
+          <p><strong>Yes &mdash; IMPL plus AUDIT is the pair that earns its keep.</strong> PLAN and PROMPT are conveniences; drop them and use <span class="mono">/clear</span> in IMPL when you switch modes. Keep the separation between the pane that writes and the pane that reviews.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">Q5</span>
+          <h3 class="step-title">Does this work on Linux or Windows?</h3>
+        </div>
+        <div class="step-body">
+          <p><strong>Claude Code does; this layout does not.</strong> The profiles, arrangements and <span class="mono">$ITERM_PROFILE</span> detection are macOS + iTerm2. The circuit-breaker hook uses <span class="mono">fcntl</span>, so they run on macOS and Linux but not Windows.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">Q6</span>
+          <h3 class="step-title">Do I need Ollama?</h3>
+        </div>
+        <div class="step-body">
+          <p><strong>No.</strong> Nothing in Parts I or II touches it. It is only a prerequisite if you install Sigil and want its classifier to stay inside the hook time budget.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- SECTION s22: Troubleshooting -->
-  <div class="section" id="s22">
+  <!-- SECTION s20: Troubleshooting -->
+  <span id="troubleshooting" class="anchor-alias"></span>
+  <div class="section" id="s20">
     <div class="section-header">
-      <span class="section-num">22</span>
+      <span class="section-num">20</span>
       <h2>Troubleshooting</h2>
     </div>
     <p class="section-intro">Common failure modes and how to fix them.</p>
@@ -2181,28 +2225,23 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">T1</span>
-          <span class="step-title"><span class="mono">$ITERM_PROFILE</span> is empty &mdash; <span class="mono">cc</span> launches the wrong model</span>
+          <h3 class="step-title"><span class="mono">$ITERM_PROFILE</span> is empty, <span class="mono">cc</span> launches with wrong model</h3>
         </div>
         <div class="step-body">
-          <p><strong>Symptom:</strong> <span class="mono">echo $ITERM_PROFILE</span> returns nothing. The <span class="mono">cc</span> alias falls through with no model flags.</p>
-          <p><strong>Cause:</strong> Old iTerm2 version (&lt; 3.3) or the pane was opened before the profile was applied.</p>
-          <p><strong>Fix:</strong></p>
-          <ul>
-            <li>Update iTerm2 to 3.3 or later (Help &rarr; Check For Updates).</li>
-            <li>Close and reopen the pane by selecting the profile explicitly: <strong>Profiles &rarr; [your profile name]</strong> &rarr; Open in current tab.</li>
-            <li>Confirm with: <span class="mono">echo $ITERM_PROFILE</span> &mdash; should print <span class="mono">CC-AUDIT</span>, etc.</li>
-          </ul>
+          <p><strong>Symptom:</strong> <span class="mono">echo $ITERM_PROFILE</span> returns nothing; the <span class="mono">cc</span> alias falls through with no model flags.</p>
+          <p><strong>Cause:</strong> iTerm2 older than 3.3, or the pane was opened before the profile was applied.</p>
+          <p><strong>Fix:</strong> update iTerm2 to 3.3+ (Help &rarr; Check For Updates), then reopen the pane via <strong>Profiles &rarr; [your profile name] &rarr; Open in current tab</strong>. Confirm with <span class="mono">echo $ITERM_PROFILE</span> &mdash; it should print <span class="mono">CC-AUDIT</span>, etc.</p>
         </div>
       </div>
 
       <div class="step">
         <div class="step-header">
           <span class="step-n">T2</span>
-          <span class="step-title"><span class="mono">cc</span> launches the C compiler instead of Claude</span>
+          <h3 class="step-title"><span class="mono">cc</span> launches the C compiler instead of Claude</h3>
         </div>
         <div class="step-body">
-          <p><strong>Symptom:</strong> <span class="mono">which cc</span> shows <span class="mono">/usr/bin/cc</span>. Typing <span class="mono">cc</span> outputs compiler error messages.</p>
-          <p><strong>Fix:</strong> Rename the alias in <span class="mono">~/.zshrc</span>. Replace all 4 <span class="mono">alias cc=</span> occurrences with <span class="mono">alias cl=</span> (or any name you prefer), then reload:</p>
+          <p><strong>Symptom:</strong> <span class="mono">which cc</span> shows <span class="mono">/usr/bin/cc</span> &mdash; <span class="mono">cc</span> is the C compiler on many systems.</p>
+          <p><strong>Fix:</strong> rename the alias in <span class="mono">~/.zshrc</span>, replacing all 4 <span class="mono">alias cc=</span> occurrences with <span class="mono">alias cl=</span> (or any name), then <span class="mono">source ~/.zshrc</span>.</p>
           <div class="code-block">
 <div class="comment"># In ~/.zshrc — change all 4 occurrences:</div>
 <div>CC-AUDIT)  alias cl='claude --model opus --effort high --permission-mode plan' ;;</div>
@@ -2216,23 +2255,22 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">T3</span>
-          <span class="step-title">Hooks not firing &mdash; <span class="mono">.env</span> edits or <span class="mono">git push</span> not blocked</span>
+          <h3 class="step-title">Hooks not firing</h3>
         </div>
         <div class="step-body">
-          <p><strong>Check 1 &mdash; Hook files exist:</strong></p>
+          <p><strong>Symptom:</strong> <span class="mono">.env</span> edits or <span class="mono">git push</span> commands are not blocked.</p>
           <div class="code-block">
+<div><span class="comment"># Check 1 — files exist</span></div>
 <div>ls ~/.claude/hooks/</div>
-<div class="comment"># Expected: protect-env.py  protect-git-push.py  circuit-breaker.py  session-start-reset.py  version-check.py</div>
-          </div>
-          <p><strong>Check 2 &mdash; Python 3 is available:</strong></p>
-          <div class="code-block">
-<div>which python3</div>
-<div class="comment"># Must return a path. If missing: brew install python3</div>
-          </div>
-          <p><strong>Check 3 &mdash; settings.json is valid JSON:</strong></p>
-          <div class="code-block">
-<div>python3 -m json.tool ~/.claude/settings.json</div>
-<div class="comment"># Prints formatted JSON on success. Any error = invalid JSON in the file.</div>
+<div><span class="comment"># Expected: protect-env.py  protect-git-push.py  circuit-breaker.py  session-start-reset.py  version-check.py</span></div>
+<div></div>
+<div><span class="comment"># Check 2 — python3 available</span></div>
+<div>which python3  <span class="comment"># must return a path; if missing: brew install python3</span></div>
+<div></div>
+<div><span class="comment"># Check 3 — settings.json is valid</span></div>
+<div>python3 -m json.tool ~/.claude/settings.json  <span class="comment"># prints formatted JSON on success</span></div>
+<div><span class="comment"># Errors on a line starting with # ? You pasted the example file wholesale.</span></div>
+<div><span class="comment"># settings.json must be pure JSON — strip the comment lines.</span></div>
           </div>
         </div>
       </div>
@@ -2240,16 +2278,14 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">T4</span>
-          <span class="step-title">Circuit-breaker stuck &mdash; session halted after tool failures</span>
+          <h3 class="step-title">Circuit-breaker stuck after tool failures</h3>
         </div>
         <div class="step-body">
-          <p><strong>Symptom:</strong> Claude is blocked and won't proceed. The circuit-breaker tripped after 3 consecutive tool failures.</p>
-          <p><strong>Fix A &mdash; Start a new session:</strong> Press <span class="mono">Ctrl+C</span>, then type <span class="mono">cc</span>. The <span class="mono">session-start-reset.py</span> hook fires automatically on session start and resets the counter.</p>
-          <p><strong>Fix B &mdash; Reset the state file directly:</strong></p>
+          <p><strong>Fix A:</strong> press <span class="mono">Ctrl+C</span>, then <span class="mono">cc</span> &mdash; <span class="mono">session-start-reset.py</span> resets the counter at session start.</p>
+          <p><strong>Fix B:</strong> delete the state file:</p>
           <div class="code-block">
-<div class="comment"># Run from your project root (where Claude Code was launched from)</div>
 <div>rm -f ./circuit-breaker-state.json</div>
-<div class="comment"># Then /clear inside Claude Code to reset conversation context.</div>
+<div><span class="comment"># Then /clear inside Claude Code to reset conversation context.</span></div>
           </div>
         </div>
       </div>
@@ -2257,14 +2293,13 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">T5</span>
-          <span class="step-title"><span class="mono">gate</span> fails with "pytest not found" or collects 0 tests</span>
+          <h3 class="step-title"><span class="mono">gate</span> fails with "pytest not found" or 0 tests collected</h3>
         </div>
         <div class="step-body">
-          <p><strong>Symptom:</strong> <span class="mono">gate</span> exits non-zero immediately or pytest reports <span class="mono">collected 0 items</span>.</p>
           <ul>
-            <li><strong>Venv not active:</strong> Run <span class="mono">source venv/bin/activate</span> (or <span class="mono">source .venv/bin/activate</span>) before running <span class="mono">gate</span>.</li>
-            <li><strong>pytest not installed:</strong> <span class="mono">which pytest</span> should point inside your venv. If not: <span class="mono">pip install pytest</span>.</li>
-            <li><strong>No test files yet:</strong> Add a placeholder so the intent is explicit: <span class="mono">touch tests/test_placeholder.py</span> with a single passing test.</li>
+            <li>Activate your venv first: <span class="mono">source venv/bin/activate</span> (or <span class="mono">.venv/bin/activate</span>).</li>
+            <li>Verify: <span class="mono">which pytest</span> should point inside your venv. If not: <span class="mono">pip install pytest</span>.</li>
+            <li>If there are no test files yet, add a placeholder: <span class="mono">touch tests/test_placeholder.py</span>.</li>
           </ul>
         </div>
       </div>
@@ -2272,17 +2307,17 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">T6</span>
-          <span class="step-title">Need to push to git &mdash; hook is blocking it</span>
+          <h3 class="step-title">Need to push to git, the hook is blocking it</h3>
         </div>
         <div class="step-body">
-          <p>The <span class="mono">protect-git-push.py</span> hook blocks Claude from running <span class="mono">git push</span> autonomously. <em>You</em> can always push directly from a regular terminal prompt &mdash; hooks only intercept tool calls inside a Claude Code session.</p>
+          <p><span class="mono">protect-git-push.py</span> blocks Claude from pushing autonomously. Hooks only intercept tool calls inside a session, so push from a regular shell:</p>
           <div class="code-block">
-<div class="comment"># Open a new iTerm2 tab (not inside a Claude session) and run:</div>
+<div><span class="comment"># Open a new tab (not inside a Claude session) and run:</span></div>
 <div>git push</div>
           </div>
           <div class="callout warn">
             <span class="callout-icon">&#9888;&#65039;</span>
-            <div>This is by design. Review the diff yourself before pushing &mdash; that's the point of the hook.</div>
+            <div>This is by design. Review the diff yourself before pushing &mdash; that&rsquo;s the point of the hook.</div>
           </div>
         </div>
       </div>
@@ -2290,19 +2325,41 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">T7</span>
-          <span class="step-title">Claude CLI update broke the <span class="mono">cc</span> alias</span>
+          <h3 class="step-title">Claude CLI update broke the <span class="mono">cc</span> alias</h3>
         </div>
         <div class="step-body">
-          <p><strong>Symptom:</strong> After <span class="mono">npm update -g @anthropic-ai/claude-code</span>, typing <span class="mono">cc</span> errors with an unknown flag message.</p>
+          <p><strong>Symptom:</strong> after <span class="mono">npm update -g @anthropic-ai/claude-code</span>, <span class="mono">cc</span> errors with an unknown flag.</p>
           <ol style="margin-left:20px">
             <li>Run <span class="mono">claude --help</span> to see current supported flags.</li>
             <li>Update the alias block in <span class="mono">~/.zshrc</span> to match, then <span class="mono">source ~/.zshrc</span>.</li>
-            <li><strong>Most stable flags:</strong> <span class="mono">--model</span> and <span class="mono">--effort</span> have been stable across versions. <span class="mono">--permission-mode</span> values are also stable. Check the Claude Code release notes for breaking changes.</li>
+            <li>Run <span class="mono">claude --version</span> to confirm your installed version. This guide was verified against v2.1.278 (September 2026).</li>
           </ol>
-          <p style="font-size:14px;color:var(--text-muted);margin-top:8px;">Run <span class="mono">claude --version</span> to check your installed version. This guide was verified against v2.1.81 (March 2026).</p>
           <div class="callout tip" style="margin-top:12px">
             <span class="callout-icon">&#128161;</span>
-            <div><strong>Tip:</strong> The <span class="mono">version-check.py</span> hook (Step 11) detects version changes automatically and prints this checklist at session start.</div>
+            <div><strong>Tip:</strong> The <span class="mono">version-check.py</span> hook detects version changes automatically and prints this checklist at session start.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-header">
+          <span class="step-n">T8</span>
+          <h3 class="step-title">Ollama: model not found or server not running</h3>
+        </div>
+        <div class="step-body">
+          <p><strong>Symptom:</strong> <span class="mono">ollama run qwen3:8b</span> hangs or returns "model not found."</p>
+          <div class="code-block">
+<div><span class="comment"># Check 1 — server is running</span></div>
+<div>curl http://localhost:11434/      <span class="comment"># should return "Ollama is running"</span></div>
+<div></div>
+<div><span class="comment"># Check 2 — model is pulled</span></div>
+<div>ollama list                       <span class="comment"># lists all downloaded models</span></div>
+<div></div>
+<div><span class="comment"># If server is not running:</span></div>
+<div>ollama serve &amp;</div>
+<div></div>
+<div><span class="comment"># If model is missing:</span></div>
+<div>ollama pull qwen3:8b              <span class="comment"># (or whichever model)</span></div>
           </div>
         </div>
       </div>
@@ -2310,27 +2367,67 @@
     </div>
   </div>
 
-  <!-- SECTION s23: Quick Reference -->
-  <div class="section" id="s23">
+  <!-- SECTION s21: Quick reference -->
+  <span id="quick-reference" class="anchor-alias"></span>
+  <div class="section" id="s21">
     <div class="section-header">
-      <span class="section-num">23</span>
-      <h2>Quick Reference — read as needed</h2>
+      <span class="section-num">21</span>
+      <h2>Quick reference</h2>
     </div>
-    <p class="section-intro">Everything on one screen — copy, paste, go.</p>
+    <p class="section-intro">Everything on one screen &mdash; copy, paste, go.</p>
+
+    <div class="code-block">
+<div>┌──────────────────────────────────────────────────────────┐</div>
+<div>│  LAUNCH                                                  │</div>
+<div>├──────────────────────────────────────────────────────────┤</div>
+<div>│  Type "cc" in any pane — alias handles the rest.         │</div>
+<div>│                                                          │</div>
+<div>│  AUDIT:  opus   · high effort · plan (read-only)         │</div>
+<div>│  IMPL:   sonnet · high effort · acceptEdits              │</div>
+<div>│  PROMPT: sonnet · medium effort                          │</div>
+<div>│  PLAN:   sonnet · low effort                             │</div>
+<div>├──────────────────────────────────────────────────────────┤</div>
+<div>│  LOCAL AI                                                │</div>
+<div>├──────────────────────────────────────────────────────────┤</div>
+<div>│  llm-fast "..."     → qwen3 (general)                    │</div>
+<div>│  llm-code "..."     → qwen2.5-coder (code)               │</div>
+<div>│  llm-reason "..."   → deepseek-r1 (reasoning, 32GB+)     │</div>
+<div>│  llm-smart "..." [fast|code|reason|embed]  → router      │</div>
+<div>│  ollama list        → show downloaded models             │</div>
+<div>├──────────────────────────────────────────────────────────┤</div>
+<div>│  NAVIGATION                                              │</div>
+<div>├──────────────────────────────────────────────────────────┤</div>
+<div>│  ⌘⌥ arrows  = switch panes    ⌘⇧↵ = zoom pane          │</div>
+<div>│  ⌘D = split right             ⌘⇧D = split down          │</div>
+<div>│  Esc = stop generation         /clear = reset context    │</div>
+<div>├──────────────────────────────────────────────────────────┤</div>
+<div>│  WORKFLOW                                                │</div>
+<div>├──────────────────────────────────────────────────────────┤</div>
+<div>│  PLAN → discuss approach (no writes)                     │</div>
+<div>│  IMPL → implement + gate (must pass) → ship to commit    │</div>
+<div>│  AUDIT → review changed files (read-only)                │</div>
+<div>│  /clear AUDIT before review (state sync)                 │</div>
+<div>│  PROMPT → prompt/content changes (separate from code)    │</div>
+<div>│                                                          │</div>
+<div>│  gate = run pytest suite    ship = gate + git add -p     │</div>
+<div>└──────────────────────────────────────────────────────────┘</div>
+    </div>
 
     <div class="steps">
       <div class="step">
         <div class="step-header">
           <span class="step-n">1</span>
-          <span class="step-title">Pane roles</span>
+          <h3 class="step-title">Pane roles</h3>
         </div>
         <div class="step-body">
           <table class="data-table">
-            <tr><th>Pane</th><th>Model</th><th>Effort</th><th>Permission</th><th>Purpose</th></tr>
-            <tr><td><span class="mono">AUDIT</span></td><td>Opus</td><td>high</td><td><span class="mono">plan</span></td><td>Code review (read-only)</td></tr>
-            <tr><td><span class="mono">IMPL</span></td><td>Sonnet</td><td>high</td><td><span class="mono">acceptEdits</span></td><td>Write code + run tests</td></tr>
-            <tr><td><span class="mono">PROMPT</span></td><td>Sonnet</td><td>medium</td><td>default</td><td>Prompt engineering</td></tr>
-            <tr><td><span class="mono">PLAN</span></td><td>Sonnet</td><td>low</td><td>default</td><td>Architecture + planning</td></tr>
+            <thead><tr><th scope="col">Pane</th><th scope="col">Model</th><th scope="col">Effort</th><th scope="col">Permission</th><th scope="col">Purpose</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-mono">AUDIT</td><td>Opus</td><td>high</td><td class="cell-mono">plan</td><td>Code review (read-only)</td></tr>
+              <tr><td class="cell-mono">IMPL</td><td>Sonnet</td><td>high</td><td class="cell-mono">acceptEdits</td><td>Write code + run tests</td></tr>
+              <tr><td class="cell-mono">PROMPT</td><td>Sonnet</td><td>medium</td><td>default</td><td>Prompt engineering</td></tr>
+              <tr><td class="cell-mono">PLAN</td><td>Sonnet</td><td>low</td><td>default</td><td>Architecture + planning</td></tr>
+            </tbody>
           </table>
         </div>
       </div>
@@ -2338,14 +2435,16 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">2</span>
-          <span class="step-title">Shell aliases</span>
+          <h3 class="step-title">Shell aliases</h3>
         </div>
         <div class="step-body">
           <table class="data-table">
-            <tr><th>Alias</th><th>Pane</th><th>What it does</th></tr>
-            <tr><td><span class="mono">cc</span></td><td>All</td><td>Launch Claude Code with role-correct flags</td></tr>
-            <tr><td><span class="mono">gate</span></td><td>IMPL</td><td>Run full test suite — must pass before AUDIT handoff</td></tr>
-            <tr><td><span class="mono">ship</span></td><td>IMPL</td><td><span class="mono">gate</span> + <span class="mono">git add -p</span> + <span class="mono">git commit</span></td></tr>
+            <thead><tr><th scope="col">Alias</th><th scope="col">Pane</th><th scope="col">What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-mono">cc</td><td>All</td><td>Launch Claude Code with role-correct flags</td></tr>
+              <tr><td class="cell-mono">gate</td><td>IMPL</td><td>Run full test suite &mdash; must pass before AUDIT handoff</td></tr>
+              <tr><td class="cell-mono">ship</td><td>IMPL</td><td><span class="mono">gate</span> + <span class="mono">git add -p</span> + <span class="mono">git commit</span></td></tr>
+            </tbody>
           </table>
         </div>
       </div>
@@ -2353,28 +2452,45 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">3</span>
-          <span class="step-title">Keyboard shortcuts</span>
+          <h3 class="step-title">Keyboard shortcuts</h3>
         </div>
         <div class="step-body">
-          <table class="data-table">
-            <tr><th>Shortcut</th><th>Action</th></tr>
-            <tr><td><span class="mono">⌘⌥ ←/→/↑/↓</span></td><td>Switch panes</td></tr>
-            <tr><td><span class="mono">⌘⇧↵</span></td><td>Zoom/unzoom pane</td></tr>
-            <tr><td><span class="mono">⌘D</span></td><td>Split right</td></tr>
-            <tr><td><span class="mono">⌘⇧D</span></td><td>Split down</td></tr>
-            <tr><td><span class="mono">Esc</span></td><td>Stop Claude generation</td></tr>
-            <tr><td><span class="mono">/clear</span></td><td>Reset conversation context</td></tr>
-            <tr><td><span class="mono">/compact</span></td><td>Compress context (keep history)</td></tr>
-          </table>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">iTerm2 navigation</p>
+          <div class="shortcut-grid">
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8997;</span><span class="key">&larr;/&rarr;</span></div><div class="shortcut-desc">Switch panes (left/right)</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8997;</span><span class="key">&uarr;/&darr;</span></div><div class="shortcut-desc">Switch panes (up/down)</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">D</span></div><div class="shortcut-desc">Split right</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8679;</span><span class="key">D</span></div><div class="shortcut-desc">Split down</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8679;</span><span class="key">&#9166;</span></div><div class="shortcut-desc">Zoom current pane (toggle)</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">1-4</span></div><div class="shortcut-desc">Switch tab</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">F</span></div><div class="shortcut-desc">Find in output</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">M</span></div><div class="shortcut-desc">Set mark (bookmark position)</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8679;</span><span class="key">&uarr;</span></div><div class="shortcut-desc">Jump to previous mark</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">K</span></div><div class="shortcut-desc">Clear terminal buffer</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">&#8984;</span><span class="key">&#8997;</span><span class="key">E</span></div><div class="shortcut-desc">Broadcast input to all panes (careful)</div></div>
+          </div>
+
+          <p style="font-size:13px;color:var(--text-muted);margin:24px 0 12px;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Claude Code (inside a session)</p>
+          <div class="shortcut-grid">
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">Esc</span></div><div class="shortcut-desc">Interrupt generation</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">Ctrl</span><span class="key">C</span></div><div class="shortcut-desc">Cancel, return to prompt</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/clear</span></div><div class="shortcut-desc">Reset conversation context</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/compact</span></div><div class="shortcut-desc">Compress context (keeps summary)</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/model</span></div><div class="shortcut-desc">Switch model mid-session</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/effort</span></div><div class="shortcut-desc">Switch effort mid-session</div></div>
+            <div class="shortcut-item"><div class="shortcut-keys"><span class="key">/help</span></div><div class="shortcut-desc">List commands</div></div>
+          </div>
         </div>
       </div>
 
       <div class="step">
         <div class="step-header">
           <span class="step-n">4</span>
-          <span class="step-title">Daily workflow</span>
+          <h3 class="step-title">Daily workflow</h3>
         </div>
         <div class="step-body">
+          <p><strong>Morning boot:</strong> open iTerm2 (arrangement auto-restores) &rarr; <span class="mono">cc</span> in each pane &rarr; <span class="mono">/clear</span> in AUDIT &rarr; PLAN reviews <span class="mono">git log --oneline -10</span> &rarr; IMPL smoke test with <span class="mono">pytest tests/ -x --tb=short</span>.</p>
+          <p><strong>End of session:</strong> IMPL runs the full suite &rarr; <span class="mono">ship</span> to commit &rarr; <span class="mono">/compact</span> any long contexts &rarr; re-save the arrangement if the layout changed.</p>
           <div class="code-block">
 <div class="comment"># Morning</div>
 <div>1. Open iTerm2 (arrangement auto-restores)</div>
@@ -2384,7 +2500,7 @@
 <div>3. PLAN → discuss approach (no writes)</div>
 <div>4. IMPL → implement → <span class="str">gate</span> (must pass)</div>
 <div>5. AUDIT → review changed files → findings back to IMPL</div>
-<div>&nbsp;&nbsp;&nbsp;<span class="mono">/clear</span> AUDIT before reviewing (state sync)</div>
+<div>&nbsp;&nbsp;&nbsp;/clear AUDIT before reviewing (state sync)</div>
 <div>&nbsp;</div>
 <div class="comment"># End of day</div>
 <div>6. IMPL → <span class="str">ship</span> (gate + stage + commit)</div>
@@ -2397,29 +2513,52 @@
       <div class="step">
         <div class="step-header">
           <span class="step-n">5</span>
-          <span class="step-title">Safety hooks</span>
+          <h3 class="step-title">Safety hooks</h3>
         </div>
         <div class="step-body">
           <table class="data-table">
-            <tr><th>Hook</th><th>Event</th><th>Blocks</th></tr>
-            <tr><td><span class="mono">protect-env.py</span></td><td>PreToolUse</td><td>Any edit to <span class="mono">.env</span> files</td></tr>
-            <tr><td><span class="mono">protect-git-push.py</span></td><td>PreToolUse</td><td><span class="mono">git push</span> commands</td></tr>
-            <tr><td><span class="mono">circuit-breaker.py</span></td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
-            <tr><td><span class="mono">session-start-reset.py</span></td><td>SessionStart</td><td>(resets counter)</td></tr>
-            <tr><td><span class="mono">version-check.py</span></td><td>SessionStart</td><td>(never blocks &mdash; prints update checklist on version change)</td></tr>
+            <thead><tr><th scope="col">Hook</th><th scope="col">Event</th><th scope="col">Blocks</th></tr></thead>
+            <tbody>
+              <tr><td class="cell-mono">protect-env.py</td><td>PreToolUse</td><td>Any edit to <span class="mono">.env</span> files</td></tr>
+              <tr><td class="cell-mono">protect-git-push.py</td><td>PreToolUse</td><td><span class="mono">git push</span> commands</td></tr>
+              <tr><td class="cell-mono">circuit-breaker.py</td><td>PostToolUse</td><td>3 consecutive tool failures</td></tr>
+              <tr><td class="cell-mono">session-start-reset.py</td><td>SessionStart</td><td>(resets counter)</td></tr>
+              <tr><td class="cell-mono">version-check.py</td><td>SessionStart</td><td>(never blocks &mdash; prints update checklist on version change)</td></tr>
+            </tbody>
           </table>
         </div>
       </div>
     </div>
   </div>
 
-</div>
+  <h2 class="part-heading" id="part-appendix">Appendix</h2>
 
-<div class="footer">
+  <!-- SECTION s22: Retired: pane handoff -->
+  <span id="retired-handoff" class="anchor-alias"></span>
+  <div class="section" id="s22">
+    <div class="section-header">
+      <span class="section-num">22</span>
+      <h2>Retired: pane handoff</h2>
+    </div>
+    <p class="section-intro">An automated AUDIT &harr; IMPL pane handoff add-on was <strong>retired on 2026-09-21</strong>. Its files are archived under <span class="mono">archive/handoff-2026-06/</span>. Persistent memory plus a shared <span class="mono">AGENTS.md</span> replaced it. See <span class="mono">archive/handoff-2026-06/README.md</span> if you want to restore it.</p>
+  </div>
+
+</main>
+
+<footer class="footer">
   <span>iTerm2 + Claude Code &middot; 4-Pane Setup Guide</span>
   <span>Built by <a href="https://pravindurgani.com">Prav Durgani</a></span>
-  <span>Claude Code v2.1.216 &middot; July 2026</span>
-</div>
+  <span>Claude Code v2.1.278 &middot; September 2026</span>
+</footer>
 
+<script>
+/* The table of contents is ~800px tall on a phone and sits between the hero and
+   the first step. Collapse it below 768px; desktop keeps it open. */
+(function(){try{
+  if(window.matchMedia('(max-width:768px)').matches){
+    var t=document.querySelector('.toc-details'); if(t) t.removeAttribute('open');
+  }
+}catch(e){}})();
+</script>
 </body>
 </html>

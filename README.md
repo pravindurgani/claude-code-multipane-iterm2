@@ -1,22 +1,12 @@
-# 4-Pane Claude Code Setup for iTerm2
+# A Disciplined Claude Code Workstation for iTerm2
 
-> Stop your AI agent from reviewing its own code — each pane runs a separate Claude Code session with a locked role, model, and permission set.
+> Four Claude Code sessions, four locked roles, one window. The reviewer runs read-only and cannot write files.
 
-By [Prav Durgani](https://pravindurgani.com) · Guide: https://pravindurgani.github.io/claude-code-multipane-iterm2/
+By [Prav Durgani](https://pravindurgani.com) · **[Read the full guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**
 
-![4-pane iTerm2 layout with Claude Code running in each pane](screenshots/05-claude-running.png)
+![Four iTerm2 panes, each running a Claude Code session with its own role colour](screenshots/05-claude-running.png)
 
-![Empty 4-pane layout showing colour differentiation](screenshots/04-four-panes.png)
-
-<p align="center"><em>Clean state on launch — colour-coded panes before any session starts</em></p>
-
-Run 4 dedicated Claude Code sessions in a single iTerm2 window — each with its own role, model, effort level, and visual identity. One command (`cc`) launches the right configuration per pane.
-
-**[Read the full guide with screenshots](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**
-
-> **New:** [Handoff](HANDOFF_GUIDE.md) — optional file-based bracketed-paste routing between AUDIT and IMPL panes. Write a directive to a file in one pane, it arrives as a single paste in the other. Scope-keyed so two projects can run in parallel without cross-talk. See [`HANDOFF_GUIDE.md`](HANDOFF_GUIDE.md).
->
-> **New:** [Sigil](https://github.com/Anmol-Srv/sigil) integration — optional persistent memory for all four panes, by [Anmol Srivastava](https://github.com/Anmol-Srv). Facts, decisions, and preferences carry across sessions, panes, and projects via Claude Code hooks. Local-first, MCP-native. See Step 20 in the guide.
+Each pane is an independent Claude Code session with its own model, effort level and permission mode. One command, `cc`, launches the right configuration for whichever pane you are in. Setup takes about 45 minutes. The core setup runs no daemons and no background services: it is four terminal sessions and a shell alias. The optional add-ons do run services.
 
 ---
 
@@ -24,116 +14,109 @@ Run 4 dedicated Claude Code sessions in a single iTerm2 window — each with its
 
 | Pane | Role | Model | Effort | Permission |
 |------|------|-------|--------|------------|
-| **AUDIT** | Code review (read-only) | Opus | high | `plan` |
-| **IMPL** | Code writing & editing | Sonnet | high | `acceptEdits` |
+| **AUDIT** | Code review, read-only | Opus | high | `plan` |
+| **IMPL** | Writing and editing code | Sonnet | high | `acceptEdits` |
 | **PROMPT** | Prompt engineering | Sonnet | medium | default |
-| **PLAN** | Architecture & planning | Sonnet | low | default |
+| **PLAN** | Architecture and planning | Sonnet | low | default |
 
-**Why split it this way?**
-- **Cost control** — Opus is ~15x more expensive than Sonnet. Reserve it for review only.
-- **No self-grading** — The model that writes the code never reviews its own work.
-- **Clean context** — Each pane has a focused, independent conversation window.
-- **One-command launch** — A `cc` alias in your shell handles model, effort, and permissions automatically.
-- **Safety hooks** — PreToolUse scripts block `.env` edits and `git push` before they happen; a circuit-breaker halts the session on repeated tool failures.
-
----
-
-## Why iTerm2 (not macOS Terminal)?
-
-This workflow depends on iTerm2-specific features:
-
-| Feature | macOS Terminal | iTerm2 |
-|---------|---------------|--------|
-| Split panes | Tabs/windows only | Unlimited independent panes in one tab |
-| Named profiles | No `$ITERM_PROFILE` env var | Auto-sets `$ITERM_PROFILE` per pane |
-| Visual identity | Basic themes | Per-profile backgrounds, tab colours, badges |
-| Saved layouts | Not supported | Save & auto-restore multi-pane arrangements |
-
-`$ITERM_PROFILE` is the key — it's what lets the shell detect which role a pane has, even after restarting iTerm2 or restoring a saved layout.
+- **No self-grading.** The model that writes the code never reviews it.
+- **Cost control.** Opus costs about 2.5× what Sonnet costs per token (Opus 5 $5/$25 per million against Sonnet 5 $2/$10, September 2026), so it only runs in the review pane.
+- **Enforced, not requested.** `--permission-mode plan` means the reviewer cannot write files, whatever it is asked to do. Hooks block `.env` edits and `git push` before they happen.
+- **Clean context.** Four independent conversation windows, each focused on one job.
+- **Survives a restart.** Saved iTerm2 arrangements bring the whole layout back.
 
 ---
 
-## Prerequisites
+## Why not just use agent teams?
 
-- **macOS** (zsh is the default shell)
-- **[iTerm2](https://iterm2.com/)** — required for split panes, named profiles, and saved layouts
-- **[Claude Code CLI](https://docs.anthropic.com/en/docs/claude-code)** with an active subscription
+Claude Code ships an experimental [agent teams](https://code.claude.com/docs/en/agent-teams) feature that can spawn teammates into iTerm2 or tmux split panes. It is excellent for short bursts of parallel exploration inside a single task.
 
-> **Windows/Linux:** This setup requires macOS with iTerm2. A WSL2 + Windows Terminal port is possible (`$WT_PROFILE_ID` as the role signal) but not documented here — contributions welcome.
+It solves a different problem from this setup. Per the documentation, teammates *"start with the lead's permission mode"* — bar `dontAsk`, which is not inherited — and *"you can't set per-teammate permission modes at spawn time"*, so you cannot give one teammate a genuinely read-only reviewer role. Teammates also each carry their own context window, which costs significantly more tokens, and they are not restored by `/resume`.
+
+Use agent teams when you want several agents attacking one problem for a few minutes. Use this when you want durable, separately-permissioned sessions you return to all day. They compose well together.
+
+---
+
+## Requirements
+
+- macOS with zsh
+- [Homebrew](https://brew.sh/) and Node.js 18+ (`brew install node`)
+- [iTerm2](https://iterm2.com/) — required, because `$ITERM_PROFILE` is what lets the shell detect which role a pane has
+- [Claude Code CLI](https://code.claude.com/docs) with an active subscription
+
+> **Windows and Linux:** not supported as written. A WSL2 and Windows Terminal port is plausible using `$WT_PROFILE_ID` as the role signal. Contributions welcome.
 
 ---
 
 ## Quick start
 
-> For detailed step-by-step instructions with screenshots, **[read the full guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**.
+Full instructions, with screenshots, are in **[the guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**. The short version:
 
-1. **Create 4 iTerm2 profiles** — `CC-AUDIT`, `CC-IMPL`, `CC-PROMPT`, `CC-PLAN` — each with a distinct background colour and tab colour
-2. **Set startup command & initial directory** — point each profile at your project folder
-3. **Add the shell snippet to `~/.zshrc`** — copy-paste from [`zshrc-snippet.sh`](zshrc-snippet.sh)
-4. **Create a 2x2 pane layout** and save it as the default window arrangement
-5. **Type `cc` in each pane** — Claude Code launches with the correct flags
-6. **Merge hooks config** — copy these five files from `hooks/` to `~/.claude/hooks/`: `circuit-breaker.py`, `protect-env.py`, `protect-git-push.py`, `session-start-reset.py`, `version-check.py`. Then merge the `"hooks"` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`. (Skip `enforce-handback.py` here — the optional handoff installer in Step 8 places it and registers its Stop hook for you.)
-7. **(Optional) MCP & slash commands** — `brew install github-mcp-server` then `claude mcp add` to register it (see Step 18 in the guide); copy `commands/reflect.md` to `~/.claude/commands/`; copy `skills/` to `~/.claude/skills/`
-8. **(Optional) Pane handoff** — `brew install fswatch` then `./handoff/install.sh` to enable file-based routing between AUDIT and IMPL panes. Read [`HANDOFF_GUIDE.md`](HANDOFF_GUIDE.md) for the operator manual.
-9. **(Optional) Persistent memory** — install [Sigil](https://github.com/Anmol-Srv/sigil) and run `sigil init` to give every pane shared memory across sessions and projects. See Step 20 in the guide — including the one setting (a fast, local LLM provider) that keeps the prompt hook under Claude Code's 10s budget.
+1. **Install the prerequisites** — `brew install node`, `brew install --cask iterm2`, then `npm install -g @anthropic-ai/claude-code` and `claude auth login`.
+1. **Clone this repo** — `git clone https://github.com/pravindurgani/claude-code-multipane-iterm2.git && cd claude-code-multipane-iterm2`. Later steps copy files out of it.
+2. **Create four iTerm2 profiles** — `CC-AUDIT`, `CC-IMPL`, `CC-PROMPT`, `CC-PLAN`, each with its own background and tab colour.
+3. **Set the startup command and initial directory** on each profile, pointing at your project.
+4. **Add the shell snippet** from [`zshrc-snippet.sh`](zshrc-snippet.sh) to your `~/.zshrc`.
+5. **Build a 2×2 layout** and save it as the default window arrangement.
+6. **Type `cc` in each pane.** Claude Code starts with the right model, effort and permission mode.
+
+That is the working four-pane setup.
+
+**Recommended next:** install the safety hooks. Copy `circuit-breaker.py`, `protect-env.py`, `protect-git-push.py`, `session-start-reset.py` and `version-check.py` from [`hooks/`](hooks/) into `~/.claude/hooks/`, then merge the `hooks` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`. They block `.env` edits and `git push` at the tool call, not by asking nicely.
+
+Also optional, all covered in the guide: an MCP server and slash commands, local models via Ollama, and shared persistent memory via [Sigil](https://github.com/Anmol-Srv/sigil).
 
 ---
 
 ## What's in this repo
 
-| File | What it does |
+| Path | What it does |
 |------|-------------|
-| [`index.html`](index.html) | Full visual guide (the GitHub Pages site) |
-| [`guide.md`](guide.md) | Markdown version for quick reference |
-| [`zshrc-snippet.sh`](zshrc-snippet.sh) | Copy-paste block for your `~/.zshrc` |
-| [`screenshots/`](screenshots/) | Step-by-step screenshots used in the guide |
-| [`hooks/`](hooks/) | Python hook scripts for PreToolUse/PostToolUse safety enforcement |
-| [`hooks/version-check.py`](hooks/version-check.py) | SessionStart hook — detects Claude Code version changes and prints an update checklist |
-| [`hooks/settings.json.example`](hooks/settings.json.example) | Hooks registration block to merge into `~/.claude/settings.json` |
-| [`CLAUDE.md.template`](CLAUDE.md.template) | Starter template for global `~/.claude/CLAUDE.md` |
-| [`REFERENCE.md.template`](REFERENCE.md.template) | Starter template for project-level `.claude/REFERENCE.md` |
-| [`.mcp.json.example`](.mcp.json.example) | GitHub MCP server reference JSON — use with `claude mcp add-json` (see Step 18) |
-| [`commands/reflect.md`](commands/reflect.md) | `/reflect` slash command — extracts session learnings for CLAUDE.md |
-| [`commands/start-impl.md`](commands/start-impl.md) | `/start-impl` slash command — IMPL pane pre-flight + hand-back protocol (handoff feature) |
-| [`commands/start-audit.md`](commands/start-audit.md) | `/start-audit` slash command — AUDIT pane pre-flight + directive routing (handoff feature) |
-| [`skills/`](skills/) | Contextual skills for AUDIT/IMPL panes (code-review, security-audit, testing) |
-| [`HANDOFF_GUIDE.md`](HANDOFF_GUIDE.md) | Operator manual for the optional pane handoff feature |
-| [`HANDOFF_GUIDE.html`](HANDOFF_GUIDE.html) | Styled visual version of the handoff guide |
-| [`handoff/`](handoff/) | Handoff implementation: watcher script, launchd plist, zsh functions, installer |
+| [`index.html`](index.html) | The full visual guide, published via GitHub Pages |
+| [`guide.md`](guide.md) | The same guide in Markdown |
+| [`zshrc-snippet.sh`](zshrc-snippet.sh) | The block to paste into `~/.zshrc` |
+| [`hooks/`](hooks/) | Safety hooks: `.env` protection, git-push gate, circuit breaker, version check |
+| [`hooks/settings.json.example`](hooks/settings.json.example) | The hooks block to merge into `~/.claude/settings.json` |
+| [`skills/`](skills/) | Skills for the review panes: code review, security audit, testing |
+| [`commands/reflect.md`](commands/reflect.md) | `/reflect` — extracts what a session learned, for your `CLAUDE.md` |
+| [`CLAUDE.md.template`](CLAUDE.md.template) | Starter for a global `~/.claude/CLAUDE.md` |
+| [`REFERENCE.md.template`](REFERENCE.md.template) | Starter for a project `.claude/REFERENCE.md` |
+| [`.mcp.json.example`](.mcp.json.example) | GitHub MCP server config, for `claude mcp add-json` |
+| [`scripts/pane-logging.sh`](scripts/pane-logging.sh) | Turns iTerm2 session logging on or off for the four profiles |
+| [`screenshots/`](screenshots/) | Images used by the guide |
+| [`archive/handoff-2026-06/`](archive/handoff-2026-06/) | The retired pane-handoff feature, kept for reference |
 
 ---
 
-## Adapting for your project
+## Adapting it to your project
 
-The setup is project-agnostic. To use it with a different codebase:
+The setup is project-agnostic. Point each profile's initial directory at the new codebase, and save a separate window arrangement per project. If you run several projects at once, rename the profiles with a project prefix such as `MYPROJECT-AUDIT` and add matching `case` entries to your `~/.zshrc`.
 
-1. Update the **Initial Directory** in each profile to your project path
-2. The default prefix this repo teaches is `CC-*`; swap `CC` for your project name when adapting. Optionally rename profiles with a project prefix (e.g. `MYPROJECT-AUDIT`) and add matching `case` entries to `~/.zshrc`
-3. Save a separate window arrangement per project
-
-**Session continuity:** Keep a `SESSION_LOG.md` in your project root. At the
-start of each IMPL session, instruct Claude to read the last 60 lines and
-resume from the most recent "Next:" item. See Step 13 in the full guide for
-the minimal entry format.
-
-**CLAUDE.md split:** Store global coding conventions in `~/.claude/CLAUDE.md`
-and project-specific rules in `.claude/CLAUDE.md` (committed to the repo).
-Claude Code merges both automatically. Use `CLAUDE.md.template` and
-`REFERENCE.md.template` as starting points. See Step 14 in the full guide.
+Two patterns in the guide travel with you: a `SESSION_LOG.md` so the next session knows where the last one stopped, and splitting your rules between a global `~/.claude/CLAUDE.md` and a project `AGENTS.md` so other agents read the same rules.
 
 ---
 
-## What this is NOT
+## What this is not
 
-- Not an agent orchestrator. No background processes, no task queues, no dashboards.
-- Not a fire-and-forget agent. The base four-pane setup is hands-on. The optional handoff layer (see [HANDOFF_GUIDE.md](HANDOFF_GUIDE.md)) automates the AUDIT↔IMPL relay — but it's bounded: a Stop hook forces a real hand-back, safety hooks block `.env` edits and `git push`, and a per-scope HALT sentinel pauses the loop the moment a human is genuinely needed.
-- Not a replacement for CI/CD. The `gate` alias is a local quality gate — your regular pipeline still runs.
-- Not Windows-native. Requires macOS with iTerm2.
-
-If this saves you time, a ⭐ helps others find it.
+- **Not an orchestrator.** No daemons, no task queues, no dashboards. You drive it.
+- **Not fire-and-forget.** It is a hands-on workflow with guardrails, not an autonomous loop.
+- **Not a CI replacement.** The `gate` alias is a local check; your pipeline still runs.
+- **Not cross-platform.** macOS and iTerm2 only.
 
 ---
 
-## License
+## Archived
+
+The **pane handoff** add-on, which routed directives between the AUDIT and IMPL panes automatically, was retired on 2026-09-21. Shared memory and a shared `AGENTS.md` replaced it. The implementation and its operator manual are preserved under [`archive/handoff-2026-06/`](archive/handoff-2026-06/README.md).
+
+---
+
+## Author
+
+Built by **[Prav Durgani](https://pravindurgani.com)**, a London-based freelancer working on data and workflow automation, API integrations and AI tooling.
+
+If this saved you time, a ⭐ helps other people find it.
+
+## Licence
 
 [MIT](LICENSE)
