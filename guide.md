@@ -4,7 +4,8 @@
 > Claude Code, local AI models (Ollama), and a 4-pane iTerm2 workflow.
 > Every command block is a literal paste — no substitution required unless noted.
 
-**Estimated time:** 3–4 hours total, most of which is waiting for model downloads.
+**Estimated time:** about 45 minutes hands-on, or 25 if you already have Homebrew, Node and iTerm2.
+Step 3 (local models) is optional and adds 15–90 minutes of unattended downloading.
 
 **RAM tiers used throughout this guide:**
 
@@ -76,7 +77,7 @@ npm install -g @anthropic-ai/claude-code
 ### 2.1 Authenticate — browser OAuth (recommended)
 
 ```bash
-claude login
+claude auth login
 ```
 
 This opens a browser window. Sign in with your Anthropic account (Pro or Max plan).
@@ -362,9 +363,9 @@ The alias (set up in Step 6) expands to the correct command per pane:
 
 | Flag                              | Purpose                                    |
 |-----------------------------------|--------------------------------------------|
-| `--model opus`                    | Use Opus (aliases: `opus`, `sonnet`, `haiku`, or full ID like `claude-opus-4-6`) |
-| `--effort high`                   | Thinking budget: `low` = fast; `medium` = balanced; `high` = extended reasoning; `max` = maximum depth |
-| `--permission-mode plan`          | Read-only — Claude can't write files       |
+| `--model opus`                    | Use Opus (aliases: `opus`, `sonnet`, `haiku`, or a full ID like `claude-fable-5`) |
+| `--effort high`                   | Thinking budget: `low` · `medium` · `high` · `xhigh` · `max` |
+| `--permission-mode plan`          | Read-only — Claude can't write files. Full set: `plan`, `acceptEdits`, `auto`, `manual`, `dontAsk`, `bypassPermissions` |
 | `--permission-mode acceptEdits`   | Auto-accept file edits without asking      |
 | `--append-system-prompt "..."`    | Add custom instructions on top of defaults |
 | `--continue`                      | Resume most recent conversation            |
@@ -375,7 +376,7 @@ The alias (set up in Step 6) expands to the correct command per pane:
 > commands. Only use `--dangerously-skip-permissions` in fully sandboxed
 > environments.
 
-> **Version note:** Flags verified against Claude Code v2.1.81 (March 2026).
+> **Version note:** Flags verified against Claude Code v2.1.278 (September 2026).
 > CLI tools update frequently — run `claude --help` if a flag isn't recognised.
 
 ---
@@ -1181,7 +1182,7 @@ git push
 
 1. Run `claude --help` to see current supported flags.
 2. Update the alias block in `~/.zshrc` to match, then `source ~/.zshrc`.
-3. Run `claude --version` to confirm your installed version. This guide was verified against v2.1.81 (March 2026).
+3. Run `claude --version` to confirm your installed version. This guide was verified against v2.1.278 (September 2026).
 
 > **Tip:** The `version-check.py` hook (Step 14) detects version changes
 > automatically and prints this checklist at session start.

@@ -72,7 +72,7 @@ This workflow depends on iTerm2-specific features:
 3. **Add the shell snippet to `~/.zshrc`** — copy-paste from [`zshrc-snippet.sh`](zshrc-snippet.sh)
 4. **Create a 2x2 pane layout** and save it as the default window arrangement
 5. **Type `cc` in each pane** — Claude Code launches with the correct flags
-6. **Merge hooks config** — copy these five files from `hooks/` to `~/.claude/hooks/`: `circuit-breaker.py`, `protect-env.py`, `protect-git-push.py`, `session-start-reset.py`, `version-check.py`. Then merge the `"hooks"` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`. (Skip `enforce-handback.py` — it belonged to the retired pane handoff feature, see Step 8.)
+6. **Merge hooks config** — copy these five files from `hooks/` to `~/.claude/hooks/`: `circuit-breaker.py`, `protect-env.py`, `protect-git-push.py`, `session-start-reset.py`, `version-check.py`. Then merge the `"hooks"` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`. (Skip `enforce-handback.py` — it belonged to the retired pane handoff feature, see Step 14.)
 7. **(Optional) MCP & slash commands** — `brew install github-mcp-server` then `claude mcp add` to register it (see Step 18 in the guide); copy `commands/reflect.md` to `~/.claude/commands/`; copy `skills/` to `~/.claude/skills/`
 8. **(Retired) Pane handoff** — this feature was retired 2026-09-21; the installer and operator manual are archived at [`archive/handoff-2026-06/`](archive/handoff-2026-06/), reachable via `./archive/handoff-2026-06/handoff/install.sh` and [`archive/handoff-2026-06/HANDOFF_GUIDE.md`](archive/handoff-2026-06/HANDOFF_GUIDE.md).
 9. **(Optional) Persistent memory** — install [Sigil](https://github.com/Anmol-Srv/sigil) and run `sigil init` to give every pane shared memory across sessions and projects. See Step 20 in the guide — including the one setting (a fast, local LLM provider) that keeps the prompt hook under Claude Code's 10s budget.
@@ -114,13 +114,13 @@ The setup is project-agnostic. To use it with a different codebase:
 
 **Session continuity:** Keep a `SESSION_LOG.md` in your project root. At the
 start of each IMPL session, instruct Claude to read the last 60 lines and
-resume from the most recent "Next:" item. See Step 13 in the full guide for
+resume from the most recent "Next:" item. See Step 16 in the full guide for
 the minimal entry format.
 
 **CLAUDE.md split:** Store global coding conventions in `~/.claude/CLAUDE.md`
 and project-specific rules in `.claude/CLAUDE.md` (committed to the repo).
 Claude Code merges both automatically. Use `CLAUDE.md.template` and
-`REFERENCE.md.template` as starting points. See Step 14 in the full guide.
+`REFERENCE.md.template` as starting points. See Step 17 in the full guide.
 
 ---
 

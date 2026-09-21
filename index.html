@@ -631,7 +631,7 @@
     <div class="hero-badge">iTerm2 + Claude Code</div>
     <h1>Stop Your AI From Grading <br>Its Own Code</h1>
     <p>Run 4 Claude Code sessions in one iTerm2 window. Opus reviews. Sonnet builds. Each pane has a locked role, model, and permission set &mdash; the reviewer is physically incapable of writing files. Optional add-ons route work between panes automatically and give every session persistent memory.</p>
-    <div class="hero-meta">macOS only &middot; iTerm2 &middot; Claude Code CLI &middot; ~15 min setup &middot; zero dependencies</div>
+    <div class="hero-meta">macOS only &middot; iTerm2 &middot; Claude Code CLI &middot; ~45 min setup &middot; no dependencies</div>
     <div class="hero-meta" style="margin-top:8px;">by <a href="https://pravindurgani.com" style="color:#94a3b8;text-decoration:underline;text-underline-offset:3px;">Prav Durgani</a></div>
   </div>
 </div>
@@ -748,7 +748,7 @@
         <div class="step-body">
           <div class="code-block">
 <div>npm install -g @anthropic-ai/claude-code</div>
-<div>claude login   <span class="comment"># opens a browser window — sign in with your Anthropic account</span></div>
+<div>claude auth login   <span class="comment"># opens a browser window — sign in with your Anthropic account</span></div>
           </div>
           <p>Pro or Max subscription required for browser OAuth. No API key needed with this method.</p>
 
@@ -1316,8 +1316,8 @@
         <table class="data-table">
           <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
           <tbody>
-            <tr><td class="cell-mono">--model opus|sonnet|haiku</td><td>Model selection (or full IDs like <span class="mono">claude-opus-4-6</span>)</td></tr>
-            <tr><td class="cell-mono">--effort low|medium|high|max</td><td>Thinking budget: <span class="mono">low</span> = fast, minimal reasoning; <span class="mono">medium</span> = balanced; <span class="mono">high</span> = extended reasoning chains, more tokens; <span class="mono">max</span> = maximum depth (slowest, most expensive). PLAN uses <span class="mono">low</span> — architectural discussion doesn't need deep reasoning chains.</td></tr>
+            <tr><td class="cell-mono">--model opus|sonnet|haiku</td><td>Model selection (or full IDs like <span class="mono">claude-fable-5</span>)</td></tr>
+            <tr><td class="cell-mono">--effort low|medium|high|xhigh|max</td><td>Thinking budget: <span class="mono">low</span> = fast, minimal reasoning; <span class="mono">medium</span> = balanced; <span class="mono">high</span> = extended reasoning chains, more tokens; <span class="mono">max</span> = maximum depth (slowest, most expensive). PLAN uses <span class="mono">low</span> — architectural discussion doesn't need deep reasoning chains.</td></tr>
             <tr><td class="cell-mono">--permission-mode plan</td><td>Read-only &mdash; Claude cannot write files</td></tr>
             <tr><td class="cell-mono">--permission-mode acceptEdits</td><td>Auto-accept file edits without prompting</td></tr>
             <tr><td class="cell-mono">--append-system-prompt "..."</td><td>Add custom instructions on top of defaults</td></tr>
@@ -1327,7 +1327,7 @@
         </table>
         <div class="callout warn" style="margin-top:12px">
           <span class="callout-icon">&#9888;&#65039;</span>
-          <div><strong>Version note:</strong> Flags verified against Claude Code v2.1.81 (March 2026). CLI tools update frequently &mdash; run <span class="mono">claude --help</span> if a flag isn't recognised.</div>
+          <div><strong>Version note:</strong> Flags verified against Claude Code v2.1.278 (September 2026). CLI tools update frequently &mdash; run <span class="mono">claude --help</span> if a flag isn't recognised.</div>
         </div>
       </div>
     </div>
@@ -2303,7 +2303,7 @@
             <li>Update the alias block in <span class="mono">~/.zshrc</span> to match, then <span class="mono">source ~/.zshrc</span>.</li>
             <li><strong>Most stable flags:</strong> <span class="mono">--model</span> and <span class="mono">--effort</span> have been stable across versions. <span class="mono">--permission-mode</span> values are also stable. Check the Claude Code release notes for breaking changes.</li>
           </ol>
-          <p style="font-size:14px;color:var(--text-muted);margin-top:8px;">Run <span class="mono">claude --version</span> to check your installed version. This guide was verified against v2.1.81 (March 2026).</p>
+          <p style="font-size:14px;color:var(--text-muted);margin-top:8px;">Run <span class="mono">claude --version</span> to check your installed version. This guide was verified against v2.1.278 (September 2026).</p>
           <div class="callout tip" style="margin-top:12px">
             <span class="callout-icon">&#128161;</span>
             <div><strong>Tip:</strong> The <span class="mono">version-check.py</span> hook (Step 11) detects version changes automatically and prints this checklist at session start.</div>
