@@ -177,7 +177,7 @@
       "name": "Does this work on Linux or Windows?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Claude Code does; this layout does not. The profiles, arrangements and $ITERM_PROFILE detection are macOS and iTerm2. The hook scripts use fcntl, so they run on macOS and Linux but not Windows."
+        "text": "Claude Code does; this layout does not. The profiles, arrangements and $ITERM_PROFILE detection are macOS and iTerm2. The circuit-breaker hook uses fcntl, so the hooks run on macOS and Linux but not Windows."
       }
     },
     {
@@ -1740,7 +1740,8 @@
           <h3 class="step-title">Sharing one rule set with other agents</h3>
         </div>
         <div class="step-body">
-          <p><span class="mono">AGENTS.md</span> is an open standard (<a href="https://agents.md/" style="color:var(--blue)">agents.md</a>) supported by roughly 28 tools, including Claude Code, Codex, Cursor, Copilot, Gemini CLI, Zed and Aider. From v2.1.277, Claude Code reads <span class="mono">AGENTS.md</span> only when no <span class="mono">CLAUDE.md</span> exists in that directory or above it.</p>
+          <p><span class="mono">AGENTS.md</span> is an open standard (<a href="https://agents.md/" style="color:var(--blue)">agents.md</a>) used by over 60,000 open-source projects and supported by a couple of dozen agents, among them Codex, Cursor, Copilot, Gemini CLI, Zed and Aider. From v2.1.277 Claude Code reads it too.</p>
+          <p>Claude Code reads <span class="mono">AGENTS.md</span> only when it finds no <span class="mono">CLAUDE.md</span>, <span class="mono">.claude/CLAUDE.md</span> or <span class="mono">CLAUDE.local.md</span> in that directory or any directory above it. Your personal <span class="mono">~/.claude/CLAUDE.md</span> does not count &mdash; it keeps loading alongside.</p>
           <p>So the portable pattern is: put the shared rules in <span class="mono">AGENTS.md</span>, and make <span class="mono">CLAUDE.md</span> a one-line import.</p>
           <div class="code-block">
 <div>echo <span class="str">'@AGENTS.md'</span> &gt; CLAUDE.md</div>
@@ -1912,7 +1913,7 @@
           </table>
           <div class="callout warn">
             <span class="callout-icon">&#9888;&#65039;</span>
-            <div><strong>Platform note:</strong> Hook scripts use <span class="mono">fcntl</span> and run on macOS and Linux only.</div>
+            <div><strong>Platform note:</strong> the circuit-breaker hook uses <span class="mono">fcntl</span>, so the hooks run on macOS and Linux only.</div>
           </div>
         </div>
       </div>
@@ -1935,7 +1936,7 @@
           <h3 class="step-title">GitHub MCP server</h3>
         </div>
         <div class="step-body">
-          <p>Claude Code registers MCP servers via <span class="mono">claude mcp add</span>, not by reading a config file from disk. The included <span class="mono">.mcp.json.example</span> is reference JSON if you need <span class="mono">claude mcp add-json</span> instead.</p>
+          <p>Claude Code registers user- and local-scoped MCP servers via <span class="mono">claude mcp add</span>, and reads project-scoped servers from a committed <span class="mono">.mcp.json</span> at the repo root. The included <span class="mono">.mcp.json.example</span> is reference JSON if you need <span class="mono">claude mcp add-json</span> instead.</p>
           <div class="code-block">
 <div>brew install github-mcp-server</div>
           </div>
@@ -2194,7 +2195,7 @@
           <h3 class="step-title">Does this work on Linux or Windows?</h3>
         </div>
         <div class="step-body">
-          <p><strong>Claude Code does; this layout does not.</strong> The profiles, arrangements and <span class="mono">$ITERM_PROFILE</span> detection are macOS + iTerm2. The hook scripts use <span class="mono">fcntl</span>, so they run on macOS and Linux but not Windows.</p>
+          <p><strong>Claude Code does; this layout does not.</strong> The profiles, arrangements and <span class="mono">$ITERM_PROFILE</span> detection are macOS + iTerm2. The circuit-breaker hook uses <span class="mono">fcntl</span>, so they run on macOS and Linux but not Windows.</p>
         </div>
       </div>
 
@@ -2268,6 +2269,8 @@
 <div></div>
 <div><span class="comment"># Check 3 — settings.json is valid</span></div>
 <div>python3 -m json.tool ~/.claude/settings.json  <span class="comment"># prints formatted JSON on success</span></div>
+<div><span class="comment"># Errors on a line starting with # ? You pasted the example file wholesale.</span></div>
+<div><span class="comment"># settings.json must be pure JSON — strip the comment lines.</span></div>
           </div>
         </div>
       </div>

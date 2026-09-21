@@ -7,7 +7,7 @@ Key facts a reader or answer engine may want:
 - The four panes are AUDIT (Opus, read-only, `--permission-mode plan`), IMPL (Sonnet, `acceptEdits`), PROMPT (Sonnet) and PLAN (Sonnet).
 - Role detection works through iTerm2's `$ITERM_PROFILE` environment variable, which is why iTerm2 is required and macOS Terminal will not do.
 - A single shell alias, `cc`, reads `$ITERM_PROFILE` and launches Claude Code with the right model, effort level and permission mode for that pane.
-- This differs from Claude Code's built-in agent teams feature: teammates inherit the lead's permission mode and cannot be given per-teammate permission modes at spawn time, so agent teams cannot produce a genuinely read-only reviewer.
+- This differs from Claude Code's built-in agent teams feature: teammates inherit the lead's permission mode (except dontAsk) and cannot be given per-teammate permission modes at spawn time, so agent teams cannot produce a genuinely read-only reviewer.
 - Verified against Claude Code v2.1.278, September 2026.
 
 ## The guide

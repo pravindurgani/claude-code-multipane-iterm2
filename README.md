@@ -31,7 +31,7 @@ Each pane is an independent Claude Code session with its own model, effort level
 
 Claude Code ships an experimental [agent teams](https://code.claude.com/docs/en/agent-teams) feature that can spawn teammates into iTerm2 or tmux split panes. It is excellent for short bursts of parallel exploration inside a single task.
 
-It solves a different problem from this setup. Per the documentation, teammates *"start with the lead's permission mode"* and *"you can't set per-teammate permission modes at spawn time"*, so you cannot give one teammate a genuinely read-only reviewer role. Teammates also each carry their own context window, which costs significantly more tokens, and they are not restored by `/resume`.
+It solves a different problem from this setup. Per the documentation, teammates *"start with the lead's permission mode"* — bar `dontAsk`, which is not inherited — and *"you can't set per-teammate permission modes at spawn time"*, so you cannot give one teammate a genuinely read-only reviewer role. Teammates also each carry their own context window, which costs significantly more tokens, and they are not restored by `/resume`.
 
 Use agent teams when you want several agents attacking one problem for a few minutes. Use this when you want durable, separately-permissioned sessions you return to all day. They compose well together.
 

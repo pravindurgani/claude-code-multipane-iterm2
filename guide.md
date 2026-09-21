@@ -37,7 +37,7 @@ it in, because the shell snippet branches on `$ITERM_PROFILE`.
 The point of the split is permissions, not tidiness. AUDIT runs in plan mode, so
 the pane that reviews your code cannot edit it. IMPL auto-accepts edits, so
 implementation is not interrupted at every file write. PLAN and PROMPT are
-cheap, low-effort sessions for thinking out loud and for prompt or content work.
+cheaper low- and medium-effort sessions for thinking out loud and for prompt or content work.
 
 What you end up with: a saved window arrangement that restores on launch, a
 `gate` command that must pass before anything goes to review, and a review pass
@@ -59,7 +59,7 @@ command -v brew >/dev/null && echo "Homebrew already installed — skip" || \
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Add Homebrew to your PATH (Apple Silicon only — skip if already in ~/.zshrc):
-echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
+grep -q 'brew shellenv' ~/.zshrc || echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -365,9 +365,13 @@ earlier ones, they do not override them.
 paths all work, and imports nest up to four levels deep.
 
 **Sharing one rule set with other agents.** `AGENTS.md` is an open standard
-(<https://agents.md/>) supported by roughly 28 tools, including Claude Code,
-Codex, Cursor, Copilot, Gemini CLI, Zed and Aider. From v2.1.277, Claude Code
-reads `AGENTS.md` only when no `CLAUDE.md` exists in that directory or above it.
+(<https://agents.md/>) used by over 60,000 open-source projects and supported by
+a couple of dozen agents, among them Codex, Cursor, Copilot, Gemini CLI, Zed and
+Aider. From v2.1.277 Claude Code reads it too.
+
+Claude Code reads `AGENTS.md` only when it finds no `CLAUDE.md`, `.claude/CLAUDE.md`
+or `CLAUDE.local.md` in that directory or any directory above it. Your personal
+`~/.claude/CLAUDE.md` does not count — it keeps loading alongside.
 
 So the portable pattern is: put the shared rules in `AGENTS.md`, and make
 `CLAUDE.md` a one-line import.
@@ -437,13 +441,16 @@ before and after tool use, and at session start.
 | `session-start-reset.py` | SessionStart | (resets failure counter — never blocks) |
 | `version-check.py` | SessionStart | (never blocks — prints update checklist when Claude Code version changes) |
 
-> **Platform note:** Hook scripts use `fcntl` and run on macOS and Linux only.
+> **Platform note:** the circuit-breaker hook uses `fcntl`, so the hooks run on
+> macOS and Linux but not Windows.
 
 ### MCP server, slash commands and skills
 
 **GitHub MCP server.** Claude Code registers MCP servers via `claude mcp add`,
-not by reading a config file from disk. The included `.mcp.json.example` is
-reference JSON if you need `claude mcp add-json` instead.
+for user- and local-scoped servers, and it reads project-scoped servers from a
+committed `.mcp.json` at the repo root. The included `.mcp.json.example` works
+either way: commit it as `.mcp.json` to share it with a team, or feed it to
+`claude mcp add-json`.
 
 ```bash
 brew install github-mcp-server
@@ -646,7 +653,7 @@ separation between the pane that writes and the pane that reviews.
 #### Does this work on Linux or Windows?
 
 **Claude Code does; this layout does not.** The profiles, arrangements and
-`$ITERM_PROFILE` detection are macOS + iTerm2. The hook scripts use `fcntl`, so
+`$ITERM_PROFILE` detection are macOS + iTerm2. The circuit-breaker hook uses `fcntl`, so
 they run on macOS and Linux but not Windows.
 
 #### Do I need Ollama?
@@ -685,6 +692,8 @@ which python3  # must return a path; if missing: brew install python3
 
 # Check 3 — settings.json is valid
 python3 -m json.tool ~/.claude/settings.json  # prints formatted JSON on success
+# Errors on a line starting with # ? You pasted the example file wholesale.
+# settings.json must be pure JSON — strip the comment lines.
 ```
 
 #### T4 — Circuit-breaker stuck after tool failures
