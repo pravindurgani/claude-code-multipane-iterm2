@@ -161,7 +161,7 @@
       "name": "How much does running Opus in one pane cost?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Substantially more than Sonnet, roughly 15&times; as of September 2026, but only on review passes. The AUDIT pane is idle while you implement, and a review reads far fewer tokens than an implementation session writes. The other three panes stay on Sonnet."
+        "text": "About 2.5x Sonnet per token (Opus 5 $5/$25 per million against Sonnet 5 $2/$10, September 2026), and only on review passes. The AUDIT pane is idle while you implement, and a review reads far fewer tokens than an implementation session writes. The other three panes stay on Sonnet."
       }
     },
     {
@@ -811,12 +811,71 @@
   .data-table thead,.data-table tbody{width:max-content;min-width:100%}
   html,body{overflow-x:hidden}
 }
+
+/* ---- accessibility remediation (added 2026-09-21, append-only) ----
+   Measured in Chromium at 1280px and 390px in both colour schemes:
+   19 contrast failures in light, 7 in dark, and no authored focus ring at all. */
+
+/* Light-scheme tokens below WCAG AA. The dark block still wins: its selector
+   :root:not([data-theme="light"]) outranks a bare :root. */
+:root{
+  --amber:#b45309;       /* was #d97706 — 3.02:1 -> 4.77:1 on --surface */
+  --cyan:#0e7490;        /* was #0891b2 — 3.50:1 -> 5.09:1 */
+  --green:#047857;       /* was #059669 — 3.58:1 -> 5.21:1 */
+  --text-muted:#616875;  /* was #6b7280 — 4.31:1 -> 5.00:1 on --surface2 */
+}
+
+/* Hard-coded colours the dark-mode token override could not reach */
+/* The footer bar is dark in BOTH schemes, so var(--blue) is too dark there
+   in light mode (4.06:1). Pin a light blue that passes against it either way. */
+.footer a{color:#93c5fd;text-decoration:underline;text-underline-offset:3px}
+.hero-meta,.hero-meta.hero-by{color:#94a3b8}   /* 3.42:1 -> 6.34:1 */
+.code-block .comment{color:#8b98ad}            /* 3.07:1 -> 5.01:1 light, 6.62:1 dark */
+.btn-ghost{border-color:rgba(203,213,225,.45)} /* 2.54:1 -> 3.32:1 */
+@media (prefers-color-scheme:dark){
+  /* --blue lightens to #60a5fa in dark, so white-on-blue drops to 2.5:1.
+     Pin these two to the light-mode blue, which keeps white legible. */
+  :root:not([data-theme="light"]) .btn-primary{background:#2563eb;border-color:#2563eb;color:#fff}
+  :root:not([data-theme="light"]) .btn-primary:hover{background:#1d4ed8;border-color:#1d4ed8}
+  :root:not([data-theme="light"]) .skip-link{background:#2563eb;color:#fff}
+}
+
+/* No :focus rules existed anywhere; the browser default is not guaranteed in
+   Safari or an in-app WebView, which is where LinkedIn traffic lands. */
+:where(a,button,summary,[tabindex]):focus-visible{
+  outline:3px solid var(--blue);outline-offset:3px;border-radius:4px}
+.btn:focus-visible{outline-color:#fff;outline-offset:3px}
+:where(a,button,summary):focus:not(:focus-visible){outline:none}
+
+.skip-link{position:absolute;left:-9999px;top:0;z-index:100;background:var(--blue);
+  color:#fff;padding:12px 20px;border-radius:0 0 8px 0;font-size:15px;font-weight:600;
+  text-decoration:none}
+.skip-link:focus{left:0}
+
+/* Phone tap targets were 20-32px tall and the collapsed contents did not read
+   as something you could tap. */
+@media (max-width:768px){
+  .toc-details > summary{min-height:44px;display:flex;align-items:center;padding:10px 14px;
+    font-size:13px;letter-spacing:1px;border:1px solid var(--border);
+    border-radius:var(--radius);background:var(--surface2);color:var(--text)}
+  .toc-details > summary::after{content:"Tap to open";margin-left:auto;font-size:11px;
+    font-weight:500;letter-spacing:0;color:var(--text-muted);text-transform:none}
+  .toc-details[open] > summary::after{content:"Tap to close"}
+  .toc-list a{min-height:44px;display:flex;align-items:center}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important;
+    animation-iteration-count:1!important;scroll-behavior:auto!important}
+  .btn:hover{transform:none}
+}
 </style>
 </head>
 <body>
 
 <!-- HERO -->
-<div class="hero">
+<a class="skip-link" href="#part-1">Skip to the setup</a>
+<header class="hero">
   <div class="hero-inner">
     <div class="hero-badge">iTerm2 + Claude Code</div>
     <h1>A Disciplined Claude Code Workstation for iTerm2</h1>
@@ -828,12 +887,12 @@
     <div class="hero-meta">macOS &middot; iTerm2 &middot; Claude Code v2.1.278 &middot; ~45 min &middot; no background services</div>
     <div class="hero-meta hero-by">by <a href="https://pravindurgani.com">Prav Durgani</a> &mdash; freelance data &amp; workflow automation, London</div>
   </div>
-</div>
+</header>
 
-<div class="container">
+<main class="container" id="main">
 
   <!-- TOC -->
-  <div class="toc">
+  <nav class="toc" aria-label="Table of contents">
     <details class="toc-details" open>
       <summary>In this guide</summary>
 
@@ -879,7 +938,7 @@
         <li><a href="#s22"><span class="toc-num">22</span> Retired: pane handoff</a></li>
       </ul>
     </details>
-  </div>
+  </nav>
 
   <h2 class="part-heading" id="part-1">Part I &mdash; Install it</h2>
   <p class="part-intro">Seven steps, strictly sequential. Do them in order.</p>
@@ -935,6 +994,12 @@
 <div>brew install --cask iterm2</div>
           </div>
           <p>Open iTerm2 once to complete its initial setup, then continue inside it. iTerm2 is required because <span class="mono">$ITERM_PROFILE</span> is what makes per-pane role detection work.</p>
+        <h3 class="step-title">This repo</h3>
+        <p>Later steps copy files out of it &mdash; the shell snippet, the hooks, the skills and the slash command. Clone it now and stay in that directory for the rest of Part I:</p>
+        <div class="code-block">
+<div>git clone https://github.com/pravindurgani/claude-code-multipane-iterm2.git</div>
+<div>cd claude-code-multipane-iterm2</div>
+        </div>
         </div>
       </div>
     </div>
@@ -1079,7 +1144,7 @@
         <div class="step-body">
           <p>Open <strong>iTerm2 &rarr; Settings &rarr; Profiles</strong> (<span class="mono">&#8984;,</span>). Click the <strong>+</strong> button four times. Double-click each "New Profile" name to rename it:</p>
           <table class="data-table">
-            <thead><tr><th>Profile Name</th><th>Background Hex</th><th>Tab Colour Hex</th><th>Role</th></tr></thead>
+            <thead><tr><th scope="col">Profile Name</th><th scope="col">Background Hex</th><th scope="col">Tab Colour Hex</th><th scope="col">Role</th></tr></thead>
             <tbody>
               <tr><td class="cell-mono">CC-AUDIT</td><td class="cell-mono">#0d0b18</td><td class="cell-mono" style="color:var(--purple)">#a855f7</td><td>Evaluation / Auditing</td></tr>
               <tr><td class="cell-mono">CC-IMPL</td><td class="cell-mono">#080f0b</td><td class="cell-mono" style="color:var(--green)">#22c55e</td><td>Implementation</td></tr>
@@ -1399,7 +1464,7 @@
     <p class="section-intro">Type <span class="mono">cc</span> in each pane. That&rsquo;s it. The alias expands per pane.</p>
 
     <table class="data-table">
-      <thead><tr><th>Pane</th><th><code>cc</code> expands to</th><th>What you see</th></tr></thead>
+      <thead><tr><th scope="col">Pane</th><th scope="col"><code>cc</code> expands to</th><th scope="col">What you see</th></tr></thead>
       <tbody>
         <tr>
           <td style="color:var(--purple);font-weight:600">AUDIT</td>
@@ -1431,7 +1496,7 @@
 
     <div class="callout warn">
       <span class="callout-icon">&#9888;&#65039;</span>
-      <div><strong>Why Opus only in AUDIT</strong> Opus costs roughly 15&times; what Sonnet costs per token. Reserve it for the review pass, where a second opinion from a stronger model earns the money, and leave the other three panes on Sonnet.</div>
+      <div><strong>Why Opus only in AUDIT</strong> Opus costs about 2.5&times; what Sonnet costs per token. Reserve it for the review pass, where a second opinion from a stronger model earns the money, and leave the other three panes on Sonnet.</div>
     </div>
 
     <div class="callout tip">
@@ -1447,7 +1512,7 @@
       </div>
       <div class="step-body">
         <table class="data-table">
-          <thead><tr><th>Flag</th><th>Purpose</th></tr></thead>
+          <thead><tr><th scope="col">Flag</th><th scope="col">Purpose</th></tr></thead>
           <tbody>
             <tr><td class="cell-mono">--model opus</td><td>Use Opus (aliases: <span class="mono">opus</span>, <span class="mono">sonnet</span>, <span class="mono">haiku</span>, or a full ID like <span class="mono">claude-fable-5</span>)</td></tr>
             <tr><td class="cell-mono">--effort high</td><td>Thinking budget: <span class="mono">low</span> &middot; <span class="mono">medium</span> &middot; <span class="mono">high</span> &middot; <span class="mono">xhigh</span> &middot; <span class="mono">max</span>. PLAN uses <span class="mono">low</span> &mdash; architectural discussion doesn&rsquo;t need deep reasoning chains.</td></tr>
@@ -1544,7 +1609,7 @@
     <p class="section-intro"><strong>Nothing reaches AUDIT until the tests pass.</strong></p>
 
     <table class="data-table">
-      <thead><tr><th>Alias</th><th>What it runs</th><th>When to use</th></tr></thead>
+      <thead><tr><th scope="col">Alias</th><th scope="col">What it runs</th><th scope="col">When to use</th></tr></thead>
       <tbody>
         <tr><td class="cell-mono">gate</td><td>pytest suite (<span class="mono">tests/</span>); exits non-zero on failure</td><td>Before handing off to AUDIT</td></tr>
         <tr><td class="cell-mono">ship</td><td><span class="mono">gate</span> + interactive <span class="mono">git add -p</span> + <span class="mono">git commit</span></td><td>When tests pass and work is commit-ready</td></tr>
@@ -1653,7 +1718,7 @@
         </div>
         <div class="step-body">
           <table class="data-table">
-            <thead><tr><th>Scope</th><th>Put it in</th><th>Committed?</th></tr></thead>
+            <thead><tr><th scope="col">Scope</th><th scope="col">Put it in</th><th scope="col">Committed?</th></tr></thead>
             <tbody>
               <tr><td>Your personal conventions, every project</td><td class="cell-mono">~/.claude/CLAUDE.md</td><td>No &mdash; personal</td></tr>
               <tr><td>Shared project rules, every agent reads them</td><td class="cell-mono">AGENTS.md</td><td>Yes</td></tr>
@@ -1788,7 +1853,7 @@
     <p class="section-intro"><strong>Hooks enforce what prompt instructions only request.</strong> Claude Code runs them before and after tool use, and at session start.</p>
 
     <table class="data-table">
-      <thead><tr><th>Tier</th><th>Event</th><th>Purpose</th></tr></thead>
+      <thead><tr><th scope="col">Tier</th><th scope="col">Event</th><th scope="col">Purpose</th></tr></thead>
       <tbody>
         <tr><td><strong>PreToolUse</strong></td><td>Before the tool executes</td><td>Block dangerous actions before they happen</td></tr>
         <tr><td><strong>PostToolUse</strong></td><td>After the tool returns</td><td>Observe outcomes; trip circuit-breaker on repeat failures</td></tr>
@@ -1836,7 +1901,7 @@
         </div>
         <div class="step-body">
           <table class="data-table">
-            <thead><tr><th>Hook</th><th>Tier</th><th>Blocks when</th></tr></thead>
+            <thead><tr><th scope="col">Hook</th><th scope="col">Tier</th><th scope="col">Blocks when</th></tr></thead>
             <tbody>
               <tr><td class="cell-mono">protect-env.py</td><td>PreToolUse</td><td>Edit/Write/MultiEdit targets any <span class="mono">.env</span> file</td></tr>
               <tr><td class="cell-mono">protect-git-push.py</td><td>PreToolUse</td><td>Bash command matches <span class="mono">git &hellip; push</span> (any flag order)</td></tr>
@@ -1905,7 +1970,7 @@
         <div class="step-body">
           <p>The <span class="mono">skills/</span> directory holds three skills that load automatically when the task matches their trigger description.</p>
           <table class="data-table">
-            <thead><tr><th>Skill</th><th>When it activates</th><th>What it adds</th></tr></thead>
+            <thead><tr><th scope="col">Skill</th><th scope="col">When it activates</th><th scope="col">What it adds</th></tr></thead>
             <tbody>
               <tr><td class="cell-mono">code-review</td><td>Code review tasks (AUDIT pane)</td><td>Project-specific review conventions</td></tr>
               <tr><td class="cell-mono">security-audit</td><td>Security review tasks (AUDIT pane)</td><td>Security checklist and vulnerability patterns</td></tr>
@@ -1930,11 +1995,11 @@
     <p class="section-intro"><strong>Private inference on your own machine, with no API calls.</strong> Nothing else in this guide requires Ollama &mdash; only Sigil (section 16) does, for its fact classifier.</p>
 
     <table class="data-table">
-      <thead><tr><th>Tier</th><th>RAM</th><th>What you get</th></tr></thead>
+      <thead><tr><th scope="col">Tier</th><th scope="col">RAM</th><th scope="col">What you get</th></tr></thead>
       <tbody>
         <tr><td>&#127802; <strong>Base</strong></td><td>16 GB+</td><td>Claude Code + small local models (fast/code/embed)</td></tr>
         <tr><td>&#128309; <strong>Mid</strong></td><td>32 GB+</td><td>Above + reasoning model + larger fast/code models</td></tr>
-        <tr><td>&#128308; <strong>Full</strong></td><td>64 GB+</td><td>Above + vision model + 32B code model</td></tr>
+        <tr><td>&#128308; <strong>Full</strong></td><td>64 GB+</td><td>Above + vision model + 32B code model (~20 GB)</td></tr>
       </tbody>
     </table>
 
@@ -1954,7 +2019,7 @@
         <div class="step-body">
           <div class="code-block">
 <div>ollama pull qwen3:8b              <span class="comment"># ~5 GB — fast daily driver</span></div>
-<div>ollama pull qwen3-coder:7b        <span class="comment"># ~4.5 GB — code specialist</span></div>
+<div>ollama pull qwen2.5-coder:7b      <span class="comment"># ~4.7 GB — code specialist</span></div>
 <div>ollama pull nomic-embed-text      <span class="comment"># ~274 MB — embeddings</span></div>
           </div>
         </div>
@@ -1968,7 +2033,7 @@
         <div class="step-body">
           <div class="code-block">
 <div>ollama pull qwen3:14b             <span class="comment"># ~9 GB — replaces qwen3:8b</span></div>
-<div>ollama pull qwen3-coder:14b       <span class="comment"># ~8.5 GB — replaces qwen3-coder:7b</span></div>
+<div>ollama pull qwen2.5-coder:14b     <span class="comment"># ~9 GB — replaces qwen2.5-coder:7b</span></div>
 <div>ollama pull nomic-embed-text      <span class="comment"># ~274 MB</span></div>
 <div>ollama pull deepseek-r1:8b        <span class="comment"># ~5 GB — structured reasoning</span></div>
           </div>
@@ -1983,7 +2048,7 @@
         <div class="step-body">
           <div class="code-block">
 <div>ollama pull qwen3:14b             <span class="comment"># ~9 GB</span></div>
-<div>ollama pull qwen3-coder:32b       <span class="comment"># ~20 GB — replaces qwen3-coder:14b</span></div>
+<div>ollama pull qwen2.5-coder:32b     <span class="comment"># ~20 GB — replaces qwen2.5-coder:14b</span></div>
 <div>ollama pull nomic-embed-text      <span class="comment"># ~274 MB</span></div>
 <div>ollama pull deepseek-r1:8b        <span class="comment"># ~5 GB</span></div>
 <div>ollama pull gemma3:27b            <span class="comment"># ~16 GB — vision + heavy reasoning</span></div>
@@ -2039,7 +2104,7 @@
     <p class="section-intro"><strong>Auto-highlight keywords in terminal output.</strong></p>
     <p style="font-size:14px;color:var(--text-secondary);margin-bottom:12px;"><strong>Profile &rarr; Advanced &rarr; Triggers &rarr; +</strong></p>
     <table class="data-table">
-      <thead><tr><th>Regex</th><th>Action</th><th>Colour</th></tr></thead>
+      <thead><tr><th scope="col">Regex</th><th scope="col">Action</th><th scope="col">Colour</th></tr></thead>
       <tbody>
         <tr><td class="cell-mono">\b(CRITICAL|ERROR|FAIL(ED)?)\b</td><td>Highlight Text</td><td>Red background</td></tr>
         <tr><td class="cell-mono">\b(PASS(ED)?|SUCCESS)\b</td><td>Highlight Text</td><td>Green background</td></tr>
@@ -2109,7 +2174,7 @@
           <h3 class="step-title">How much does running Opus in one pane cost?</h3>
         </div>
         <div class="step-body">
-          <p><strong>Roughly 15&times; Sonnet per token, but only on review passes.</strong> AUDIT is idle while you implement, and a review reads far fewer tokens than an implementation session writes. The other three panes stay on Sonnet.</p>
+          <p><strong>About 2.5&times; Sonnet per token &mdash; Opus 5 is $5/$25 per million against Sonnet 5's $2/$10, checked September 2026 &mdash; and only on review passes.</strong> AUDIT is idle while you implement, and a review reads far fewer tokens than an implementation session writes. The other three panes stay on Sonnet.</p>
         </div>
       </div>
 
@@ -2322,7 +2387,7 @@
 <div>│  LOCAL AI                                                │</div>
 <div>├──────────────────────────────────────────────────────────┤</div>
 <div>│  llm-fast "..."     → qwen3 (general)                    │</div>
-<div>│  llm-code "..."     → qwen3-coder (code)                 │</div>
+<div>│  llm-code "..."     → qwen2.5-coder (code)               │</div>
 <div>│  llm-reason "..."   → deepseek-r1 (reasoning, 32GB+)     │</div>
 <div>│  llm-smart "..." [fast|code|reason|embed]  → router      │</div>
 <div>│  ollama list        → show downloaded models             │</div>
@@ -2353,7 +2418,7 @@
         </div>
         <div class="step-body">
           <table class="data-table">
-            <thead><tr><th>Pane</th><th>Model</th><th>Effort</th><th>Permission</th><th>Purpose</th></tr></thead>
+            <thead><tr><th scope="col">Pane</th><th scope="col">Model</th><th scope="col">Effort</th><th scope="col">Permission</th><th scope="col">Purpose</th></tr></thead>
             <tbody>
               <tr><td class="cell-mono">AUDIT</td><td>Opus</td><td>high</td><td class="cell-mono">plan</td><td>Code review (read-only)</td></tr>
               <tr><td class="cell-mono">IMPL</td><td>Sonnet</td><td>high</td><td class="cell-mono">acceptEdits</td><td>Write code + run tests</td></tr>
@@ -2371,7 +2436,7 @@
         </div>
         <div class="step-body">
           <table class="data-table">
-            <thead><tr><th>Alias</th><th>Pane</th><th>What it does</th></tr></thead>
+            <thead><tr><th scope="col">Alias</th><th scope="col">Pane</th><th scope="col">What it does</th></tr></thead>
             <tbody>
               <tr><td class="cell-mono">cc</td><td>All</td><td>Launch Claude Code with role-correct flags</td></tr>
               <tr><td class="cell-mono">gate</td><td>IMPL</td><td>Run full test suite &mdash; must pass before AUDIT handoff</td></tr>
@@ -2449,7 +2514,7 @@
         </div>
         <div class="step-body">
           <table class="data-table">
-            <thead><tr><th>Hook</th><th>Event</th><th>Blocks</th></tr></thead>
+            <thead><tr><th scope="col">Hook</th><th scope="col">Event</th><th scope="col">Blocks</th></tr></thead>
             <tbody>
               <tr><td class="cell-mono">protect-env.py</td><td>PreToolUse</td><td>Any edit to <span class="mono">.env</span> files</td></tr>
               <tr><td class="cell-mono">protect-git-push.py</td><td>PreToolUse</td><td><span class="mono">git push</span> commands</td></tr>
@@ -2475,13 +2540,13 @@
     <p class="section-intro">An automated AUDIT &harr; IMPL pane handoff add-on was <strong>retired on 2026-09-21</strong>. Its files are archived under <span class="mono">archive/handoff-2026-06/</span>. Persistent memory plus a shared <span class="mono">AGENTS.md</span> replaced it. See <span class="mono">archive/handoff-2026-06/README.md</span> if you want to restore it.</p>
   </div>
 
-</div>
+</main>
 
-<div class="footer">
+<footer class="footer">
   <span>iTerm2 + Claude Code &middot; 4-Pane Setup Guide</span>
   <span>Built by <a href="https://pravindurgani.com">Prav Durgani</a></span>
   <span>Claude Code v2.1.278 &middot; September 2026</span>
-</div>
+</footer>
 
 <script>
 /* The table of contents is ~800px tall on a phone and sits between the hero and

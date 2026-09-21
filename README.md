@@ -6,7 +6,7 @@ By [Prav Durgani](https://pravindurgani.com) · **[Read the full guide](https://
 
 ![Four iTerm2 panes, each running a Claude Code session with its own role colour](screenshots/05-claude-running.png)
 
-Each pane is an independent Claude Code session with its own model, effort level and permission mode. One command, `cc`, launches the right configuration for whichever pane you are in. Setup takes about 45 minutes. Once installed it runs no daemons and no background services: it is four terminal sessions and a shell alias.
+Each pane is an independent Claude Code session with its own model, effort level and permission mode. One command, `cc`, launches the right configuration for whichever pane you are in. Setup takes about 45 minutes. The core setup runs no daemons and no background services: it is four terminal sessions and a shell alias. The optional add-ons do run services.
 
 ---
 
@@ -20,7 +20,7 @@ Each pane is an independent Claude Code session with its own model, effort level
 | **PLAN** | Architecture and planning | Sonnet | low | default |
 
 - **No self-grading.** The model that writes the code never reviews it.
-- **Cost control.** Opus is substantially more expensive than Sonnet per token, roughly 15× as of September 2026, so it only runs in the review pane.
+- **Cost control.** Opus costs about 2.5× what Sonnet costs per token (Opus 5 $5/$25 per million against Sonnet 5 $2/$10, September 2026), so it only runs in the review pane.
 - **Enforced, not requested.** `--permission-mode plan` means the reviewer cannot write files, whatever it is asked to do. Hooks block `.env` edits and `git push` before they happen.
 - **Clean context.** Four independent conversation windows, each focused on one job.
 - **Survives a restart.** Saved iTerm2 arrangements bring the whole layout back.
@@ -40,6 +40,7 @@ Use agent teams when you want several agents attacking one problem for a few min
 ## Requirements
 
 - macOS with zsh
+- [Homebrew](https://brew.sh/) and Node.js 18+ (`brew install node`)
 - [iTerm2](https://iterm2.com/) — required, because `$ITERM_PROFILE` is what lets the shell detect which role a pane has
 - [Claude Code CLI](https://code.claude.com/docs) with an active subscription
 
@@ -52,6 +53,7 @@ Use agent teams when you want several agents attacking one problem for a few min
 Full instructions, with screenshots, are in **[the guide](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**. The short version:
 
 1. **Install the prerequisites** — `brew install node`, `brew install --cask iterm2`, then `npm install -g @anthropic-ai/claude-code` and `claude auth login`.
+1. **Clone this repo** — `git clone https://github.com/pravindurgani/claude-code-multipane-iterm2.git && cd claude-code-multipane-iterm2`. Later steps copy files out of it.
 2. **Create four iTerm2 profiles** — `CC-AUDIT`, `CC-IMPL`, `CC-PROMPT`, `CC-PLAN`, each with its own background and tab colour.
 3. **Set the startup command and initial directory** on each profile, pointing at your project.
 4. **Add the shell snippet** from [`zshrc-snippet.sh`](zshrc-snippet.sh) to your `~/.zshrc`.

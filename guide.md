@@ -73,6 +73,15 @@ brew install --cask iterm2
 Open iTerm2 once to complete its initial setup, then continue inside it. iTerm2
 is required because `$ITERM_PROFILE` is what makes per-pane role detection work.
 
+**This repo.** Later steps copy files out of it — the shell snippet, the hooks,
+the skills and the slash command. Clone it now and stay in that directory for the
+rest of Part I:
+
+```bash
+git clone https://github.com/pravindurgani/claude-code-multipane-iterm2.git
+cd claude-code-multipane-iterm2
+```
+
 ### Step 2 — Install and authenticate Claude Code
 
 ```bash
@@ -238,7 +247,7 @@ Type `cc` in each pane. That's it. The alias expands per pane:
 | `--continue`                      | Resume most recent conversation            |
 | `--resume`                        | Resume a specific session by ID            |
 
-> **Why Opus only in AUDIT:** Opus costs roughly 15× what Sonnet costs per
+> **Why Opus only in AUDIT:** Opus costs about 2.5× what Sonnet costs per
 > token. Reserve it for the review pass, where a second opinion from a stronger
 > model earns the money, and leave the other three panes on Sonnet.
 
@@ -485,7 +494,7 @@ fact classifier.
 |------|-----|-------------|
 | 🟢 **Base** | 16 GB+ | Claude Code + small local models (fast/code/embed) |
 | 🔵 **Mid** | 32 GB+ | Above + reasoning model + larger fast/code models |
-| 🔴 **Full** | 64 GB+ | Above + vision model + 32B code model |
+| 🔴 **Full** | 64 GB+ | Above + vision model + 32B code model (~20 GB) |
 
 ```bash
 brew install ollama
@@ -498,7 +507,7 @@ Pull the block matching your RAM. Times assume a 100 Mbps connection.
 
 ```bash
 ollama pull qwen3:8b              # ~5 GB — fast daily driver
-ollama pull qwen3-coder:7b        # ~4.5 GB — code specialist
+ollama pull qwen2.5-coder:7b      # ~4.7 GB — code specialist
 ollama pull nomic-embed-text      # ~274 MB — embeddings
 ```
 
@@ -506,7 +515,7 @@ ollama pull nomic-embed-text      # ~274 MB — embeddings
 
 ```bash
 ollama pull qwen3:14b             # ~9 GB — replaces qwen3:8b
-ollama pull qwen3-coder:14b       # ~8.5 GB — replaces qwen3-coder:7b
+ollama pull qwen2.5-coder:14b     # ~9 GB — replaces qwen2.5-coder:7b
 ollama pull nomic-embed-text      # ~274 MB
 ollama pull deepseek-r1:8b        # ~5 GB — structured reasoning
 ```
@@ -515,7 +524,7 @@ ollama pull deepseek-r1:8b        # ~5 GB — structured reasoning
 
 ```bash
 ollama pull qwen3:14b             # ~9 GB
-ollama pull qwen3-coder:32b       # ~20 GB — replaces qwen3-coder:14b
+ollama pull qwen2.5-coder:32b     # ~20 GB — replaces qwen2.5-coder:14b
 ollama pull nomic-embed-text      # ~274 MB
 ollama pull deepseek-r1:8b        # ~5 GB
 ollama pull gemma3:27b            # ~16 GB — vision + heavy reasoning
@@ -624,7 +633,7 @@ report; it cannot edit.
 
 #### How much does running Opus in one pane cost?
 
-**Substantially more than Sonnet, roughly 15× as of September 2026, but only on review passes.** AUDIT is idle while
+**About 2.5× Sonnet per token — Opus 5 is $5/$25 per million against Sonnet 5's $2/$10, checked September 2026 — and only on review passes.** AUDIT is idle while
 you implement, and a review reads far fewer tokens than an implementation
 session writes. The other three panes stay on Sonnet.
 
@@ -750,7 +759,7 @@ ollama pull qwen3:8b              # (or whichever model)
 │  LOCAL AI                                                │
 ├──────────────────────────────────────────────────────────┤
 │  llm-fast "..."     → qwen3 (general)                    │
-│  llm-code "..."     → qwen3-coder (code)                 │
+│  llm-code "..."     → qwen2.5-coder (code)               │
 │  llm-reason "..."   → deepseek-r1 (reasoning, 32GB+)     │
 │  llm-smart "..." [fast|code|reason|embed]  → router      │
 │  ollama list        → show downloaded models             │
