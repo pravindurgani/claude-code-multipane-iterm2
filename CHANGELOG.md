@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026-09-21 — Handoff retired, repo tidy
+
+Retired the pane handoff feature (Step 19). The author moved to a shared-memory model instead: persistent memory (Sigil) plus a shared `AGENTS.md` kernel now cover carrying context and directives between panes. The AppleScript bracketed-paste injection path the daemon relied on is an injection-class risk surface not worth carrying once a simpler alternative existed. The daemon has also been removed from the author's machine.
+
+### Moved to `archive/handoff-2026-06/`
+
+- `handoff/` (all 5 files), `HANDOFF_GUIDE.md`, `HANDOFF_GUIDE.html`, `hooks/enforce-handback.py`, `commands/start-audit.md`, `commands/start-impl.md`
+- Added `archive/handoff-2026-06/README.md` explaining the retirement, the injection-risk rationale, and how to restore from commit `a706e6b` if needed
+
+### Modified
+
+- `guide.md` / `index.html` — Step 19 heading now reads "(retired, archived)"; one callout added at the top of the section pointing to the archive and to Step 20 (persistent memory) + `AGENTS.md` as the replacement. Section kept in place, not renumbered.
+- `README.md` — replaced the "New: Handoff" blockquote with a retirement note linking to the archive README; updated the file table and Step 8 install line to point at `archive/handoff-2026-06/…`; added `scripts/pane-logging.sh` to the file table.
+- `index.html` footer — bumped current-version marker to Claude Code v2.1.278 (September 2026).
+- `.claude/CLAUDE.md` — corrected the stale claim that `~/.claude/settings.json` has `#` comments (it doesn't; `hooks/settings.json.example` does); replaced brittle line-number references in "Version String" with grep-able anchors; added a "Retired" section.
+- `.claude/REFERENCE.md` — redacted private project/business details that didn't belong in a public repo.
+- `hooks/settings.json.example` — removed the comment paragraph describing the handoff installer's Stop hook wiring.
+- `scripts/pane-logging.sh` — added to the repo (was untracked): enable/disable iTerm2 automatic session logging for the four profiles.
+
 ## 2026-06-05 — Pane handoff feature
 
 Optional file-based bracketed-paste routing between AUDIT and IMPL panes. Write a directive to a scope-keyed file in one pane, it arrives as a single paste in the other. Built around a launchd-managed `fswatch` daemon that wraps file content in bracketed-paste escapes and injects it into the bound iTerm session via AppleScript.

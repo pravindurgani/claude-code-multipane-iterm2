@@ -34,9 +34,9 @@ Global conventions live in ~/.claude/CLAUDE.md.
 - Hook templates must be created in the project repo (hooks/) and installed via a
   manual cp command. Never attempt to Write or Edit directly to ~/.claude/hooks/.
 
-- ~/.claude/settings.json contains # comment lines and is not valid JSON. Any
-  verification script that parses it must strip comment lines first:
-  json.loads(''.join(l for l in open(path) if not l.strip().startswith('#')))
+- ~/.claude/settings.json is plain JSON (json.load works). hooks/settings.json.example
+  in this repo is NOT valid JSON — it carries # comment lines — strip them before
+  parsing it.
 
 - SessionStart hooks must always exit 0. Print to stdout for informational output but
   never raise an uncaught exception or call sys.exit() with a non-zero code — doing so
@@ -49,20 +49,29 @@ Global conventions live in ~/.claude/CLAUDE.md.
 Two different version-string semantics live in this repo — don't conflate them.
 See ARCHITECTURE.md §3 for the full rationale.
 
-- **Current-version marker (1 place): index.html footer (line ~2024).**
-  Bumps on every Claude Code release. AUDIT treats drift here as HIGH — a stale
-  footer shows the reader the wrong current-state claim in the first second on
-  the page.
+- **Current-version marker (1 place): index.html footer — grep `class="footer"`,
+  version span follows 2 lines after.** Bumps on every Claude Code release.
+  AUDIT treats drift here as HIGH — a stale footer shows the reader the wrong
+  current-state claim in the first second on the page.
 
-- **Last-verified-against markers (4 places): guide.md:368
-  flag-compatibility note, guide.md:836 T7 troubleshooting, index.html:1239
-  flag-compatibility note, index.html:1906 T7 mirror.** Bumps only when someone
-  actually re-walks the guide against a new Claude Code version. AUDIT treats
-  drift here as LOW staleness, not a correctness bug.
+- **Last-verified-against markers (4 places): guide.md flag-compatibility note
+  — grep `Version note:`; guide.md T7 troubleshooting — grep `guide was
+  verified against`; index.html flag-compatibility note — grep `Version
+  note:`; index.html T7 mirror — grep `guide was verified against`.** Bumps
+  only when someone actually re-walks the guide against a new Claude Code
+  version. AUDIT treats drift here as LOW staleness, not a correctness bug.
 
 - `hooks/version-check.py` fires a SessionStart reminder when `claude --version`
   changes — the default response is a footer bump. Re-verify is a separate,
   deliberate session.
+
+---
+
+## Retired
+
+- Pane handoff (Step 19) retired 2026-09-21; archived under
+  archive/handoff-2026-06/. Do not re-add HANDOFF_SCOPE / handoff-*
+  requirements anywhere.
 
 ---
 

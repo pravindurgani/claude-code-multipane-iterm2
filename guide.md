@@ -445,7 +445,7 @@ The AUDIT pane identified: [paste findings here].
 Fix this while preserving existing patterns. Do not touch unrelated files.
 ```
 
-> **Optional:** If you've installed the pane handoff feature (Step 19), the AUDIT pane writes the directive to `~/.claude/handoff/to-impl.<scope>.txt` and the watcher delivers it as a single bracketed paste to the IMPL pane — no manual copy-paste. See Step 19 or `HANDOFF_GUIDE.md` §5.
+> **Optional:** If you've installed the pane handoff feature (Step 19), the AUDIT pane writes the directive to `~/.claude/handoff/to-impl.<scope>.txt` and the watcher delivers it as a single bracketed paste to the IMPL pane — no manual copy-paste. See Step 19 (retired, archived) or `archive/handoff-2026-06/HANDOFF_GUIDE.md` §5.
 
 ### Context hygiene
 
@@ -743,7 +743,11 @@ skill's trigger description — no manual invocation needed.
 
 ---
 
-## Step 19 — Pane Handoff (AUDIT ↔ IMPL)
+## Step 19 — Pane Handoff (AUDIT ↔ IMPL) (retired, archived)
+
+> **Retired 2026-09-21.** This feature was retired; its files now live under
+> `archive/handoff-2026-06/`. Persistent memory (Step 20) plus a shared
+> `AGENTS.md` kernel is the recommended replacement.
 
 The cross-pane workflow (Step 11) has one manual chore left: copying AUDIT's
 findings into the IMPL pane, and IMPL's hand-back into AUDIT. This optional
@@ -788,7 +792,7 @@ only. Two projects run side by side with zero cross-talk. Unscoped writes
 
 ```bash
 brew install fswatch    # required dependency
-./handoff/install.sh    # from the repo root
+./archive/handoff-2026-06/handoff/install.sh    # from the repo root
 ```
 
 The installer verifies `fswatch`, `osascript`, and iTerm2 are present; copies
@@ -804,12 +808,12 @@ launchctl list | grep handoff   # → "<PID>  0  com.user.handoff"
 tail /tmp/handoff.log           # → "[handoff] Watching ~/.claude/handoff"
 ```
 
-To uninstall: `./handoff/install.sh --uninstall`
+To uninstall: `./archive/handoff-2026-06/handoff/install.sh --uninstall`
 
 ### 2. Add the shell functions
 
 ```bash
-cat handoff/zshrc-handoff.sh >> ~/.zshrc
+cat archive/handoff-2026-06/handoff/zshrc-handoff.sh >> ~/.zshrc
 source ~/.zshrc
 ```
 
@@ -937,7 +941,7 @@ and launchd respawns it within ~1s.
 
 That's the full daily loop. For multi-project isolation probes, the complete
 command and path reference, and the under-the-hood details, see the
-[Pane Handoff operator guide](HANDOFF_GUIDE.md).
+[Pane Handoff operator guide](archive/handoff-2026-06/HANDOFF_GUIDE.md).
 
 ---
 

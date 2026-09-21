@@ -14,7 +14,7 @@ Run 4 dedicated Claude Code sessions in a single iTerm2 window — each with its
 
 **[Read the full guide with screenshots](https://pravindurgani.github.io/claude-code-multipane-iterm2/)**
 
-> **New:** [Handoff](HANDOFF_GUIDE.md) — optional file-based bracketed-paste routing between AUDIT and IMPL panes. Write a directive to a file in one pane, it arrives as a single paste in the other. Scope-keyed so two projects can run in parallel without cross-talk. See [`HANDOFF_GUIDE.md`](HANDOFF_GUIDE.md).
+> **Retired:** The pane handoff feature is retired (2026-09-21) and archived — see [`archive/handoff-2026-06/README.md`](archive/handoff-2026-06/README.md).
 >
 > **New:** [Sigil](https://github.com/Anmol-Srv/sigil) integration — optional persistent memory for all four panes, by [Anmol Srivastava](https://github.com/Anmol-Srv). Facts, decisions, and preferences carry across sessions, panes, and projects via Claude Code hooks. Local-first, MCP-native. See Step 20 in the guide.
 
@@ -72,9 +72,9 @@ This workflow depends on iTerm2-specific features:
 3. **Add the shell snippet to `~/.zshrc`** — copy-paste from [`zshrc-snippet.sh`](zshrc-snippet.sh)
 4. **Create a 2x2 pane layout** and save it as the default window arrangement
 5. **Type `cc` in each pane** — Claude Code launches with the correct flags
-6. **Merge hooks config** — copy these five files from `hooks/` to `~/.claude/hooks/`: `circuit-breaker.py`, `protect-env.py`, `protect-git-push.py`, `session-start-reset.py`, `version-check.py`. Then merge the `"hooks"` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`. (Skip `enforce-handback.py` here — the optional handoff installer in Step 8 places it and registers its Stop hook for you.)
+6. **Merge hooks config** — copy these five files from `hooks/` to `~/.claude/hooks/`: `circuit-breaker.py`, `protect-env.py`, `protect-git-push.py`, `session-start-reset.py`, `version-check.py`. Then merge the `"hooks"` block from [`hooks/settings.json.example`](hooks/settings.json.example) into `~/.claude/settings.json`. (Skip `enforce-handback.py` — it belonged to the retired pane handoff feature, see Step 8.)
 7. **(Optional) MCP & slash commands** — `brew install github-mcp-server` then `claude mcp add` to register it (see Step 18 in the guide); copy `commands/reflect.md` to `~/.claude/commands/`; copy `skills/` to `~/.claude/skills/`
-8. **(Optional) Pane handoff** — `brew install fswatch` then `./handoff/install.sh` to enable file-based routing between AUDIT and IMPL panes. Read [`HANDOFF_GUIDE.md`](HANDOFF_GUIDE.md) for the operator manual.
+8. **(Retired) Pane handoff** — this feature was retired 2026-09-21; the installer and operator manual are archived at [`archive/handoff-2026-06/`](archive/handoff-2026-06/), reachable via `./archive/handoff-2026-06/handoff/install.sh` and [`archive/handoff-2026-06/HANDOFF_GUIDE.md`](archive/handoff-2026-06/HANDOFF_GUIDE.md).
 9. **(Optional) Persistent memory** — install [Sigil](https://github.com/Anmol-Srv/sigil) and run `sigil init` to give every pane shared memory across sessions and projects. See Step 20 in the guide — including the one setting (a fast, local LLM provider) that keeps the prompt hook under Claude Code's 10s budget.
 
 ---
@@ -87,6 +87,7 @@ This workflow depends on iTerm2-specific features:
 | [`guide.md`](guide.md) | Markdown version for quick reference |
 | [`zshrc-snippet.sh`](zshrc-snippet.sh) | Copy-paste block for your `~/.zshrc` |
 | [`screenshots/`](screenshots/) | Step-by-step screenshots used in the guide |
+| [`scripts/pane-logging.sh`](scripts/pane-logging.sh) | Enable/disable iTerm2 automatic session logging for the four profiles |
 | [`hooks/`](hooks/) | Python hook scripts for PreToolUse/PostToolUse safety enforcement |
 | [`hooks/version-check.py`](hooks/version-check.py) | SessionStart hook — detects Claude Code version changes and prints an update checklist |
 | [`hooks/settings.json.example`](hooks/settings.json.example) | Hooks registration block to merge into `~/.claude/settings.json` |
@@ -94,12 +95,12 @@ This workflow depends on iTerm2-specific features:
 | [`REFERENCE.md.template`](REFERENCE.md.template) | Starter template for project-level `.claude/REFERENCE.md` |
 | [`.mcp.json.example`](.mcp.json.example) | GitHub MCP server reference JSON — use with `claude mcp add-json` (see Step 18) |
 | [`commands/reflect.md`](commands/reflect.md) | `/reflect` slash command — extracts session learnings for CLAUDE.md |
-| [`commands/start-impl.md`](commands/start-impl.md) | `/start-impl` slash command — IMPL pane pre-flight + hand-back protocol (handoff feature) |
-| [`commands/start-audit.md`](commands/start-audit.md) | `/start-audit` slash command — AUDIT pane pre-flight + directive routing (handoff feature) |
+| [`archive/handoff-2026-06/commands/start-impl.md`](archive/handoff-2026-06/commands/start-impl.md) | `/start-impl` slash command — IMPL pane pre-flight + hand-back protocol (retired handoff feature) |
+| [`archive/handoff-2026-06/commands/start-audit.md`](archive/handoff-2026-06/commands/start-audit.md) | `/start-audit` slash command — AUDIT pane pre-flight + directive routing (retired handoff feature) |
 | [`skills/`](skills/) | Contextual skills for AUDIT/IMPL panes (code-review, security-audit, testing) |
-| [`HANDOFF_GUIDE.md`](HANDOFF_GUIDE.md) | Operator manual for the optional pane handoff feature |
-| [`HANDOFF_GUIDE.html`](HANDOFF_GUIDE.html) | Styled visual version of the handoff guide |
-| [`handoff/`](handoff/) | Handoff implementation: watcher script, launchd plist, zsh functions, installer |
+| [`archive/handoff-2026-06/HANDOFF_GUIDE.md`](archive/handoff-2026-06/HANDOFF_GUIDE.md) | Operator manual for the retired pane handoff feature |
+| [`archive/handoff-2026-06/HANDOFF_GUIDE.html`](archive/handoff-2026-06/HANDOFF_GUIDE.html) | Styled visual version of the retired handoff guide |
+| [`archive/handoff-2026-06/handoff/`](archive/handoff-2026-06/handoff/) | Retired handoff implementation: watcher script, launchd plist, zsh functions, installer |
 
 ---
 
@@ -126,7 +127,7 @@ Claude Code merges both automatically. Use `CLAUDE.md.template` and
 ## What this is NOT
 
 - Not an agent orchestrator. No background processes, no task queues, no dashboards.
-- Not a fire-and-forget agent. The base four-pane setup is hands-on. The optional handoff layer (see [HANDOFF_GUIDE.md](HANDOFF_GUIDE.md)) automates the AUDIT↔IMPL relay — but it's bounded: a Stop hook forces a real hand-back, safety hooks block `.env` edits and `git push`, and a per-scope HALT sentinel pauses the loop the moment a human is genuinely needed.
+- Not a fire-and-forget agent. The base four-pane setup is hands-on. The now-retired handoff layer (see [archive/handoff-2026-06/HANDOFF_GUIDE.md](archive/handoff-2026-06/HANDOFF_GUIDE.md)) automated the AUDIT↔IMPL relay — but it was bounded: a Stop hook forced a real hand-back, safety hooks blocked `.env` edits and `git push`, and a per-scope HALT sentinel paused the loop the moment a human was genuinely needed.
 - Not a replacement for CI/CD. The `gate` alias is a local quality gate — your regular pipeline still runs.
 - Not Windows-native. Requires macOS with iTerm2.
 

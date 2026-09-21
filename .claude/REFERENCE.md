@@ -55,7 +55,7 @@ Architecture and scope decisions.
 **Freeze starts:** 2026-04-14 after Bucket 2 commit.
 **Freeze ends:** 2026-07-14 (90 days). Only genuine blockers justify reopening.
 
-**Real work to ship during freeze:** [REDACTED-PROJECT] Issue #2, [REDACTED], AgentSutra v8.5.1, [REDACTED] negotiation. See `SETUP_FREEZE_PLAN.md` §"What to build instead".
+**Real work to ship during freeze:** see `SETUP_FREEZE_PLAN.md` §"What to build instead" (private project/business items redacted from this public repo).
 
 ---
 
