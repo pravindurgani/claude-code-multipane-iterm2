@@ -15,8 +15,12 @@ Global conventions live in ~/.claude/CLAUDE.md.
   the id="sN" anchor, the <span class="section-num"> display label, and the TOC href.
   When adding a section, update all three together.
 
-- guide.md `## Overview` is intentionally rendered as the index.html hero block, not a
-  numbered section. This divergence is ratified — do not re-flag as a parity issue.
+- guide.md `## What you are building` is intentionally rendered as the index.html hero
+  block, not a numbered section. This divergence is ratified — do not re-flag as a
+  parity issue. (It was called `## Overview` before the 2026-09-21 restructure.)
+
+- guide.md is the source of truth. Restructure there first, then mirror into index.html.
+  Both follow the four-part structure described in ARCHITECTURE.md §1.
 
 - step_guide.md is gitignored and local-only. Append new ╔══╗ phase blocks after each
   phase commit — they persist locally as a running implementation log but never appear
@@ -69,7 +73,7 @@ See ARCHITECTURE.md §3 for the full rationale.
 
 ## Retired
 
-- Pane handoff (Step 19) retired 2026-09-21; archived under
+- Pane handoff retired 2026-09-21, now the appendix (section 22); archived under
   archive/handoff-2026-06/. Do not re-add HANDOFF_SCOPE / handoff-*
   requirements anywhere.
 

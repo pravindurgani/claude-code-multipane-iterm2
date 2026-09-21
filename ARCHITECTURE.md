@@ -8,13 +8,28 @@ Reference for the four non-obvious structural constraints in this repo. Read bef
 
 The two files are the same document in two formats — markdown for readers on GitHub, HTML for readers who open the repo in a browser. When content changes in one, the other must change to match.
 
+**`guide.md` is the source of truth.** It carries no numbering machinery, so it is the safer place to restructure. Change it first, then mirror into `index.html`.
+
+Both use the same four-part structure, adopted 2026-09-21:
+
+| Part | Sections | What belongs there |
+|---|---|---|
+| I — Install it | 1–7 | Strictly sequential. The reader must not skip. |
+| II — Work in it | 8–12 | Working patterns. Order does not matter. |
+| III — Optional add-ons | 13–17 | Each independently skippable. |
+| IV — Reference | 18–21 | Lookup material. |
+| Appendix | 22 | Retired features, pointer only. |
+
 Section numbering in `index.html` uses three coupled values. All three change together whenever a section is added, removed, or renumbered:
 
 - `id="sN"` anchor on the section element
 - `<span class="section-num">N</span>` display label
 - TOC `<a href="#sN">` link
 
-`guide.md` uses markdown headings only (no numbering machinery) — so the HTML side always carries more editing risk. Make HTML changes first, then mirror to markdown.
+Each section additionally carries a semantic alias immediately before it —
+`<span id="agents-md" class="anchor-alias"></span>` — because answer engines cite
+semantic anchors and people already deep-link to the numeric ones. Both must keep
+resolving; never remove a numeric id to "tidy up".
 
 ---
 
@@ -40,19 +55,18 @@ Version strings in this repo encode two different claims. They bump on different
 
 ### Current-version marker (1 place)
 
-`index.html:1818` footer. States the Claude Code version the site's content was last published alongside. Bumps on **every** Claude Code release, together with a `hooks/version-check.py` SessionStart reminder.
+The `index.html` footer — find it with `grep -n 'class="footer"'`, the version span follows two lines after. States the Claude Code version the site's content was last published alongside. Bumps on **every** Claude Code release, together with a `hooks/version-check.py` SessionStart reminder.
 
 Drift here = **HIGH**: the reader sees a wrong current-state claim in the first second on the page.
 
-### Last-verified-against markers (5 places)
+### Last-verified-against markers (4 places)
 
-Claims that someone actually walked the guide against a specific Claude Code version — flags, hook behavior, slash commands, MCP wiring. Bumps **only** when a real re-verification pass happens, not automatically on release.
+Claims that someone actually walked the guide against a specific Claude Code version — flags, hook behaviour, slash commands, MCP wiring. Bumps **only** when a real re-verification pass happens, not automatically on release.
 
-- `guide.md:4` — intro paragraph
-- `guide.md:249` — flag-compatibility note (§5)
-- `guide.md:692` — T7 troubleshooting
-- `index.html:1074` — flag-compatibility note (mirror of `guide.md:249`)
-- `index.html:1803` — T7 mirror (mirror of `guide.md:692`)
+Find them by content, not by line number — line numbers rot on every edit:
+
+- flag-compatibility note in `guide.md` and `index.html` — `grep -n 'Version note:'`
+- T7 troubleshooting in `guide.md` and `index.html` — `grep -n 'guide was verified against'`
 
 Drift here = **LOW staleness**: the guide may be subtly out of date, but the reader can still run `claude --version` and cross-check. Not a correctness bug.
 
